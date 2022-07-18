@@ -1,4 +1,8 @@
-name: PaveraliciousAdditions
+name: Paveral
 version: '${project.version}'
 main: de.powerspieler.paveral.Paveral
 api-version: 1.19
+
+commands:
+  test:
+    description: Execute Test Code
