@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.powerspieler</groupId>
-    <artifactId>Paveralicious-Additions</artifactId>
+    <artifactId>Paveral</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Paveralicious Additions</name>
+    <name>Paveral</name>
 
     <properties>
         <java.version>1.17</java.version>

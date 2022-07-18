@@ -6,9 +6,13 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -74,64 +78,86 @@ public class AntiCreeperGrief implements Listener {
 
         return c;
     }
+    private Entity creeper;
 
-    // handle Creeperexplosion
+
     @EventHandler
     public void onCreeperExplosion(EntityExplodeEvent event) {
         if (!(event.getEntityType() == EntityType.CREEPER)) return;
-        Entity creeper = event.getEntity();
+        creeper = event.getEntity();
+        if(checkForPlayer(creeper, defineCreeperitem()) || checkForItemframe(creeper, defineCreeperitem()) == true){
+            defineFirework();
+            event.setCancelled(true);
+            return;
+        }
+    }
 
-        // Check for Player in 8x8x8 Box
+    @EventHandler
+    public void onCreeperDamageEntity(EntityDamageByEntityEvent event){
+        if(!(event.getDamager().getType() == EntityType.CREEPER)) return;
+        Entity damager = event.getDamager();
+        if(checkForPlayer(damager, defineCreeperitem()) || checkForItemframe(damager, defineCreeperitem()) == true){
+            event.setCancelled(true);
+            return;
+        }
+    }
+
+    @EventHandler
+    public void onCreeperDamageHanging(HangingBreakByEntityEvent event){
+        if(!(event.getRemover().getType() == EntityType.CREEPER)) return;
+        Entity remover = event.getRemover();
+        if(checkForPlayer(remover, defineCreeperitem()) || checkForItemframe(remover, defineCreeperitem()) == true){
+            event.setCancelled(true);
+            return;
+        }
+    }
+
+    public boolean checkForPlayer(Entity creeper, ItemStack creeperitem){
+        // Check for Player with CreeperItem in 8x8x8 Box
         List<Entity> playernearby = creeper.getNearbyEntities(8D,8D,8D);
         for(Entity entity : playernearby){
-            if(entity instanceof Player player){
-                ItemStack creeperitem = new ItemStack(Material.JIGSAW);
-                ItemMeta creeperitemmeta = creeperitem.getItemMeta();
-                creeperitemmeta.setCustomModelData(1);
-                creeperitem.setItemMeta(creeperitemmeta);
-
-                if(player.getInventory().contains(creeperitem)){
-                    Firework fw = (Firework) creeper.getWorld().spawnEntity(creeper.getLocation(), EntityType.FIREWORK);
-                    FireworkMeta fwm = fw.getFireworkMeta();
-                    Random r = new Random();
-                    int r1i = r.nextInt(17) + 1;
-                    int r2i = r.nextInt(17) + 1;
-                    Color c1 = getColor(r1i);
-                    Color c2 = getColor(r2i);
-                    FireworkEffect effect = FireworkEffect.builder().flicker(r.nextBoolean()).withColor(c1).withFade(c2).with(FireworkEffect.Type.BURST).trail(r.nextBoolean()).build();
-                    fwm.addEffect(effect);
-                    fw.setFireworkMeta(fwm);
-                    fw.detonate();
-                    event.setCancelled(true);
-                    return;
+            if(entity instanceof Player player) {
+                if (player.getInventory().contains(creeperitem)) {
+                    return true;
                 }
             }
         }
+        return false;
+    }
+
+    public boolean checkForItemframe(Entity creeper, ItemStack creeperitem){
         // Check of Itemframe in 50x50x50 Box
         List<Entity> itemframenearby = creeper.getNearbyEntities(50D,50D,50D);
         for(Entity entity : itemframenearby){
             if(entity instanceof ItemFrame itemframe){
-                ItemStack creeperitem = new ItemStack(Material.JIGSAW);
-                ItemMeta creeperitemmeta = creeperitem.getItemMeta();
-                creeperitemmeta.setCustomModelData(1);
-                creeperitem.setItemMeta(creeperitemmeta);
-
                 if(itemframe.getItem().equals(creeperitem)){
-                    Firework fw = (Firework) creeper.getWorld().spawnEntity(creeper.getLocation(), EntityType.FIREWORK);
-                    FireworkMeta fwm = fw.getFireworkMeta();
-                    Random r = new Random();
-                    int r1i = r.nextInt(17) + 1;
-                    int r2i = r.nextInt(17) + 1;
-                    Color c1 = getColor(r1i);
-                    Color c2 = getColor(r2i);
-                    FireworkEffect effect = FireworkEffect.builder().flicker(r.nextBoolean()).withColor(c1).withFade(c2).with(FireworkEffect.Type.BURST).trail(r.nextBoolean()).build();
-                    fwm.addEffect(effect);
-                    fw.setFireworkMeta(fwm);
-                    fw.detonate();
-                    event.setCancelled(true);
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
+    }
+
+
+    public ItemStack defineCreeperitem(){
+        ItemStack creeperitem = new ItemStack(Material.JIGSAW);
+        ItemMeta creeperitemmeta = creeperitem.getItemMeta();
+        creeperitemmeta.setCustomModelData(1);
+        creeperitem.setItemMeta(creeperitemmeta);
+        return creeperitem;
+    }
+
+    public void defineFirework(){
+        Firework fw = (Firework) creeper.getWorld().spawnEntity(creeper.getLocation(), EntityType.FIREWORK);
+        FireworkMeta fwm = fw.getFireworkMeta();
+        Random r = new Random();
+        int r1i = r.nextInt(17) + 1;
+        int r2i = r.nextInt(17) + 1;
+        Color c1 = getColor(r1i);
+        Color c2 = getColor(r2i);
+        FireworkEffect effect = FireworkEffect.builder().flicker(r.nextBoolean()).withColor(c1).withFade(c2).with(FireworkEffect.Type.BURST).trail(r.nextBoolean()).build();
+        fwm.addEffect(effect);
+        fw.setFireworkMeta(fwm);
+        fw.detonate();
     }
 }
