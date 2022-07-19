@@ -1,23 +1,32 @@
 package de.powerspieler.paveral.items;
 
+import de.powerspieler.paveral.Paveral;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Material;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.player.PlayerChangedMainHandEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class AntiCreeperGrief implements Listener {
@@ -79,45 +88,66 @@ public class AntiCreeperGrief implements Listener {
         return c;
     }
     private Entity creeper;
+    private static NamespacedKey creeperitemkey = new NamespacedKey(Paveral.getPlugin(), "creeperitem");
 
 
-    @EventHandler
+
+    @EventHandler // handle CreeperExplosions
     public void onCreeperExplosion(EntityExplodeEvent event) {
         if (!(event.getEntityType() == EntityType.CREEPER)) return;
         creeper = event.getEntity();
-        if(checkForPlayer(creeper, defineCreeperitem()) || checkForItemframe(creeper, defineCreeperitem()) == true){
+        if(checkForPlayer(creeper) || checkForItemframe(creeper) == true){
             defineFirework();
             event.setCancelled(true);
             return;
         }
     }
 
-    @EventHandler
+    @EventHandler //handle EntityDamage Inflicted By Creeper
     public void onCreeperDamageEntity(EntityDamageByEntityEvent event){
         if(!(event.getDamager().getType() == EntityType.CREEPER)) return;
         Entity damager = event.getDamager();
-        if(checkForPlayer(damager, defineCreeperitem()) || checkForItemframe(damager, defineCreeperitem()) == true){
+        if(checkForPlayer(damager) || checkForItemframe(damager) == true){
+            event.setCancelled(true);
+            return;
+        }
+    }
+
+    @EventHandler //handle HangingDamage Inflicted by Creeper
+    public void onCreeperDamageHanging(HangingBreakByEntityEvent event){
+        if(!(event.getRemover().getType() == EntityType.CREEPER)) return;
+        Entity remover = event.getRemover();
+        if(checkForPlayer(remover) || checkForItemframe(remover) == true){
             event.setCancelled(true);
             return;
         }
     }
 
     @EventHandler
-    public void onCreeperDamageHanging(HangingBreakByEntityEvent event){
-        if(!(event.getRemover().getType() == EntityType.CREEPER)) return;
-        Entity remover = event.getRemover();
-        if(checkForPlayer(remover, defineCreeperitem()) || checkForItemframe(remover, defineCreeperitem()) == true){
-            event.setCancelled(true);
-            return;
+    public void onCreeperItemHold(PlayerInteractEvent event){
+        if(event.hasItem()){
+            if(event.getItem().getItemMeta().getPersistentDataContainer().has(creeperitemkey, PersistentDataType.INTEGER)){
+                if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    Player player = event.getPlayer();
+                    if (checkForItemframe(player) == true) {
+                        player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                                .append(Component.text("Save",NamedTextColor.GREEN))
+                                .append(Component.text(" ]",NamedTextColor.GOLD)));
+                    } else
+                        player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                                .append(Component.text("Unsave",NamedTextColor.RED))
+                                .append(Component.text(" ]",NamedTextColor.GOLD)));
+                }
+            }
         }
     }
 
-    public boolean checkForPlayer(Entity creeper, ItemStack creeperitem){
-        // Check for Player with CreeperItem in 8x8x8 Box
+    // Check for Player with CreeperItem in 8x8x8 Box
+    public boolean checkForPlayer(Entity creeper){
         List<Entity> playernearby = creeper.getNearbyEntities(8D,8D,8D);
         for(Entity entity : playernearby){
             if(entity instanceof Player player) {
-                if (player.getInventory().contains(creeperitem)) {
+                if(hasCreeperItem(player) == true){
                     return true;
                 }
             }
@@ -125,28 +155,35 @@ public class AntiCreeperGrief implements Listener {
         return false;
     }
 
-    public boolean checkForItemframe(Entity creeper, ItemStack creeperitem){
-        // Check of Itemframe in 50x50x50 Box
+    // Check of Itemframe in 50x50x50 Box
+    public boolean checkForItemframe(Entity creeper){
         List<Entity> itemframenearby = creeper.getNearbyEntities(50D,50D,50D);
         for(Entity entity : itemframenearby){
             if(entity instanceof ItemFrame itemframe){
-                if(itemframe.getItem().equals(creeperitem)){
-                    return true;
+                if(itemframe.getItem().hasItemMeta()){
+                    if(itemframe.getItem().getItemMeta().getPersistentDataContainer().has(creeperitemkey, PersistentDataType.INTEGER)){
+                        return true;
+                    }
                 }
             }
         }
         return false;
     }
 
-
-    public ItemStack defineCreeperitem(){
-        ItemStack creeperitem = new ItemStack(Material.JIGSAW);
-        ItemMeta creeperitemmeta = creeperitem.getItemMeta();
-        creeperitemmeta.setCustomModelData(1);
-        creeperitem.setItemMeta(creeperitemmeta);
-        return creeperitem;
+    // Check if CreeperItem is in Inventory
+    private static boolean hasCreeperItem(final Player player) {
+        final PlayerInventory inv = player.getInventory();
+        final ItemStack[] contents = inv.getContents();
+        for (int i = 0; i < contents.length; i++){
+            final ItemStack stack = contents[i];
+            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(creeperitemkey, PersistentDataType.INTEGER)){
+                return true;
+            }
+        }
+        return false;
     }
 
+    //Define FireworkVisual
     public void defineFirework(){
         Firework fw = (Firework) creeper.getWorld().spawnEntity(creeper.getLocation(), EntityType.FIREWORK);
         FireworkMeta fwm = fw.getFireworkMeta();
