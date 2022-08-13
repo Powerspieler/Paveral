@@ -1,10 +1,13 @@
 package de.powerspieler.paveral.commands;
 
 import de.powerspieler.paveral.Paveral;
+import de.powerspieler.paveral.items.AntiCreeperGrief;
+import de.powerspieler.paveral.items.LightStaff;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Jigsaw;
+import org.bukkit.block.data.type.Light;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,6 +30,7 @@ public class TestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
+            // Creeperitem Give
             ItemStack creeperitem = new ItemStack(Material.JIGSAW);
             NamespacedKey creeperitemkey = new NamespacedKey(Paveral.getPlugin(), "creeperitem");
             ItemMeta creeperitemmeta = creeperitem.getItemMeta();
@@ -34,6 +38,17 @@ public class TestCommand implements CommandExecutor {
             creeperitemmeta.setCustomModelData(1);
             creeperitem.setItemMeta(creeperitemmeta);
             player.getInventory().addItem(creeperitem);
+
+            // Lightstaff Give
+            ItemStack lightstaff = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
+            NamespacedKey lightstaffkey = new NamespacedKey(Paveral.getPlugin(), "lightstaff");
+            NamespacedKey lightblocklevel = new NamespacedKey(Paveral.getPlugin(), "lightlevel");
+            ItemMeta lightstaffmeta = lightstaff.getItemMeta();
+            lightstaffmeta.getPersistentDataContainer().set(lightstaffkey, PersistentDataType.INTEGER, 1);
+            lightstaffmeta.getPersistentDataContainer().set(lightblocklevel, PersistentDataType.INTEGER, 15);
+            lightstaffmeta.setCustomModelData(4);
+            lightstaff.setItemMeta(lightstaffmeta);
+            player.getInventory().addItem(lightstaff);
 
 
             /*
@@ -52,4 +67,5 @@ public class TestCommand implements CommandExecutor {
         }
         return false;
     }
+
 }

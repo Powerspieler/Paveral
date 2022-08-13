@@ -2,6 +2,7 @@ package de.powerspieler.paveral;
 
 import de.powerspieler.paveral.commands.TestCommand;
 import de.powerspieler.paveral.items.AntiCreeperGrief;
+import de.powerspieler.paveral.items.LightStaff;
 import de.powerspieler.paveral.listeners.ItemDropListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -20,6 +21,7 @@ public final class Paveral extends JavaPlugin {
 
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new AntiCreeperGrief(), this);
+        pm.registerEvents(new LightStaff(), this);
         pm.registerEvents(new ItemDropListener(), this);
     }
 

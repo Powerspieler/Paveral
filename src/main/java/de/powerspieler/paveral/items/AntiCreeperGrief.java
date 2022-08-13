@@ -176,7 +176,7 @@ public class AntiCreeperGrief implements Listener {
         final ItemStack[] contents = inv.getContents();
         for (int i = 0; i < contents.length; i++){
             final ItemStack stack = contents[i];
-            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(creeperitemkey, PersistentDataType.INTEGER)){
+            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(creeperitemkey)){
                 return true;
             }
         }
