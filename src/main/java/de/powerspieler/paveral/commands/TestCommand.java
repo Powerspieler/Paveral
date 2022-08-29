@@ -2,6 +2,7 @@ package de.powerspieler.paveral.commands;
 
 import de.powerspieler.paveral.Paveral;
 import de.powerspieler.paveral.items.AntiCreeperGrief;
+import de.powerspieler.paveral.items.Items;
 import de.powerspieler.paveral.items.LightStaff;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -40,6 +41,7 @@ public class TestCommand implements CommandExecutor {
             player.getInventory().addItem(creeperitem);
 
             // Lightstaff Give
+            /*
             ItemStack lightstaff = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
             NamespacedKey lightstaffkey = new NamespacedKey(Paveral.getPlugin(), "lightstaff");
             NamespacedKey lightblocklevel = new NamespacedKey(Paveral.getPlugin(), "lightlevel");
@@ -48,7 +50,9 @@ public class TestCommand implements CommandExecutor {
             lightstaffmeta.getPersistentDataContainer().set(lightblocklevel, PersistentDataType.INTEGER, 15);
             lightstaffmeta.setCustomModelData(4);
             lightstaff.setItemMeta(lightstaffmeta);
-            player.getInventory().addItem(lightstaff);
+             */
+            Items lightStaff = new LightStaff();
+            player.getInventory().addItem(lightStaff.build());
 
 
             /*

@@ -1,5 +1,6 @@
 package de.powerspieler.paveral;
 
+import de.powerspieler.paveral.commands.CooldownCommand;
 import de.powerspieler.paveral.commands.TestCommand;
 import de.powerspieler.paveral.items.AntiCreeperGrief;
 import de.powerspieler.paveral.items.LightStaff;
@@ -18,6 +19,7 @@ public final class Paveral extends JavaPlugin {
         plugin = this;
 
         Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
+        Objects.requireNonNull(getCommand("cooldown")).setExecutor(new CooldownCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new AntiCreeperGrief(), this);

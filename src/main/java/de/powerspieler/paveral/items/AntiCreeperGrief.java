@@ -3,30 +3,23 @@ package de.powerspieler.paveral.items;
 import de.powerspieler.paveral.Paveral;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.*;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerChangedMainHandEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class AntiCreeperGrief implements Listener {
@@ -88,7 +81,7 @@ public class AntiCreeperGrief implements Listener {
         return c;
     }
     private Entity creeper;
-    private static NamespacedKey creeperitemkey = new NamespacedKey(Paveral.getPlugin(), "creeperitem");
+    private static final NamespacedKey creeperitemkey = new NamespacedKey(Paveral.getPlugin(), "creeperitem");
 
 
 
@@ -96,10 +89,9 @@ public class AntiCreeperGrief implements Listener {
     public void onCreeperExplosion(EntityExplodeEvent event) {
         if (!(event.getEntityType() == EntityType.CREEPER)) return;
         creeper = event.getEntity();
-        if(checkForPlayer(creeper) || checkForItemframe(creeper) == true){
+        if(checkForPlayer(creeper) || checkForItemframe(creeper)){
             defineFirework();
             event.setCancelled(true);
-            return;
         }
     }
 
@@ -107,9 +99,8 @@ public class AntiCreeperGrief implements Listener {
     public void onCreeperDamageEntity(EntityDamageByEntityEvent event){
         if(!(event.getDamager().getType() == EntityType.CREEPER)) return;
         Entity damager = event.getDamager();
-        if(checkForPlayer(damager) || checkForItemframe(damager) == true){
+        if(checkForPlayer(damager) || checkForItemframe(damager)){
             event.setCancelled(true);
-            return;
         }
     }
 
@@ -117,19 +108,18 @@ public class AntiCreeperGrief implements Listener {
     public void onCreeperDamageHanging(HangingBreakByEntityEvent event){
         if(!(event.getRemover().getType() == EntityType.CREEPER)) return;
         Entity remover = event.getRemover();
-        if(checkForPlayer(remover) || checkForItemframe(remover) == true){
+        if(checkForPlayer(remover) || checkForItemframe(remover)){
             event.setCancelled(true);
-            return;
         }
     }
 
     @EventHandler
     public void onCreeperItemHold(PlayerInteractEvent event){
-        if(event.hasItem()){
+        if(event.hasItem() && event.getItem().hasItemMeta()){
             if(event.getItem().getItemMeta().getPersistentDataContainer().has(creeperitemkey, PersistentDataType.INTEGER)){
                 if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     Player player = event.getPlayer();
-                    if (checkForItemframe(player) == true) {
+                    if (checkForItemframe(player)) {
                         player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
                                 .append(Component.text("Save",NamedTextColor.GREEN))
                                 .append(Component.text(" ]",NamedTextColor.GOLD)));
@@ -147,7 +137,7 @@ public class AntiCreeperGrief implements Listener {
         List<Entity> playernearby = creeper.getNearbyEntities(8D,8D,8D);
         for(Entity entity : playernearby){
             if(entity instanceof Player player) {
-                if(hasCreeperItem(player) == true){
+                if(hasCreeperItem(player)){
                     return true;
                 }
             }
@@ -174,9 +164,8 @@ public class AntiCreeperGrief implements Listener {
     private static boolean hasCreeperItem(final Player player) {
         final PlayerInventory inv = player.getInventory();
         final ItemStack[] contents = inv.getContents();
-        for (int i = 0; i < contents.length; i++){
-            final ItemStack stack = contents[i];
-            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(creeperitemkey)){
+        for (final ItemStack stack : contents) {
+            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(creeperitemkey)) {
                 return true;
             }
         }
