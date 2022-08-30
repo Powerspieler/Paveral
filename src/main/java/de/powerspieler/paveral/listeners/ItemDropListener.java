@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
 public class ItemDropListener implements Listener {
-    @EventHandler
+    /*@EventHandler
     public void onItemDrop(PlayerDropItemEvent event){
         Player player = event.getPlayer();
         if(event.getItemDrop().getItemStack().getType() == Material.STICK){
@@ -18,5 +18,5 @@ public class ItemDropListener implements Listener {
                 player.sendMessage("Stick auf Lodestone gedroppt!");
             }
         }
-    }
+    }*/
 }
