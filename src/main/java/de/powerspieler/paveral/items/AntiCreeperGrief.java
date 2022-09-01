@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -17,12 +18,26 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 import java.util.Random;
 
-public class AntiCreeperGrief implements Listener {
+public class AntiCreeperGrief implements Listener, Items {
+
+    private static final NamespacedKey ITEMTYPE = new NamespacedKey(Paveral.getPlugin(), "itemtype");
+
+    @Override
+    public ItemStack build() {
+        ItemStack creeperitem = new ItemStack(Material.JIGSAW);
+        ItemMeta creeperitemmeta = creeperitem.getItemMeta();
+        creeperitemmeta.getPersistentDataContainer().set(ITEMTYPE, PersistentDataType.STRING, "anticreepergrief");
+        creeperitemmeta.setCustomModelData(1);
+        creeperitem.setItemMeta(creeperitemmeta);
+        return creeperitem;
+    }
+
     // Convert Random Int to ColorType
     private Color getColor(int i) {
         Color c = null;
@@ -81,8 +96,6 @@ public class AntiCreeperGrief implements Listener {
         return c;
     }
     private Entity creeper;
-    private static final NamespacedKey creeperitemkey = new NamespacedKey(Paveral.getPlugin(), "creeperitem");
-
 
 
     @EventHandler // handle CreeperExplosions
@@ -117,7 +130,7 @@ public class AntiCreeperGrief implements Listener {
     @EventHandler
     public void onCreeperItemHold(PlayerInteractEvent event){
         if(event.hasItem() && event.getItem().hasItemMeta()){
-            if(event.getItem().getItemMeta().getPersistentDataContainer().has(creeperitemkey, PersistentDataType.INTEGER)){
+            if(event.getItem().getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING).equals("anticreepergrief")){
                 if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     Player player = event.getPlayer();
                     if (checkForItemframe(player)) {
@@ -152,7 +165,7 @@ public class AntiCreeperGrief implements Listener {
         for(Entity entity : itemframenearby){
             if(entity instanceof ItemFrame itemframe){
                 if(itemframe.getItem().hasItemMeta()){
-                    if(itemframe.getItem().getItemMeta().getPersistentDataContainer().has(creeperitemkey, PersistentDataType.INTEGER)){
+                    if(itemframe.getItem().getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING).equals("anticreepergrief")){
                         return true;
                     }
                 }
@@ -166,7 +179,7 @@ public class AntiCreeperGrief implements Listener {
         final PlayerInventory inv = player.getInventory();
         final ItemStack[] contents = inv.getContents();
         for (final ItemStack stack : contents) {
-            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(creeperitemkey)) {
+            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(ITEMTYPE) && stack.getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING).equals("anticreepergrief")) {
                 return true;
             }
         }
@@ -187,4 +200,5 @@ public class AntiCreeperGrief implements Listener {
         fw.setFireworkMeta(fwm);
         fw.detonate();
     }
+
 }

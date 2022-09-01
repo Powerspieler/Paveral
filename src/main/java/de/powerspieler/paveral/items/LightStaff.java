@@ -21,32 +21,36 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.List;
 import java.util.Objects;
 
+
+
 public class LightStaff implements Listener,Items {
+
+    private static final NamespacedKey ITEMTYPE = new NamespacedKey(Paveral.getPlugin(), "itemtype");
+
 
     // Lightstaff ItemStack
     public ItemStack build(){
         ItemStack lightstaff = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
         ItemMeta lightstaffmeta = lightstaff.getItemMeta();
-        lightstaffmeta.getPersistentDataContainer().set(lightstaffkey, PersistentDataType.INTEGER, 1);
-        lightstaffmeta.getPersistentDataContainer().set(lightblocklevel, PersistentDataType.INTEGER, 15);
+        lightstaffmeta.getPersistentDataContainer().set(ITEMTYPE, PersistentDataType.STRING, "lightstaff");
+        lightstaffmeta.getPersistentDataContainer().set(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER, 15);
         lightstaffmeta.setCustomModelData(4);
         lightstaff.setItemMeta(lightstaffmeta);
         return lightstaff;
     }
 
-    private static final NamespacedKey lightstaffkey = new NamespacedKey(Paveral.getPlugin(), "lightstaff");
-    private static final NamespacedKey lightblockmarker = new NamespacedKey(Paveral.getPlugin(), "lightblock");
-    private static final NamespacedKey lightblocklevel = new NamespacedKey(Paveral.getPlugin(), "lightlevel");
+    private static final NamespacedKey LIGHTBLOCKMARKER = new NamespacedKey(Paveral.getPlugin(), "lightblock");
+    private static final NamespacedKey LIGHTBLOCKLEVEL = new NamespacedKey(Paveral.getPlugin(), "lightlevel");
     private static boolean particlecooldown;
 
    // Placement and Removal
     @EventHandler
     public void onPlayerRightclick(PlayerInteractEvent event){
-        if(event.hasItem()){
-            if(Objects.requireNonNull(event.getItem()).getItemMeta().getPersistentDataContainer().has(lightstaffkey, PersistentDataType.INTEGER)){
+        if(event.hasItem() && event.getItem().hasItemMeta() && event.getItem().getItemMeta().getPersistentDataContainer().has(ITEMTYPE)){
+            if(event.getItem().getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING).equals("lightstaff")){
                 if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
                     Location location = Objects.requireNonNull(event.getClickedBlock()).getLocation();
-                    int lightlevel = event.getItem().getItemMeta().getPersistentDataContainer().get(lightblocklevel, PersistentDataType.INTEGER);
+                    int lightlevel = event.getItem().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
                     switch (event.getBlockFace()) {
                         case UP -> location.add(0, 1, 0);
                         case DOWN -> location.add(0, -1, 0);
@@ -67,7 +71,7 @@ public class LightStaff implements Listener,Items {
         Player player = event.getPlayer();
         ItemStack MainHand = player.getInventory().getItemInMainHand();
         ItemStack OffHand = player.getInventory().getItemInOffHand();
-        if(MainHand.hasItemMeta() && MainHand.getItemMeta().getPersistentDataContainer().has(lightstaffkey, PersistentDataType.INTEGER) || OffHand.hasItemMeta() && OffHand.getItemMeta().getPersistentDataContainer().has(lightstaffkey, PersistentDataType.INTEGER)){
+        if((MainHand.hasItemMeta() && MainHand.getItemMeta().getPersistentDataContainer().has(ITEMTYPE) && MainHand.getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING).equals("lightstaff")) || OffHand.hasItemMeta() && (OffHand.getItemMeta().getPersistentDataContainer().has(ITEMTYPE) && OffHand.getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING).equals("lightstaff"))){
             if(!particlecooldown) {
                 particlecooldown = true;
                 Bukkit.getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), new Runnable() {
@@ -79,7 +83,7 @@ public class LightStaff implements Listener,Items {
                 List<Entity> entityList = player.getNearbyEntities(16D,16D,16D);
                 for(Entity entity : entityList){
                     if(entity instanceof Marker marker){
-                        if(marker.getPersistentDataContainer().has(lightblockmarker, PersistentDataType.INTEGER)){
+                        if(marker.getPersistentDataContainer().has(LIGHTBLOCKMARKER, PersistentDataType.INTEGER)){
                             if(marker.getLocation().getBlock().getType() == Material.LIGHT) {
                                 Location particlelocation = marker.getLocation();
                                 marker.getWorld().spawnParticle(Particle.BLOCK_MARKER, particlelocation, 1, marker.getLocation().getBlock().getBlockData());
@@ -93,9 +97,9 @@ public class LightStaff implements Listener,Items {
 
             int lightlevel = 0;
             if(player.getInventory().getItemInOffHand().hasItemMeta()) {
-                lightlevel = player.getInventory().getItemInOffHand().getItemMeta().getPersistentDataContainer().get(lightblocklevel, PersistentDataType.INTEGER);
+                lightlevel = player.getInventory().getItemInOffHand().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
             } else if (player.getInventory().getItemInMainHand().hasItemMeta()){
-                lightlevel = player.getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(lightblocklevel, PersistentDataType.INTEGER);
+                lightlevel = player.getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
             }
             showActionbar(player, lightlevel);
         }
@@ -107,10 +111,10 @@ public class LightStaff implements Listener,Items {
     public void onPlayerLeftClick(PlayerInteractEvent event){
         if(event.getAction().isLeftClick() && event.hasItem()){
             ItemStack lightstaff = event.getItem();
-            if(lightstaff.hasItemMeta()){
+            if(lightstaff.hasItemMeta() && lightstaff.getItemMeta().getPersistentDataContainer().has(ITEMTYPE)){
                 ItemMeta lightstaffmeta = lightstaff.getItemMeta();
-                if(event.getItem().getItemMeta().getPersistentDataContainer().has(lightblocklevel)){
-                    int lightlevel = event.getItem().getItemMeta().getPersistentDataContainer().get(lightblocklevel, PersistentDataType.INTEGER);
+                if(event.getItem().getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)){
+                    int lightlevel = event.getItem().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
                     if(event.getPlayer().isSneaking()){
                         lightlevel--;
                         if(lightlevel < 1){
@@ -123,7 +127,7 @@ public class LightStaff implements Listener,Items {
                             lightlevel = 1;
                         }
                     }
-                    lightstaffmeta.getPersistentDataContainer().set(lightblocklevel, PersistentDataType.INTEGER, lightlevel);
+                    lightstaffmeta.getPersistentDataContainer().set(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER, lightlevel);
                     lightstaff.add().setItemMeta(lightstaffmeta);
                     showActionbar(event.getPlayer(), lightlevel);
                     event.setCancelled(true);
@@ -172,7 +176,7 @@ public class LightStaff implements Listener,Items {
                     location.getWorld().spawnParticle(Particle.BLOCK_MARKER, location, 1, block.getBlockData());
 
                     location.getWorld().spawn(location, Marker.class, marker -> {
-                        marker.getPersistentDataContainer().set(lightblockmarker, PersistentDataType.INTEGER, 1);
+                        marker.getPersistentDataContainer().set(LIGHTBLOCKMARKER, PersistentDataType.INTEGER, 1);
                     });
                 }
             }, 1);
