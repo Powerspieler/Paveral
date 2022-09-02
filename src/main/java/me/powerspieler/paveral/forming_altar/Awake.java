@@ -13,12 +13,15 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 public class Awake implements Listener {
 
     private static HashSet<Material> itemlist;
     public static final NamespacedKey FORMING_CANDIDATE = new NamespacedKey(Paveral.getPlugin(), "forming_candidate");
+    public static final NamespacedKey ALREADY_FORMING = new NamespacedKey(Paveral.getPlugin(), "already_forming");
 
     public Awake(){
         itemlist = new HashSet<>(20);
@@ -26,15 +29,22 @@ public class Awake implements Listener {
         itemlist.add(Material.STICK);
         itemlist.add(Material.ENCHANTED_BOOK);
         itemlist.add(Material.NETHERITE_SCRAP);
-        // CreeperItem
+        // CreeperItem (3)
         itemlist.add(Material.CREEPER_HEAD);
         itemlist.add(Material.FIREWORK_STAR);
         itemlist.add(Material.SCULK_SENSOR);
-        // Lightstaff
+        // Lightstaff (4)
         itemlist.add(Material.IRON_INGOT);
         itemlist.add(Material.COPPER_INGOT);
         itemlist.add(Material.REDSTONE_LAMP);
         itemlist.add(Material.WITHER_ROSE);
+        // Bedrock Breaker (6)
+        itemlist.add(Material.OBSIDIAN);
+        itemlist.add(Material.PISTON);
+        itemlist.add(Material.TNT);
+        itemlist.add(Material.LEVER);
+        itemlist.add(Material.OAK_TRAPDOOR);
+        itemlist.add(Material.ANCIENT_DEBRIS);
     }
 
 
@@ -51,8 +61,10 @@ public class Awake implements Listener {
                         layingon.add(0,-1,0);
                         if(layingon.getBlock().getType() == Material.LODESTONE){
                             if(onValidAltar(layingon)){
-                                itementity.getPersistentDataContainer().set(FORMING_CANDIDATE, PersistentDataType.INTEGER, 1);
-                                Bukkit.getPluginManager().callEvent(new FormingItemOnAltar(itementity, itementity.getLocation().getBlock().getLocation().add(0.5,-0.5,0.5)));
+                                if(isAltarAvailable(itementity.getLocation())){
+                                    itementity.getPersistentDataContainer().set(FORMING_CANDIDATE, PersistentDataType.INTEGER, 1);
+                                    Bukkit.getPluginManager().callEvent(new FormingItemOnAltar(itementity, itementity.getLocation().getBlock().getLocation().add(0.5,-0.5,0.5)));
+                                }
                             }
                         }
                         cancel();
@@ -130,5 +142,11 @@ public class Awake implements Listener {
             }
         }
         return true;
+    }
+
+    private boolean isAltarAvailable(Location lodestone){
+        Collection<Item> raw = lodestone.getNearbyEntitiesByType(Item.class,5, 5,5);
+        List<Item> itemsforming = raw.stream().filter(item -> item.getPersistentDataContainer().has(ALREADY_FORMING)).toList();
+        return itemsforming.isEmpty();
     }
 }

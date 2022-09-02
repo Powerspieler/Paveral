@@ -169,10 +169,7 @@ public class LightStaff implements Listener,Items {
                     lightstaff.add().setItemMeta(lightstaffmeta);
                     showActionbar(event.getPlayer(), lightlevel);
                     event.setCancelled(true);
-
-
                 }
-
             }
         }
     }

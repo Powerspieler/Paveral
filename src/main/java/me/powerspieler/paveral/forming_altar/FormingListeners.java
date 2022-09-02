@@ -3,6 +3,7 @@ package me.powerspieler.paveral.forming_altar;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
 import me.powerspieler.paveral.items.AntiCreeperGrief;
+import me.powerspieler.paveral.items.BedrockBreaker;
 import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.LightStaff;
 import net.kyori.adventure.key.Key;
@@ -19,13 +20,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.Collection;
 import java.util.List;
 
+import static me.powerspieler.paveral.forming_altar.Awake.ALREADY_FORMING;
+
 public class FormingListeners implements Listener {
+
+
 
     // FOR FUTURE USE :) // private static final NamespacedKey ITEMTYPE = new NamespacedKey(Paveral.getPlugin(), "itemtype");
 
@@ -61,9 +67,24 @@ public class FormingListeners implements Listener {
                     formItem(event.getAltar(), formingitems, lightstaff.build());
                 }
             }
-            // Insert return; here
+            return;
         }
-        // Next Entry HERE!
+        // Bedrock Breaker
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.PISTON) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.TNT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.LEVER) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.OAK_TRAPDOOR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.ANCIENT_DEBRIS)){
+            List<Item> formingitems = items.stream()
+                    .filter(item -> {
+                        Material type = item.getItemStack().getType();
+                        return (type == Material.OBSIDIAN && item.getItemStack().getAmount() == 1) || (type == Material.PISTON && item.getItemStack().getAmount() == 2) || (type == Material.TNT  && item.getItemStack().getAmount() == 2) || (type == Material.LEVER  && item.getItemStack().getAmount() == 1) || (type == Material.OAK_TRAPDOOR  && item.getItemStack().getAmount() == 1) || (type == Material.ANCIENT_DEBRIS  && item.getItemStack().getAmount() == 4);
+                    }).toList();
+            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.PISTON) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.TNT) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.LEVER) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.OAK_TRAPDOOR) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.ANCIENT_DEBRIS)){
+                if(isCharged(event.getAltar())){
+                    Items bb = new BedrockBreaker();
+                    formItem(event.getAltar(), formingitems, bb.build());
+                }
+            }
+            // Insert return;
+        }
+        // Next Entry here!
 
     }
 
@@ -111,11 +132,10 @@ public class FormingListeners implements Listener {
             formingitem.setCanPlayerPickup(false);
             formingitem.setGravity(false);
             formingitem.setWillAge(false);
+            formingitem.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, formingitem.getLocation(), 100, 0,0,0,0.3);
+            formingitem.getPersistentDataContainer().set(ALREADY_FORMING, PersistentDataType.INTEGER, 1);
         }
         location.getWorld().playSound(Sound.sound(Key.key("entity.wither.spawn"), Sound.Source.AMBIENT, 1f, 1f));
-        for(Item formingitem : formingitems){
-            formingitem.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, formingitem.getLocation(), 100, 0,0,0,0.3);
-        }
         BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Forming...", BarColor.PURPLE, BarStyle.SOLID);
         Collection<Entity> entities = location.getNearbyEntities(25,25,25);
         for(Entity entity : entities){
@@ -136,6 +156,7 @@ public class FormingListeners implements Listener {
                         formingitem.setCanPlayerPickup(true);
                         formingitem.setGravity(true);
                         formingitem.setWillAge(true);
+                        formingitem.getPersistentDataContainer().remove(ALREADY_FORMING);
                     }
                     location.getWorld().playSound(Sound.sound(Key.key("entity.lightning_bolt.impact"), Sound.Source.AMBIENT, 1f, 0.75f));
                     location.getWorld().playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 0.25f));

@@ -5,6 +5,7 @@ import me.powerspieler.paveral.commands.TestCommand;
 import me.powerspieler.paveral.forming_altar.Awake;
 import me.powerspieler.paveral.forming_altar.FormingListeners;
 import me.powerspieler.paveral.items.AntiCreeperGrief;
+import me.powerspieler.paveral.items.BedrockBreaker;
 import me.powerspieler.paveral.items.LightStaff;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -24,8 +25,11 @@ public final class Paveral extends JavaPlugin {
         Objects.requireNonNull(getCommand("cooldown")).setExecutor(new CooldownCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
+        // Items
         pm.registerEvents(new AntiCreeperGrief(), this);
         pm.registerEvents(new LightStaff(), this);
+        pm.registerEvents(new BedrockBreaker(), this);
+        // Forming Altar
         pm.registerEvents(new Awake(), this);
         pm.registerEvents(new FormingListeners(), this);
     }

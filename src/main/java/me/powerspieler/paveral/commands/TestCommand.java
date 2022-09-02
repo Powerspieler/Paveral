@@ -1,21 +1,29 @@
 package me.powerspieler.paveral.commands;
 
+import me.powerspieler.paveral.items.BedrockBreaker;
+import me.powerspieler.paveral.items.Items;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
+import java.util.List;
+
+import static me.powerspieler.paveral.forming_altar.Awake.ALREADY_FORMING;
 
 public class TestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
-            RespawnAnchor soos = (RespawnAnchor) player.getLocation().getBlock().getRelative(0,-1,0).getBlockData();
-            soos.setCharges(2);
-
-
-
+            Items bb = new BedrockBreaker();
+            player.getInventory().addItem(bb.build());
             /*
             // Creeperitem Give
             Items anticreeperitem = new AntiCreeperGrief();
@@ -42,5 +50,4 @@ public class TestCommand implements CommandExecutor {
         }
         return false;
     }
-
 }
