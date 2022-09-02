@@ -1,7 +1,7 @@
-package de.powerspieler.paveral.forming_altar;
+package me.powerspieler.paveral.forming_altar;
 
-import de.powerspieler.paveral.Paveral;
-import de.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
+import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.*;

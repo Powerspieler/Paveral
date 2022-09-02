@@ -1,4 +1,4 @@
-package de.powerspieler.paveral.items;
+package me.powerspieler.paveral.items;
 
 import org.bukkit.inventory.ItemStack;
 

@@ -1,10 +1,10 @@
-package de.powerspieler.paveral.forming_altar;
+package me.powerspieler.paveral.forming_altar;
 
-import de.powerspieler.paveral.Paveral;
-import de.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
-import de.powerspieler.paveral.items.AntiCreeperGrief;
-import de.powerspieler.paveral.items.Items;
-import de.powerspieler.paveral.items.LightStaff;
+import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
+import me.powerspieler.paveral.items.AntiCreeperGrief;
+import me.powerspieler.paveral.items.Items;
+import me.powerspieler.paveral.items.LightStaff;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.*;
@@ -25,8 +25,6 @@ import org.bukkit.util.Vector;
 import java.util.Collection;
 import java.util.List;
 
-import static de.powerspieler.paveral.forming_altar.Awake.FORMING_CANDIDATE;
-
 public class FormingListeners implements Listener {
 
     // FOR FUTURE USE :) // private static final NamespacedKey ITEMTYPE = new NamespacedKey(Paveral.getPlugin(), "itemtype");
@@ -34,7 +32,7 @@ public class FormingListeners implements Listener {
     @EventHandler
     public void onIngredientDrop(FormingItemOnAltar event){
         Collection<Item> raw = event.getAltar().getNearbyEntitiesByType(Item.class, 1,1,1);
-        List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(FORMING_CANDIDATE)).toList();
+        List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(Awake.FORMING_CANDIDATE)).toList();
         // AntiCreeperGrief
         if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.CREEPER_HEAD) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.FIREWORK_STAR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.SCULK_SENSOR)){
             List<Item> formingitems = items.stream()

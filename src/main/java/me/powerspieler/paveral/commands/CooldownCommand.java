@@ -1,4 +1,4 @@
-package de.powerspieler.paveral.commands;
+package me.powerspieler.paveral.commands;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;

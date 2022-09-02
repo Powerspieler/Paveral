@@ -1,11 +1,11 @@
-package de.powerspieler.paveral;
+package me.powerspieler.paveral;
 
-import de.powerspieler.paveral.commands.CooldownCommand;
-import de.powerspieler.paveral.commands.TestCommand;
-import de.powerspieler.paveral.forming_altar.Awake;
-import de.powerspieler.paveral.forming_altar.FormingListeners;
-import de.powerspieler.paveral.items.AntiCreeperGrief;
-import de.powerspieler.paveral.items.LightStaff;
+import me.powerspieler.paveral.commands.CooldownCommand;
+import me.powerspieler.paveral.commands.TestCommand;
+import me.powerspieler.paveral.forming_altar.Awake;
+import me.powerspieler.paveral.forming_altar.FormingListeners;
+import me.powerspieler.paveral.items.AntiCreeperGrief;
+import me.powerspieler.paveral.items.LightStaff;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;

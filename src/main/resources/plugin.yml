@@ -1,6 +1,6 @@
 name: Paveral
 version: '${project.version}'
-main: de.powerspieler.paveral.Paveral
+main: me.powerspieler.paveral.Paveral
 api-version: 1.19
 
 commands:

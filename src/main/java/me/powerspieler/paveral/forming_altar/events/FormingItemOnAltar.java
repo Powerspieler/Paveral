@@ -1,4 +1,4 @@
-package de.powerspieler.paveral.forming_altar.events;
+package me.powerspieler.paveral.forming_altar.events;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Item;

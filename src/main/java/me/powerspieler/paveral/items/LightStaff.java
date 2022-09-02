@@ -1,6 +1,6 @@
-package de.powerspieler.paveral.items;
+package me.powerspieler.paveral.items;
 
-import de.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.Paveral;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
