@@ -5,9 +5,11 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Levelled;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,9 +17,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,6 +39,43 @@ public class LightStaff implements Listener,Items {
         lightstaffmeta.getPersistentDataContainer().set(ITEMTYPE, PersistentDataType.STRING, "lightstaff");
         lightstaffmeta.getPersistentDataContainer().set(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER, 15);
         lightstaffmeta.setCustomModelData(4);
+
+        lightstaffmeta.displayName(Component.text("Lightstaff", NamedTextColor.GOLD)
+                .decoration(TextDecoration.ITALIC, false));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Press ")
+                .decoration(TextDecoration.ITALIC, false)
+                .append(
+                        Component.keybind("key.use", NamedTextColor.YELLOW)
+                                .decoration(TextDecoration.ITALIC, false)
+                )
+                .append(Component.text(" to place and remove lightblocks")));
+        lore.add(Component.text("Press (")
+                .decoration(TextDecoration.ITALIC, false)
+                .append(
+                        Component.keybind("key.sneak", NamedTextColor.GREEN)
+                                .decoration(TextDecoration.ITALIC, false)
+                )
+                .append(Component.text(" + ) ")
+                        .decoration(TextDecoration.ITALIC, false))
+                .append(Component.keybind("key.attack", NamedTextColor.YELLOW)
+                        .decoration(TextDecoration.ITALIC, false)
+                        )
+                .append(Component.text(" to change lightlevel")
+                        .decoration(TextDecoration.ITALIC,false)));
+        lore.add(Component.text(""));
+        lore.add(Component.text("Enchantable with ")
+                .decoration(TextDecoration.ITALIC, false)
+                .append(Component.text("Unbreaking",NamedTextColor.GRAY)
+                        .decoration(TextDecoration.ITALIC, false)
+                )
+                .append(Component.text(" and ")
+                        .decoration(TextDecoration.ITALIC, false)
+                )
+                .append(Component.text("Mending", NamedTextColor.GRAY)
+                        .decoration(TextDecoration.ITALIC, false)));
+        lightstaffmeta.lore(lore);
+
         lightstaff.setItemMeta(lightstaffmeta);
         return lightstaff;
     }
@@ -46,20 +87,22 @@ public class LightStaff implements Listener,Items {
    // Placement and Removal
     @EventHandler
     public void onPlayerRightclick(PlayerInteractEvent event){
-        if(event.hasItem() && event.getItem().hasItemMeta() && event.getItem().getItemMeta().getPersistentDataContainer().has(ITEMTYPE)){
-            if(event.getItem().getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING).equals("lightstaff")){
+        if(event.getItem() != null && event.getItem().hasItemMeta() && event.getItem().getItemMeta().getPersistentDataContainer().has(ITEMTYPE)){
+            if(Objects.equals(event.getItem().getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "lightstaff")){
                 if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
-                    Location location = Objects.requireNonNull(event.getClickedBlock()).getLocation();
-                    int lightlevel = event.getItem().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
-                    switch (event.getBlockFace()) {
-                        case UP -> location.add(0, 1, 0);
-                        case DOWN -> location.add(0, -1, 0);
-                        case NORTH -> location.add(0, 0, -1);
-                        case SOUTH -> location.add(0, 0, 1);
-                        case WEST -> location.add(-1, 0, 0);
-                        case EAST -> location.add(1, 0, 0);
+                    if(event.getClickedBlock() != null && event.getItem().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER) != null){
+                        Location location = event.getClickedBlock().getLocation();
+                        int lightlevel = event.getItem().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
+                        switch (event.getBlockFace()) {
+                            case UP -> location.add(0, 1, 0);
+                            case DOWN -> location.add(0, -1, 0);
+                            case NORTH -> location.add(0, 0, -1);
+                            case SOUTH -> location.add(0, 0, 1);
+                            case WEST -> location.add(-1, 0, 0);
+                            case EAST -> location.add(1, 0, 0);
+                        }
+                        setLightblock(location, lightlevel, event.getItem());
                     }
-                    setLightblock(location, lightlevel);
                 }
             }
         }
@@ -71,15 +114,10 @@ public class LightStaff implements Listener,Items {
         Player player = event.getPlayer();
         ItemStack MainHand = player.getInventory().getItemInMainHand();
         ItemStack OffHand = player.getInventory().getItemInOffHand();
-        if((MainHand.hasItemMeta() && MainHand.getItemMeta().getPersistentDataContainer().has(ITEMTYPE) && MainHand.getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING).equals("lightstaff")) || OffHand.hasItemMeta() && (OffHand.getItemMeta().getPersistentDataContainer().has(ITEMTYPE) && OffHand.getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING).equals("lightstaff"))){
+        if((MainHand.hasItemMeta() && MainHand.getItemMeta().getPersistentDataContainer().has(ITEMTYPE) && Objects.equals(MainHand.getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "lightstaff")) || OffHand.hasItemMeta() && (OffHand.getItemMeta().getPersistentDataContainer().has(ITEMTYPE) && Objects.equals(OffHand.getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "lightstaff"))){
             if(!particlecooldown) {
                 particlecooldown = true;
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        particlecooldown = false;
-                    }
-                }, 80);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), () -> particlecooldown = false, 80);
                 List<Entity> entityList = player.getNearbyEntities(16D,16D,16D);
                 for(Entity entity : entityList){
                     if(entity instanceof Marker marker){
@@ -148,7 +186,8 @@ public class LightStaff implements Listener,Items {
     }
 
 
-    private void setLightblock(Location location, int lightlevel){
+    private void setLightblock(Location location, int lightlevel, ItemStack lightstaff){
+        Damageable itemdamage = (Damageable) lightstaff.getItemMeta();
         if(location.getBlock().getType() == Material.LIGHT){
 
             Location particlelocation = location.add(0.5,0.5,0.5);
@@ -158,28 +197,37 @@ public class LightStaff implements Listener,Items {
 
             location.getWorld().spawnParticle(Particle.BLOCK_MARKER, particlelocation, 1, Material.BARRIER.createBlockData());
 
-        } else if(location.getBlock().getType() == Material.AIR) {
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), new Runnable() {
+        } else if(location.getBlock().getType() == Material.AIR && itemdamage.getDamage() < 100) {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), () -> {
 
-                @Override
-                public void run() {
+                Block block = location.getBlock();
+                block.setType(Material.LIGHT);
 
-                    Block block = location.getBlock();
-                    block.setType(Material.LIGHT);
+                Levelled light = (Levelled) block.getBlockData();
+                light.setLevel(lightlevel);
+                block.setBlockData(light);
+                location.getWorld().playSound(Sound.sound(Key.key("item.flintandsteel.use"), Sound.Source.BLOCK, 1f, 1f));
+                applyDamage(lightstaff);
 
-                    Levelled light = (Levelled) block.getBlockData();
-                    light.setLevel(lightlevel);
-                    block.setBlockData(light);
-                    location.getWorld().playSound(Sound.sound(Key.key("item.flintandsteel.use"), Sound.Source.BLOCK, 1f, 1f));
+                location.add(0.5, 0.5, 0.5);
+                location.getWorld().spawnParticle(Particle.BLOCK_MARKER, location, 1, block.getBlockData());
 
-                    location.add(0.5, 0.5, 0.5);
-                    location.getWorld().spawnParticle(Particle.BLOCK_MARKER, location, 1, block.getBlockData());
-
-                    location.getWorld().spawn(location, Marker.class, marker -> {
-                        marker.getPersistentDataContainer().set(LIGHTBLOCKMARKER, PersistentDataType.INTEGER, 1);
-                    });
-                }
+                location.getWorld().spawn(location, Marker.class, marker -> marker.getPersistentDataContainer().set(LIGHTBLOCKMARKER, PersistentDataType.INTEGER, 1));
             }, 1);
+        }
+    }
+
+    private void applyDamage(ItemStack item){
+        int unbreakinglvl = item.getEnchantmentLevel(Enchantment.DURABILITY);
+        boolean shoulddamage = ((Math.random()) < (1 / (unbreakinglvl + 1.0)));
+        if(shoulddamage){
+            Damageable itemvalue = (Damageable) item.getItemMeta();
+            int damage = (itemvalue.getDamage() + 1);
+            if(damage > 100){
+                damage = 100;
+            }
+            itemvalue.setDamage(damage);
+            item.setItemMeta(itemvalue);
         }
     }
 }

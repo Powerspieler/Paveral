@@ -4,6 +4,7 @@ import de.powerspieler.paveral.Paveral;
 import de.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
 import de.powerspieler.paveral.items.AntiCreeperGrief;
 import de.powerspieler.paveral.items.Items;
+import de.powerspieler.paveral.items.LightStaff;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.*;
@@ -50,7 +51,21 @@ public class FormingListeners implements Listener {
             return;
         }
         // Lightstaff
-
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.COPPER_INGOT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.REDSTONE_LAMP) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.WITHER_ROSE)){
+            List<Item> formingitems = items.stream()
+                    .filter(item -> {
+                        Material type = item.getItemStack().getType();
+                        return (type == Material.IRON_INGOT && item.getItemStack().getAmount() == 2) || (type == Material.COPPER_INGOT && item.getItemStack().getAmount() == 1) || (type == Material.REDSTONE_LAMP  && item.getItemStack().getAmount() == 1) || (type == Material.WITHER_ROSE  && item.getItemStack().getAmount() == 2);
+                    }).toList();
+            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.COPPER_INGOT) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.REDSTONE_LAMP) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.WITHER_ROSE)){
+                if(isCharged(event.getAltar())){
+                    Items lightstaff = new LightStaff();
+                    formItem(event.getAltar(), formingitems, lightstaff.build());
+                }
+            }
+            // Insert return; here
+        }
+        // Next Entry HERE!
 
     }
 
