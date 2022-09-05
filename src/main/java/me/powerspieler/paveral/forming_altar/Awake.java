@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -116,12 +116,12 @@ public class Awake implements Listener {
                     }
                 }
                 if((Math.abs(x) == 2 && Math.abs(z) == 1) || (Math.abs(x) == 1 && Math.abs(z) == 2)){
-                    if(!(center.getRelative(x,0,z).getType() == Material.END_PORTAL_FRAME)){
+                    if(!(Tag.SLABS.getValues().contains(center.getRelative(x,0,z).getType()))){
                         return false;
                     }
                 }
                 if((Math.abs(x) == 2 && Math.abs(z) == 0) || (Math.abs(x) == 0 && Math.abs(z) == 2)){
-                    if(!(center.getRelative(x,0,z).getType() == Material.END_PORTAL_FRAME)){
+                    if(!(center.getRelative(x,0,z).getType() == Material.PURPUR_PILLAR)){
                         return false;
                     }
                 }
@@ -131,9 +131,9 @@ public class Awake implements Listener {
                     }
                 }
                 if(Math.abs(x) == 1 && Math.abs(z) == 1){
-                    if(!(center.getRelative(x,0,z).getType() == Material.CUT_COPPER_SLAB)){
+                    if(!(center.getRelative(x,0,z).getType() == Material.CUT_COPPER)){
                         if(!(center.getRelative(x,0,z).getType() == Material.AIR)){
-                            center.getWorld().spawnParticle(Particle.WAX_ON, center.getLocation().add(x + 0.5,0.5,z + 0.5), 50, 0.25,0,0.25, 1);
+                            center.getWorld().spawnParticle(Particle.WAX_ON, center.getLocation().add(x + 0.5,1,z + 0.5), 50, 0.25,0,0.25, 1);
                             center.getWorld().playSound(Sound.sound(Key.key("item.axe.scrape"), Sound.Source.BLOCK, 1f, 1f));
                         }
                         return false;
@@ -145,7 +145,7 @@ public class Awake implements Listener {
     }
 
     private boolean isAltarAvailable(Location lodestone){
-        Collection<Item> raw = lodestone.getNearbyEntitiesByType(Item.class,5, 5,5);
+        List<Item> raw = new ArrayList<>(lodestone.getNearbyEntitiesByType(Item.class,5, 5,5));
         List<Item> itemsforming = raw.stream().filter(item -> item.getPersistentDataContainer().has(ALREADY_FORMING)).toList();
         return itemsforming.isEmpty();
     }

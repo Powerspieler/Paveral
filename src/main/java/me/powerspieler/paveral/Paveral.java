@@ -6,6 +6,8 @@ import me.powerspieler.paveral.forming_altar.Awake;
 import me.powerspieler.paveral.forming_altar.FormingListeners;
 import me.powerspieler.paveral.items.AntiCreeperGrief;
 import me.powerspieler.paveral.items.BedrockBreaker;
+import me.powerspieler.paveral.items.Chunkloader;
+import me.powerspieler.paveral.items.enchanced.Knockback;
 import me.powerspieler.paveral.items.LightStaff;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -27,8 +29,13 @@ public final class Paveral extends JavaPlugin {
         PluginManager pm = Bukkit.getPluginManager();
         // Items
         pm.registerEvents(new AntiCreeperGrief(), this);
-        pm.registerEvents(new LightStaff(), this);
         pm.registerEvents(new BedrockBreaker(), this);
+        pm.registerEvents(new Chunkloader(), this);
+        pm.registerEvents(new LightStaff(), this);
+
+        // Enhanced Enchantments
+        pm.registerEvents(new Knockback(), this);
+
         // Forming Altar
         pm.registerEvents(new Awake(), this);
         pm.registerEvents(new FormingListeners(), this);

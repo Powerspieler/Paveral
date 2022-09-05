@@ -1,13 +1,12 @@
 package me.powerspieler.paveral.items;
 
-import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,14 +26,11 @@ import java.util.Objects;
 import java.util.Random;
 
 public class AntiCreeperGrief implements Listener, Items {
-
-    private static final NamespacedKey ITEMTYPE = new NamespacedKey(Paveral.getPlugin(), "itemtype");
-
     @Override
     public ItemStack build() {
         ItemStack creeperitem = new ItemStack(Material.JIGSAW);
         ItemMeta creeperitemmeta = creeperitem.getItemMeta();
-        creeperitemmeta.getPersistentDataContainer().set(ITEMTYPE, PersistentDataType.STRING, "anticreepergrief");
+        creeperitemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "anticreepergrief");
         creeperitemmeta.setCustomModelData(1);
 
         creeperitemmeta.displayName(Component.text("Creeper Defuser", NamedTextColor.BLUE)
@@ -145,8 +141,8 @@ public class AntiCreeperGrief implements Listener, Items {
 
     @EventHandler
     public void onCreeperItemHold(PlayerMoveEvent event){
-        if(event.getPlayer().getInventory().getItemInMainHand().getItemMeta() != null && event.getPlayer().getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().has(ITEMTYPE)){
-            if(Objects.equals(event.getPlayer().getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")){
+        if(event.getPlayer().getInventory().getItemInMainHand().getItemMeta() != null && event.getPlayer().getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)){
+            if(Objects.equals(event.getPlayer().getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")){
                 Player player = event.getPlayer();
                 if (checkForItemframe(player)) {
                     player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
@@ -179,7 +175,7 @@ public class AntiCreeperGrief implements Listener, Items {
         for(Entity entity : itemframenearby){
             if(entity instanceof ItemFrame itemframe){
                 if(itemframe.getItem().hasItemMeta()){
-                    if(Objects.equals(itemframe.getItem().getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")){
+                    if(Objects.equals(itemframe.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")){
                         return true;
                     }
                 }
@@ -193,7 +189,7 @@ public class AntiCreeperGrief implements Listener, Items {
         final PlayerInventory inv = player.getInventory();
         final ItemStack[] contents = inv.getContents();
         for (final ItemStack stack : contents) {
-            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(ITEMTYPE) && Objects.equals(stack.getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")) {
+            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(stack.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")) {
                 return true;
             }
         }

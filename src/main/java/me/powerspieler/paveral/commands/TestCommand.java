@@ -1,29 +1,39 @@
 package me.powerspieler.paveral.commands;
 
+import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.items.BedrockBreaker;
+import me.powerspieler.paveral.items.Chunkloader;
 import me.powerspieler.paveral.items.Items;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.data.type.RespawnAnchor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.List;
-
-import static me.powerspieler.paveral.forming_altar.Awake.ALREADY_FORMING;
-
 public class TestCommand implements CommandExecutor {
+    private static final NamespacedKey CHUNKLOADS = new NamespacedKey(Paveral.getPlugin(), "chunkloads");
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
-            Items bb = new BedrockBreaker();
-            player.getInventory().addItem(bb.build());
+            if(args.length == 1){
+                if(args[0].equalsIgnoreCase("get")){
+                    Items test = new Chunkloader();
+                    player.getInventory().addItem(test.build());
+                }
+                if(args[0].equalsIgnoreCase("remove")){
+                    player.getChunk().getPersistentDataContainer().remove(CHUNKLOADS);
+                }
+
+            } else {
+                int value = player.getChunk().getPersistentDataContainer().get(CHUNKLOADS, PersistentDataType.INTEGER);
+                Bukkit.broadcast(Component.text("Is Chunkforce loaded?: " + player.getChunk().isForceLoaded()));
+                Bukkit.broadcast(Component.text("Chunkloads Value: " + value));
+            }
+
             /*
             // Creeperitem Give
             Items anticreeperitem = new AntiCreeperGrief();

@@ -2,10 +2,8 @@ package me.powerspieler.paveral.forming_altar;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
-import me.powerspieler.paveral.items.AntiCreeperGrief;
-import me.powerspieler.paveral.items.BedrockBreaker;
-import me.powerspieler.paveral.items.Items;
-import me.powerspieler.paveral.items.LightStaff;
+import me.powerspieler.paveral.items.*;
+import me.powerspieler.paveral.items.enchanced.Knockback;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.*;
@@ -14,30 +12,29 @@ import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static me.powerspieler.paveral.forming_altar.Awake.ALREADY_FORMING;
 
 public class FormingListeners implements Listener {
 
-
-
-    // FOR FUTURE USE :) // private static final NamespacedKey ITEMTYPE = new NamespacedKey(Paveral.getPlugin(), "itemtype");
-
     @EventHandler
     public void onIngredientDrop(FormingItemOnAltar event){
-        Collection<Item> raw = event.getAltar().getNearbyEntitiesByType(Item.class, 1,1,1);
+        List<Item> raw = new ArrayList<>(event.getAltar().getNearbyEntitiesByType(Item.class, 1,1,1));
         List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(Awake.FORMING_CANDIDATE)).toList();
         // AntiCreeperGrief
         if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.CREEPER_HEAD) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.FIREWORK_STAR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.SCULK_SENSOR)){
@@ -82,10 +79,31 @@ public class FormingListeners implements Listener {
                     formItem(event.getAltar(), formingitems, bb.build());
                 }
             }
-            // Insert return;
+            return;
         }
         // Next Entry here!
 
+        // Enchaned Enchantment
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.ENCHANTED_BOOK) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
+            List<Item> formingitems = new ArrayList<>(items.stream()
+                    .filter(item -> {
+                        Material type = item.getItemStack().getType();
+                        return (type == Material.ENCHANTED_BOOK) || (type == Material.NETHERITE_SCRAP && item.getItemStack().getAmount() == 1);
+                    }).toList());
+            Optional<Item> ench_raw = formingitems.stream().filter(item -> item.getItemStack().getType() == Material.ENCHANTED_BOOK).findFirst();
+            if(ench_raw.isPresent()){
+                EnchantmentStorageMeta ench = (EnchantmentStorageMeta) ench_raw.get().getItemStack().getItemMeta();
+                // Knockback 5
+                if(ench.hasStoredEnchant(Enchantment.KNOCKBACK) && ench.getStoredEnchantLevel(Enchantment.KNOCKBACK) == 2){
+                    formingitems.add(ench_raw.get());
+                    if(isCharged(event.getAltar())){
+                        Items enh_kb = new Knockback();
+                        formItem(event.getAltar(), formingitems, enh_kb.build());
+                    }
+                }
+                // Next Enchantment Entry HERE
+            }
+        }
     }
 
     private boolean isCharged(Location location){
@@ -137,7 +155,7 @@ public class FormingListeners implements Listener {
         }
         location.getWorld().playSound(Sound.sound(Key.key("entity.wither.spawn"), Sound.Source.AMBIENT, 1f, 1f));
         BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Forming...", BarColor.PURPLE, BarStyle.SOLID);
-        Collection<Entity> entities = location.getNearbyEntities(25,25,25);
+        List<Entity> entities = new ArrayList<>(location.getNearbyEntities(25,25,25));
         for(Entity entity : entities){
             if(entity instanceof Player player){
                 progress.addPlayer(player);

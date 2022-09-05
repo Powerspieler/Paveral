@@ -1,12 +1,16 @@
 package me.powerspieler.paveral.items;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.util.Constant;
+import me.powerspieler.paveral.util.ItemsUtil;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
@@ -25,13 +29,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class BedrockBreaker implements Listener,Items {
-
-    private static final NamespacedKey ITEMTYPE = new NamespacedKey(Paveral.getPlugin(), "itemtype");
+    
     @Override
     public ItemStack build() {
         ItemStack bedrockbreaker = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
         ItemMeta bedrockbreakermeta = bedrockbreaker.getItemMeta();
-        bedrockbreakermeta.getPersistentDataContainer().set(ITEMTYPE, PersistentDataType.STRING, "bedrock_breaker");
+        bedrockbreakermeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "bedrock_breaker");
         bedrockbreakermeta.setCustomModelData(5);
 
         bedrockbreakermeta.displayName(Component.text("Bedrock Breaker", NamedTextColor.GRAY)
@@ -58,79 +61,50 @@ public class BedrockBreaker implements Listener,Items {
     }
 
     @EventHandler
-    public void onPlayerRightClick(PlayerInteractEvent event){
-        if(event.getItem() != null && Objects.equals(event.getItem().getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "bedrock_breaker")){
-            if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
+    public void onPlayerRightClick(PlayerInteractEvent event) {
+        if (event.getItem() != null && Objects.equals(event.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bedrock_breaker")) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         Damageable itemdamage = (Damageable) event.getItem().getItemMeta();
                         Block block = event.getClickedBlock();
-                        if(block != null && block.getType() == Material.BEDROCK && itemdamage.getDamage() < 100){
+                        if (block != null && block.getType() == Material.BEDROCK && itemdamage.getDamage() < 100) {
                             block.setType(Material.AIR);
-                            block.getWorld().spawnParticle(Particle.ASH, block.getLocation().add(0.5,0.5,0.5), 500, 0.25,0.25,0.25);
+                            block.getWorld().spawnParticle(Particle.ASH, block.getLocation().add(0.5, 0.5, 0.5), 500, 0.25, 0.25, 0.25);
                             block.getWorld().playSound(Sound.sound(Key.key("entity.elder_guardian.death"), Sound.Source.AMBIENT, 1f, 0.75f));
                             block.getWorld().playSound(Sound.sound(Key.key("entity.wither.break_block"), Sound.Source.AMBIENT, 1f, 0.25f));
-                            applyDamage(event.getItem());
-                        } else if(block != null && block.getType() == Material.ANCIENT_DEBRIS){
+                            ItemsUtil.applyDamage(event.getItem(), 2);
+                        } else if (block != null && block.getType() == Material.ANCIENT_DEBRIS) {
                             block.setType(Material.AIR);
-                            block.getWorld().spawnParticle(Particle.DUST_COLOR_TRANSITION, block.getLocation().add(0.5,0.5,0.5), 100, 0.25,0.25,0.25, new Particle.DustTransition(Color.BLACK, Color.WHITE,2));
+                            block.getWorld().spawnParticle(Particle.DUST_COLOR_TRANSITION, block.getLocation().add(0.5, 0.5, 0.5), 100, 0.25, 0.25, 0.25, new Particle.DustTransition(Color.BLACK, Color.WHITE, 2));
                             block.getWorld().stopSound(Sound.sound(Key.key("entity.ender_dragon.death"), Sound.Source.AMBIENT, 1f, 2f));
                             block.getWorld().playSound(Sound.sound(Key.key("block.ancient_debris.break"), Sound.Source.BLOCK, 1f, 1f));
                             block.getWorld().playSound(Sound.sound(Key.key("ui.stonecutter.take_result"), Sound.Source.AMBIENT, 1f, 0.25f));
                             block.getWorld().playSound(Sound.sound(Key.key("entity.wither.ambient"), Sound.Source.AMBIENT, 1f, 0.5f));
                             block.getWorld().playSound(Sound.sound(Key.key("entity.ender_dragon.death"), Sound.Source.AMBIENT, 1f, 2f));
-                            repair25(event.getItem());
+                            ItemsUtil.repair(event.getItem(), 25);
                         }
                     }
-                }.runTaskLater(Paveral.getPlugin(),1);
+                }.runTaskLater(Paveral.getPlugin(), 1);
             }
         }
     }
-
     @EventHandler
-    public void onMendingAttempt(PrepareAnvilEvent event){
-        if(event.getResult() != null && event.getResult().getItemMeta().getPersistentDataContainer().has(ITEMTYPE)){
-            if(Objects.equals(event.getResult().getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "bedrock_breaker")){
-
-
-
-
-
-
-
-
+    public void onMendingAttempt(PrepareAnvilEvent event) {
+        if (event.getInventory().getFirstItem() != null && event.getResult() != null && event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)) {
+            if (Objects.equals(event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bedrock_breaker")) {
                 ItemStack result = event.getResult();
                 ItemMeta resultmeta = result.getItemMeta();
-                String display = event.getInventory().getRenameText();
-                Component name = resultmeta.displayName();
-                if(event.getResult().containsEnchantment(Enchantment.MENDING)){
+                if (event.getResult().containsEnchantment(Enchantment.MENDING)) {
                     resultmeta.removeEnchant(Enchantment.MENDING);
                 }
                 result.setItemMeta(resultmeta);
                 event.setResult(result);
-
+                if (!event.getResult().containsEnchantment(Enchantment.DURABILITY)) {
+                    event.setResult(new ItemStack(Material.AIR));
+                }
             }
         }
-    }
-
-    private void applyDamage(ItemStack item){
-        int unbreakinglvl = item.getEnchantmentLevel(Enchantment.DURABILITY);
-        boolean shoulddamage = ((Math.random()) < (1 / (unbreakinglvl + 1.0)));
-        if(shoulddamage){
-            Damageable itemvalue = (Damageable) item.getItemMeta();
-            int damage = (itemvalue.getDamage() + 2);
-            if(damage > 100){
-                damage = 100;
-            }
-            itemvalue.setDamage(damage);
-            item.setItemMeta(itemvalue);
-        }
-    }
-
-    private void repair25(ItemStack item){
-        Damageable itemvalue = (Damageable) item.getItemMeta();
-        itemvalue.setDamage(itemvalue.getDamage() - 25);
-        item.setItemMeta(itemvalue);
     }
 }

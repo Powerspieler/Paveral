@@ -1,6 +1,8 @@
 package me.powerspieler.paveral.items;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.util.Constant;
+import me.powerspieler.paveral.util.ItemsUtil;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -9,8 +11,9 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Levelled;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Marker;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -28,15 +31,12 @@ import java.util.Objects;
 
 
 public class LightStaff implements Listener,Items {
-
-    private static final NamespacedKey ITEMTYPE = new NamespacedKey(Paveral.getPlugin(), "itemtype");
-
-
+    
     // Lightstaff ItemStack
     public ItemStack build(){
         ItemStack lightstaff = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
         ItemMeta lightstaffmeta = lightstaff.getItemMeta();
-        lightstaffmeta.getPersistentDataContainer().set(ITEMTYPE, PersistentDataType.STRING, "lightstaff");
+        lightstaffmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "lightstaff");
         lightstaffmeta.getPersistentDataContainer().set(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER, 15);
         lightstaffmeta.setCustomModelData(4);
 
@@ -87,8 +87,8 @@ public class LightStaff implements Listener,Items {
    // Placement and Removal
     @EventHandler
     public void onPlayerRightclick(PlayerInteractEvent event){
-        if(event.getItem() != null && event.getItem().hasItemMeta() && event.getItem().getItemMeta().getPersistentDataContainer().has(ITEMTYPE)){
-            if(Objects.equals(event.getItem().getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "lightstaff")){
+        if(event.getItem() != null && event.getItem().hasItemMeta() && event.getItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)){
+            if(Objects.equals(event.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff")){
                 if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
                     if(event.getClickedBlock() != null && event.getItem().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER) != null){
                         Location location = event.getClickedBlock().getLocation();
@@ -114,7 +114,7 @@ public class LightStaff implements Listener,Items {
         Player player = event.getPlayer();
         ItemStack MainHand = player.getInventory().getItemInMainHand();
         ItemStack OffHand = player.getInventory().getItemInOffHand();
-        if((MainHand.hasItemMeta() && MainHand.getItemMeta().getPersistentDataContainer().has(ITEMTYPE) && Objects.equals(MainHand.getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "lightstaff")) || OffHand.hasItemMeta() && (OffHand.getItemMeta().getPersistentDataContainer().has(ITEMTYPE) && Objects.equals(OffHand.getItemMeta().getPersistentDataContainer().get(ITEMTYPE, PersistentDataType.STRING), "lightstaff"))){
+        if((MainHand.hasItemMeta() && MainHand.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(MainHand.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff")) || OffHand.hasItemMeta() && (OffHand.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(OffHand.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff"))){
             if(!particlecooldown) {
                 particlecooldown = true;
                 Bukkit.getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), () -> particlecooldown = false, 80);
@@ -149,7 +149,7 @@ public class LightStaff implements Listener,Items {
     public void onPlayerLeftClick(PlayerInteractEvent event){
         if(event.getAction().isLeftClick() && event.hasItem()){
             ItemStack lightstaff = event.getItem();
-            if(lightstaff.hasItemMeta() && lightstaff.getItemMeta().getPersistentDataContainer().has(ITEMTYPE)){
+            if(lightstaff.hasItemMeta() && lightstaff.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)){
                 ItemMeta lightstaffmeta = lightstaff.getItemMeta();
                 if(event.getItem().getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)){
                     int lightlevel = event.getItem().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
@@ -204,27 +204,13 @@ public class LightStaff implements Listener,Items {
                 light.setLevel(lightlevel);
                 block.setBlockData(light);
                 location.getWorld().playSound(Sound.sound(Key.key("item.flintandsteel.use"), Sound.Source.BLOCK, 1f, 1f));
-                applyDamage(lightstaff);
+                ItemsUtil.applyDamage(lightstaff, 1);
 
                 location.add(0.5, 0.5, 0.5);
                 location.getWorld().spawnParticle(Particle.BLOCK_MARKER, location, 1, block.getBlockData());
 
                 location.getWorld().spawn(location, Marker.class, marker -> marker.getPersistentDataContainer().set(LIGHTBLOCKMARKER, PersistentDataType.INTEGER, 1));
             }, 1);
-        }
-    }
-
-    private void applyDamage(ItemStack item){
-        int unbreakinglvl = item.getEnchantmentLevel(Enchantment.DURABILITY);
-        boolean shoulddamage = ((Math.random()) < (1 / (unbreakinglvl + 1.0)));
-        if(shoulddamage){
-            Damageable itemvalue = (Damageable) item.getItemMeta();
-            int damage = (itemvalue.getDamage() + 1);
-            if(damage > 100){
-                damage = 100;
-            }
-            itemvalue.setDamage(damage);
-            item.setItemMeta(itemvalue);
         }
     }
 }
