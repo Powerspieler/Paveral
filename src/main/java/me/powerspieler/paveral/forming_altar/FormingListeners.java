@@ -3,6 +3,7 @@ package me.powerspieler.paveral.forming_altar;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
 import me.powerspieler.paveral.items.*;
+import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -99,6 +100,14 @@ public class FormingListeners implements Listener {
                     if(isCharged(event.getAltar())){
                         Items enh_kb = new Knockback();
                         formItem(event.getAltar(), formingitems, enh_kb.build());
+                    }
+                }
+                // Channeling 10
+                if(ench.hasStoredEnchant(Enchantment.CHANNELING) && ench.getStoredEnchantLevel(Enchantment.CHANNELING) == 1){
+                    formingitems.add(ench_raw.get());
+                    if(isCharged(event.getAltar())){
+                        Items enh_ch = new Channeling();
+                        formItem(event.getAltar(), formingitems, enh_ch.build());
                     }
                 }
                 // Next Enchantment Entry HERE

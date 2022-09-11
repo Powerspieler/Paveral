@@ -4,6 +4,7 @@ import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.items.BedrockBreaker;
 import me.powerspieler.paveral.items.Chunkloader;
 import me.powerspieler.paveral.items.Items;
+import me.powerspieler.paveral.items.LightningRod;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -12,6 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 public class TestCommand implements CommandExecutor {
@@ -19,7 +21,11 @@ public class TestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
-            if(args.length == 1){
+
+            Items lr = new LightningRod();
+            player.getInventory().addItem(lr.build());
+
+/*            if(args.length == 1){
                 if(args[0].equalsIgnoreCase("get")){
                     Items test = new Chunkloader();
                     player.getInventory().addItem(test.build());
@@ -32,7 +38,7 @@ public class TestCommand implements CommandExecutor {
                 int value = player.getChunk().getPersistentDataContainer().get(CHUNKLOADS, PersistentDataType.INTEGER);
                 Bukkit.broadcast(Component.text("Is Chunkforce loaded?: " + player.getChunk().isForceLoaded()));
                 Bukkit.broadcast(Component.text("Chunkloads Value: " + value));
-            }
+            }*/
 
             /*
             // Creeperitem Give
