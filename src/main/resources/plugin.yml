@@ -8,3 +8,5 @@ commands:
     description: Execute Test Code
   cooldown:
     description: Soosmose
+  items:
+    description: Request a paveral item

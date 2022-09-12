@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -37,6 +38,8 @@ public class LightningRod implements Listener, Items {
         ItemMeta lrmeta = lr.getItemMeta();
         lrmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "lightning_rod");
         lrmeta.setCustomModelData(1);
+        lrmeta.setUnbreakable(true);
+        lrmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 
         lrmeta.displayName(Component.text("Lightning Rod", NamedTextColor.LIGHT_PURPLE)
                 .decoration(TextDecoration.ITALIC, false));

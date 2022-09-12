@@ -1,10 +1,11 @@
 package me.powerspieler.paveral.commands;
 
 import me.powerspieler.paveral.Paveral;
-import me.powerspieler.paveral.items.BedrockBreaker;
-import me.powerspieler.paveral.items.Chunkloader;
-import me.powerspieler.paveral.items.Items;
-import me.powerspieler.paveral.items.LightningRod;
+import me.powerspieler.paveral.discovery.Discovery;
+import me.powerspieler.paveral.discovery.diaries.AntiCreeperGrief;
+import me.powerspieler.paveral.discovery.diaries.BedrockBreaker;
+import me.powerspieler.paveral.discovery.diaries.Bonk;
+import me.powerspieler.paveral.items.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -22,9 +23,10 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
 
-            Items lr = new LightningRod();
-            player.getInventory().addItem(lr.build());
-
+            Discovery soos = new BedrockBreaker();
+            player.getInventory().addItem(soos.build());
+            Discovery soos2 = new AntiCreeperGrief();
+            player.getInventory().addItem(soos2.build());
 /*            if(args.length == 1){
                 if(args[0].equalsIgnoreCase("get")){
                     Items test = new Chunkloader();

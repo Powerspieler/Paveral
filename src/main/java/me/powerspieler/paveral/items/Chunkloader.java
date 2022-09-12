@@ -143,7 +143,7 @@ public class Chunkloader implements Listener, Items {
                     .append(Component.text("Chunk not loaded", NamedTextColor.RED))
                     .append(Component.text(" ]",NamedTextColor.GOLD))
                     .append(Component.text(" - ",NamedTextColor.GRAY))
-                    .append(Component.text("Total: ",NamedTextColor.DARK_BLUE))
+                    .append(Component.text("Total: ",NamedTextColor.BLUE))
                     .append(Component.text("" + chunks)));
         }
 

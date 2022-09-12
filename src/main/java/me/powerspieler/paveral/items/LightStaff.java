@@ -194,7 +194,7 @@ public class LightStaff implements Listener,Items {
 
             location.getWorld().spawnParticle(Particle.BLOCK_MARKER, particlelocation, 1, Material.BARRIER.createBlockData());
 
-        } else if(location.getBlock().getType() == Material.AIR && itemdamage.getDamage() < 100) {
+        } else if((location.getBlock().getType() == Material.AIR || location.getBlock().getType() == Material.CAVE_AIR) && itemdamage.getDamage() < 100) {
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), () -> {
 
                 Block block = location.getBlock();
