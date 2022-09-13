@@ -55,7 +55,9 @@ public class Knockback implements Listener, Items {
                     .decoration(TextDecoration.ITALIC, false));
             itemmeta.lore(lore);
             item.setItemMeta(itemmeta);
+            event.getInventory().setRepairCost(0);
             event.setResult(item);
+
         }
     }
 }
