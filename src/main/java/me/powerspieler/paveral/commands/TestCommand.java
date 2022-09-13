@@ -2,19 +2,14 @@ package me.powerspieler.paveral.commands;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.discovery.Discovery;
-import me.powerspieler.paveral.discovery.diaries.AntiCreeperGrief;
-import me.powerspieler.paveral.discovery.diaries.BedrockBreaker;
-import me.powerspieler.paveral.discovery.diaries.Bonk;
-import me.powerspieler.paveral.items.*;
+import me.powerspieler.paveral.discovery.tutorial.altar_book;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 public class TestCommand implements CommandExecutor {
@@ -22,11 +17,9 @@ public class TestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
-
-            Discovery soos = new BedrockBreaker();
-            player.getInventory().addItem(soos.build());
-            Discovery soos2 = new AntiCreeperGrief();
-            player.getInventory().addItem(soos2.build());
+            if(player.isOp()){
+                Discovery soos = new altar_book();
+                player.getInventory().addItem(soos.build());
 /*            if(args.length == 1){
                 if(args[0].equalsIgnoreCase("get")){
                     Items test = new Chunkloader();
@@ -65,6 +58,7 @@ public class TestCommand implements CommandExecutor {
             inventory.addItem(item);
             player.openInventory(inventory);
             */
+            } else player.sendMessage(Component.text("ERROR: No Op", NamedTextColor.RED));
         }
         return false;
     }
