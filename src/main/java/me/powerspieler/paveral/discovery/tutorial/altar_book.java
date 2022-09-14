@@ -1,17 +1,20 @@
 package me.powerspieler.paveral.discovery.tutorial;
 
 import me.powerspieler.paveral.discovery.Discovery;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 public class altar_book implements Discovery {
     @Override
     public ItemStack build() {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta bookmeta = (BookMeta) book.getItemMeta();
+        bookmeta.getPersistentDataContainer().set(Constant.DISCOVERY, PersistentDataType.STRING, "altar_book");
         bookmeta.setAuthor("Powerspieler");
         bookmeta.setTitle("Paveralicious Additions");
         final Component page1 = GsonComponentSerializer.gson().deserialize("[{\"text\":\"\n\n\n\n\n   Paveral\",\"color\":\"dark_green\",\"italic\":true},{\"text\":\"icious\n               Additions\n\",\"color\":\"light_purple\",\"italic\":true}]");

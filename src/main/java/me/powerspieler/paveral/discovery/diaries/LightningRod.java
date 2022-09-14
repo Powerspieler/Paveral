@@ -1,16 +1,19 @@
 package me.powerspieler.paveral.discovery.diaries;
 
 import me.powerspieler.paveral.discovery.Discovery;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 public class LightningRod implements Discovery {
     @Override
     public ItemStack build() {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta bookmeta = (BookMeta) book.getItemMeta();
+        bookmeta.getPersistentDataContainer().set(Constant.DISCOVERY, PersistentDataType.STRING, "diary_17");
         bookmeta.setAuthor("");
         bookmeta.setTitle("Diary [#17]");
         bookmeta.setGeneration(BookMeta.Generation.TATTERED);

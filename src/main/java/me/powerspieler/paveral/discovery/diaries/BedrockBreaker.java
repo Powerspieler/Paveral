@@ -1,16 +1,19 @@
 package me.powerspieler.paveral.discovery.diaries;
 
 import me.powerspieler.paveral.discovery.Discovery;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 public class BedrockBreaker implements Discovery {
     @Override
     public ItemStack build() {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta bookmeta = (BookMeta) book.getItemMeta();
+        bookmeta.getPersistentDataContainer().set(Constant.DISCOVERY, PersistentDataType.STRING, "bedrock_breaker");
         bookmeta.setAuthor("");
         bookmeta.setTitle("A tale about an unbreakable myth");
         bookmeta.setGeneration(BookMeta.Generation.TATTERED);
