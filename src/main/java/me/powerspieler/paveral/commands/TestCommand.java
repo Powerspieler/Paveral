@@ -3,6 +3,7 @@ package me.powerspieler.paveral.commands;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.discovery.Discovery;
 import me.powerspieler.paveral.discovery.tutorial.altar_book;
+import me.powerspieler.paveral.discovery.tutorial.dis_book;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.NamespacedKey;
@@ -18,7 +19,7 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
             if(player.isOp()){
-                Discovery soos = new altar_book();
+                Discovery soos = new dis_book();
                 player.getInventory().addItem(soos.build());
 /*            if(args.length == 1){
                 if(args[0].equalsIgnoreCase("get")){
