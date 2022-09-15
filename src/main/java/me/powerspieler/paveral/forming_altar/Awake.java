@@ -25,8 +25,7 @@ public class Awake implements Listener {
 
     public Awake(){
         itemlist = new HashSet<>(20);
-        itemlist.add(Material.WARPED_FUNGUS_ON_A_STICK);
-        itemlist.add(Material.STICK);
+        // Enhancing (2)
         itemlist.add(Material.ENCHANTED_BOOK);
         itemlist.add(Material.NETHERITE_SCRAP);
         // CreeperItem (3)
@@ -45,6 +44,8 @@ public class Awake implements Listener {
         itemlist.add(Material.LEVER);
         itemlist.add(Material.OAK_TRAPDOOR);
         itemlist.add(Material.ANCIENT_DEBRIS);
+        // Disassemble Tutorial Book
+        itemlist.add(Material.WRITTEN_BOOK);
     }
 
 

@@ -1,10 +1,13 @@
 package me.powerspieler.paveral.forming_altar;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.discovery.Discovery;
+import me.powerspieler.paveral.discovery.tutorial.dis_book;
 import me.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.*;
@@ -27,6 +30,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static me.powerspieler.paveral.forming_altar.Awake.ALREADY_FORMING;
@@ -78,6 +82,21 @@ public class FormingListeners implements Listener {
                 if(isCharged(event.getAltar())){
                     Items bb = new BedrockBreaker();
                     formItem(event.getAltar(), formingitems, bb.build());
+                }
+            }
+            return;
+        }
+        // Disassemble Tutorial Book
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.WRITTEN_BOOK) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
+            List<Item> formingitems = items.stream()
+                    .filter(item -> {
+                        Material type = item.getItemStack().getType();
+                        return (type == Material.WRITTEN_BOOK && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.DISCOVERY, PersistentDataType.STRING) && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "altar_book")) || (type == Material.NETHERITE_SCRAP && item.getItemStack().getAmount() == 1);
+                    }).toList();
+            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.WRITTEN_BOOK) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
+                if(isCharged(event.getAltar())){
+                    Discovery dis_book = new dis_book();
+                    formItem(event.getAltar(), formingitems, dis_book.build());
                 }
             }
             return;
