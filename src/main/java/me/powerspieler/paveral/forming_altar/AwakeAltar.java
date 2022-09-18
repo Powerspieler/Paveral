@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class Awake implements Listener {
+public class AwakeAltar implements Listener {
 
     private static HashSet<Material> itemlist;
     public static final NamespacedKey FORMING_CANDIDATE = new NamespacedKey(Paveral.getPlugin(), "forming_candidate");
     public static final NamespacedKey ALREADY_FORMING = new NamespacedKey(Paveral.getPlugin(), "already_forming");
 
-    public Awake(){
+    public AwakeAltar(){
         itemlist = new HashSet<>(20);
         // Enhancing (2)
         itemlist.add(Material.ENCHANTED_BOOK);
@@ -44,8 +44,12 @@ public class Awake implements Listener {
         itemlist.add(Material.LEVER);
         itemlist.add(Material.OAK_TRAPDOOR);
         itemlist.add(Material.ANCIENT_DEBRIS);
-        // Disassemble Tutorial Book
+        // Disassemble Tutorial Book (1)
         itemlist.add(Material.WRITTEN_BOOK);
+        // Chunkloader
+        itemlist.add(Material.ENCHANTING_TABLE);
+        itemlist.add(Material.LODESTONE);
+        itemlist.add(Material.NETHER_STAR);
     }
 
 

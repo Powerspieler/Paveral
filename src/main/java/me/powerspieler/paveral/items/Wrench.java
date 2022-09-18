@@ -45,6 +45,14 @@ public class Wrench implements Listener,Items {
         return wrench;
     }
 
+    @Override
+    public List<ItemStack> parts() {
+        List<ItemStack> parts = new ArrayList<>();
+        ItemStack ironingot = new ItemStack(Material.IRON_INGOT, 4);
+        parts.add(ironingot);
+        return parts;
+    }
+
     @EventHandler
     public void onPlayerRightclick(PlayerInteractEvent event){
         if(event.getItem() != null && event.getItem().hasItemMeta() && event.getItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)){

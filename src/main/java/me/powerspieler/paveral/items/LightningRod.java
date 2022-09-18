@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -60,6 +61,19 @@ public class LightningRod implements Listener, Items {
 
         lr.setItemMeta(lrmeta);
         return lr;
+    }
+
+    @Override
+    public List<ItemStack> parts() {
+        List<ItemStack> parts = new ArrayList<>();
+        ItemStack trident = new ItemStack(Material.TRIDENT);
+        Damageable tridentmeta = (Damageable) trident.getItemMeta();
+        tridentmeta.setDamage(250 - (int) (Math.random() * 50));
+        trident.setItemMeta(tridentmeta);
+        ItemStack book = new ItemStack(Material.BOOK);
+        parts.add(trident);
+        parts.add(book);
+        return parts;
     }
 
     private final HashMap<UUID, Long> cooldown = new HashMap<>();

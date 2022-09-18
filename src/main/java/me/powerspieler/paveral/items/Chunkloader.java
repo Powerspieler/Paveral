@@ -46,6 +46,20 @@ public class Chunkloader implements Listener, Items {
         return item;
     }
 
+    @Override
+    public List<ItemStack> parts() {
+        List<ItemStack> parts = new ArrayList<>();
+        ItemStack netherstar = new ItemStack(Material.NETHER_STAR, 3);
+        ItemStack lodestone = new ItemStack(Material.LODESTONE);
+        ItemStack obsidian = new ItemStack(Material.OBSIDIAN, 2);
+        ItemStack enchtable = new ItemStack(Material.ENCHANTING_TABLE);
+        parts.add(netherstar);
+        parts.add(lodestone);
+        parts.add(obsidian);
+        parts.add(enchtable);
+        return parts;
+    }
+
     private static final NamespacedKey CHUNKLOADS = new NamespacedKey(Paveral.getPlugin(), "chunkloads");
 
     @EventHandler

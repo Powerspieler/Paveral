@@ -33,14 +33,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static me.powerspieler.paveral.forming_altar.Awake.ALREADY_FORMING;
+import static me.powerspieler.paveral.forming_altar.AwakeAltar.ALREADY_FORMING;
 
 public class FormingListeners implements Listener {
 
     @EventHandler
     public void onIngredientDrop(FormingItemOnAltar event){
         List<Item> raw = new ArrayList<>(event.getAltar().getNearbyEntitiesByType(Item.class, 1,1,1));
-        List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(Awake.FORMING_CANDIDATE)).toList();
+        List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(AwakeAltar.FORMING_CANDIDATE)).toList();
         // AntiCreeperGrief
         if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.CREEPER_HEAD) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.FIREWORK_STAR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.SCULK_SENSOR)){
             List<Item> formingitems = items.stream()
@@ -97,6 +97,36 @@ public class FormingListeners implements Listener {
                 if(isCharged(event.getAltar())){
                     Discovery dis_book = new dis_book();
                     formItem(event.getAltar(), formingitems, dis_book.build());
+                }
+            }
+            return;
+        }
+        // Wrench
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT)){
+            List<Item> formingitems = items.stream()
+                    .filter(item -> {
+                        Material type = item.getItemStack().getType();
+                        return type == Material.IRON_INGOT && item.getItemStack().getAmount() == 4;
+                    }).toList();
+            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT)){
+                if(isCharged(event.getAltar())){
+                    Items wrench = new Wrench();
+                    formItem(event.getAltar(), formingitems, wrench.build());
+                }
+            }
+            return;
+        }
+        // Chunkloader
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHER_STAR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.LODESTONE) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.ENCHANTING_TABLE)){
+            List<Item> formingitems = items.stream()
+                    .filter(item -> {
+                        Material type = item.getItemStack().getType();
+                        return (type == Material.NETHER_STAR && item.getItemStack().getAmount() == 3) || (type == Material.LODESTONE && item.getItemStack().getAmount() == 1) || (type == Material.OBSIDIAN  && item.getItemStack().getAmount() == 2) || (type == Material.ENCHANTING_TABLE  && item.getItemStack().getAmount() == 1);
+                    }).toList();
+            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHER_STAR) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.LODESTONE) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.ENCHANTING_TABLE)){
+                if(isCharged(event.getAltar())){
+                    Items cl = new Chunkloader();
+                    formItem(event.getAltar(), formingitems, cl.build());
                 }
             }
             return;

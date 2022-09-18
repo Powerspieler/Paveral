@@ -60,6 +60,23 @@ public class BedrockBreaker implements Listener,Items {
         return bedrockbreaker;
     }
 
+    @Override
+    public List<ItemStack> parts() {
+        List<ItemStack> parts = new ArrayList<>();
+        ItemStack obsidian = new ItemStack(Material.OBSIDIAN);
+        ItemStack piston = new ItemStack(Material.PISTON, 2);
+        ItemStack tnt = new ItemStack(Material.TNT, 2);
+        ItemStack lever = new ItemStack(Material.LEVER);
+        ItemStack oaktrap = new ItemStack(Material.OAK_TRAPDOOR);
+        // Skipped 4 Ancient Debris
+        parts.add(obsidian);
+        parts.add(piston);
+        parts.add(tnt);
+        parts.add(lever);
+        parts.add(oaktrap);
+        return parts;
+    }
+
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
         if (event.getItem() != null && Objects.equals(event.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bedrock_breaker")) {

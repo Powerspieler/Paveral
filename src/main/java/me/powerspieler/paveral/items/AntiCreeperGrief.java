@@ -48,6 +48,18 @@ public class AntiCreeperGrief implements Listener, Items {
         return creeperitem;
     }
 
+    @Override
+    public List<ItemStack> parts() {
+        List<ItemStack> parts = new ArrayList<>();
+        ItemStack creeperhead = new ItemStack(Material.CREEPER_HEAD);
+        ItemStack fireworkstar = new ItemStack(Material.FIREWORK_STAR);
+        ItemStack sculksensor = new ItemStack(Material.SCULK_SENSOR);
+        parts.add(creeperhead);
+        parts.add(fireworkstar);
+        parts.add(sculksensor);
+        return parts;
+    }
+
     // Convert Random Int to ColorType
     private Color getColor(int i) {
         Color c = null;

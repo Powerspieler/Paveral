@@ -1,26 +1,45 @@
 package me.powerspieler.paveral.commands;
 
-import me.powerspieler.paveral.Paveral;
+
 import me.powerspieler.paveral.discovery.Discovery;
-import me.powerspieler.paveral.discovery.tutorial.altar_book;
 import me.powerspieler.paveral.discovery.tutorial.dis_book;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+
 public class TestCommand implements CommandExecutor {
-    private static final NamespacedKey CHUNKLOADS = new NamespacedKey(Paveral.getPlugin(), "chunkloads");
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
             if(player.isOp()){
-                Discovery soos = new dis_book();
-                player.getInventory().addItem(soos.build());
+
+                /*NamespacedKey key = ro;
+                AdvancementProgress progress = player.getAdvancementProgress(Bukkit.getAdvancement(key));
+                for(String criteria : progress.getRemainingCriteria())
+                    progress.awardCriteria(criteria);*/
+
+
+
+                /*NamespacedKey soos = Bukkit.advancementIterator().next().getKey();
+                Bukkit.broadcast(Component.text("soos: " + soos));
+
+                Advancement foof = new Test();
+                Bukkit.broadcast(Component.text("Adv: " + foof));
+                Bukkit.broadcast(Component.text("Executed!"));
+                player.getAdvancementProgress(foof).getRemainingCriteria();
+                for(String criteria : player.getAdvancementProgress(foof).getRemainingCriteria())
+                    player.getAdvancementProgress(foof).awardCriteria(criteria);*/
+
+
 /*            if(args.length == 1){
                 if(args[0].equalsIgnoreCase("get")){
                     Items test = new Chunkloader();

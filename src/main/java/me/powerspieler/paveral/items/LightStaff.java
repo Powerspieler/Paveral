@@ -80,6 +80,20 @@ public class LightStaff implements Listener,Items {
         return lightstaff;
     }
 
+    @Override
+    public List<ItemStack> parts() {
+        List<ItemStack> parts = new ArrayList<>();
+        ItemStack ironingot = new ItemStack(Material.IRON_INGOT, 2);
+        ItemStack copperingot = new ItemStack(Material.COPPER_INGOT);
+        ItemStack redstonelamp = new ItemStack(Material.REDSTONE_LAMP);
+        ItemStack witherrose = new ItemStack(Material.WITHER_ROSE, 2);
+        parts.add(ironingot);
+        parts.add(copperingot);
+        parts.add(redstonelamp);
+        parts.add(witherrose);
+        return parts;
+    }
+
     private static final NamespacedKey LIGHTBLOCKMARKER = new NamespacedKey(Paveral.getPlugin(), "lightblock");
     private static final NamespacedKey LIGHTBLOCKLEVEL = new NamespacedKey(Paveral.getPlugin(), "lightlevel");
     private static boolean particlecooldown;

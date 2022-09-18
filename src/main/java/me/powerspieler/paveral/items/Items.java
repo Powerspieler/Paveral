@@ -2,7 +2,9 @@ package me.powerspieler.paveral.items;
 
 import org.bukkit.inventory.ItemStack;
 
-public interface Items {
+import java.util.List;
 
+public interface Items {
     ItemStack build();
+    List<ItemStack> parts();
 }

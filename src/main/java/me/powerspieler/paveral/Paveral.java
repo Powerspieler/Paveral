@@ -1,12 +1,15 @@
 package me.powerspieler.paveral;
 
+import me.powerspieler.paveral.util.AdvancementLoader;
 import me.powerspieler.paveral.commands.CooldownCommand;
 import me.powerspieler.paveral.commands.ItemsCommand;
 import me.powerspieler.paveral.commands.TestCommand;
+import me.powerspieler.paveral.disassemble.AwakeTable;
+import me.powerspieler.paveral.disassemble.DisassembleListeners;
 import me.powerspieler.paveral.discovery.CatMorningGiftLootTable;
 import me.powerspieler.paveral.discovery.ChestLootTable;
 import me.powerspieler.paveral.discovery.FishingLootTable;
-import me.powerspieler.paveral.forming_altar.Awake;
+import me.powerspieler.paveral.forming_altar.AwakeAltar;
 import me.powerspieler.paveral.forming_altar.FormingListeners;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enchanced.Channeling;
@@ -16,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public final class Paveral extends JavaPlugin {
@@ -27,6 +31,11 @@ public final class Paveral extends JavaPlugin {
 
         new RecipeLoader().registerRecipes();
 
+        try {
+            new AdvancementLoader().load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
         Objects.requireNonNull(getCommand("cooldown")).setExecutor(new CooldownCommand());
@@ -46,8 +55,12 @@ public final class Paveral extends JavaPlugin {
         pm.registerEvents(new Channeling(), this);
 
         // Forming Altar
-        pm.registerEvents(new Awake(), this);
+        pm.registerEvents(new AwakeAltar(), this);
         pm.registerEvents(new FormingListeners(), this);
+
+        // Disassembling Table
+        pm.registerEvents(new AwakeTable(), this);
+        pm.registerEvents(new DisassembleListeners(), this);
 
         // Discovery
         pm.registerEvents(new ChestLootTable(), this);

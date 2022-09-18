@@ -40,6 +40,15 @@ public class Channeling implements Listener, Items {
         return item;
     }
 
+    @Override
+    public List<ItemStack> parts() {
+        List<ItemStack> parts = new ArrayList<>();
+        ItemStack book = new ItemStack(Material.BOOK);
+        // Skipped 1 Netherite Scrap
+        parts.add(book);
+        return parts;
+    }
+
     @EventHandler
     public void onAnvilUse(PrepareAnvilEvent event){
         if(event.getInventory().getFirstItem() != null && event.getInventory().getFirstItem().getType() == Material.TRIDENT && event.getInventory().getSecondItem() != null && Objects.equals(event.getInventory().getSecondItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "enhanced_channeling")){
