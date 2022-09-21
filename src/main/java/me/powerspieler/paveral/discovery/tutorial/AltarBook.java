@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-public class altar_book implements Discovery {
+public class AltarBook implements Discovery {
     @Override
     public ItemStack build() {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);

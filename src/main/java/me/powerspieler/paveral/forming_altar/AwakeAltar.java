@@ -1,7 +1,7 @@
 package me.powerspieler.paveral.forming_altar;
 
 import me.powerspieler.paveral.Paveral;
-import me.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
+import me.powerspieler.paveral.forming_altar.events.FormItemEvent;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.*;
@@ -28,7 +28,7 @@ public class AwakeAltar implements Listener {
         // Enhancing (2)
         itemlist.add(Material.ENCHANTED_BOOK);
         itemlist.add(Material.NETHERITE_SCRAP);
-        // CreeperItem (3)
+        // CreeperItem (3) // TODO MOVE TO FORGE!!!
         itemlist.add(Material.CREEPER_HEAD);
         itemlist.add(Material.FIREWORK_STAR);
         itemlist.add(Material.SCULK_SENSOR);
@@ -68,7 +68,7 @@ public class AwakeAltar implements Listener {
                             if(onValidAltar(layingon)){
                                 if(isAltarAvailable(itementity.getLocation())){
                                     itementity.getPersistentDataContainer().set(FORMING_CANDIDATE, PersistentDataType.INTEGER, 1);
-                                    Bukkit.getPluginManager().callEvent(new FormingItemOnAltar(itementity, itementity.getLocation().getBlock().getLocation().add(0.5,-0.5,0.5)));
+                                    Bukkit.getPluginManager().callEvent(new FormItemEvent(itementity, itementity.getLocation().getBlock().getLocation().add(0.5,-0.5,0.5)));
                                 }
                             }
                         }

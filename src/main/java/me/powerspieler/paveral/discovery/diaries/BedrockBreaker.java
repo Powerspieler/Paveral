@@ -14,6 +14,7 @@ public class BedrockBreaker implements Discovery {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta bookmeta = (BookMeta) book.getItemMeta();
         bookmeta.getPersistentDataContainer().set(Constant.DISCOVERY, PersistentDataType.STRING, "bedrock_breaker");
+        bookmeta.getPersistentDataContainer().set(Constant.IS_DIARY, PersistentDataType.INTEGER, 1);
         bookmeta.setAuthor("");
         bookmeta.setTitle("A tale about an unbreakable myth");
         bookmeta.setGeneration(BookMeta.Generation.TATTERED);

@@ -14,6 +14,7 @@ public class LightningRod implements Discovery {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta bookmeta = (BookMeta) book.getItemMeta();
         bookmeta.getPersistentDataContainer().set(Constant.DISCOVERY, PersistentDataType.STRING, "diary_17");
+        bookmeta.getPersistentDataContainer().set(Constant.IS_DIARY, PersistentDataType.INTEGER, 1);
         bookmeta.setAuthor("");
         bookmeta.setTitle("Diary [#17]");
         bookmeta.setGeneration(BookMeta.Generation.TATTERED);

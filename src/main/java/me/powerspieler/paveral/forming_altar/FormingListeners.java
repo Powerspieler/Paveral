@@ -2,8 +2,8 @@ package me.powerspieler.paveral.forming_altar;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.discovery.Discovery;
-import me.powerspieler.paveral.discovery.tutorial.dis_book;
-import me.powerspieler.paveral.forming_altar.events.FormingItemOnAltar;
+import me.powerspieler.paveral.discovery.tutorial.DisBook;
+import me.powerspieler.paveral.forming_altar.events.FormItemEvent;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
@@ -38,7 +38,7 @@ import static me.powerspieler.paveral.forming_altar.AwakeAltar.ALREADY_FORMING;
 public class FormingListeners implements Listener {
 
     @EventHandler
-    public void onIngredientDrop(FormingItemOnAltar event){
+    public void onIngredientDrop(FormItemEvent event){
         List<Item> raw = new ArrayList<>(event.getAltar().getNearbyEntitiesByType(Item.class, 1,1,1));
         List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(AwakeAltar.FORMING_CANDIDATE)).toList();
         // AntiCreeperGrief
@@ -95,7 +95,7 @@ public class FormingListeners implements Listener {
                     }).toList();
             if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.WRITTEN_BOOK) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
                 if(isCharged(event.getAltar())){
-                    Discovery dis_book = new dis_book();
+                    Discovery dis_book = new DisBook();
                     formItem(event.getAltar(), formingitems, dis_book.build());
                 }
             }

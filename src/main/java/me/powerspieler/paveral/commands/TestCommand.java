@@ -2,13 +2,10 @@ package me.powerspieler.paveral.commands;
 
 
 import me.powerspieler.paveral.discovery.Discovery;
-import me.powerspieler.paveral.discovery.tutorial.dis_book;
+import me.powerspieler.paveral.discovery.tutorial.TechBook;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,6 +18,23 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
             if(player.isOp()){
+                Discovery soos = new TechBook();
+                player.getInventory().addItem(soos.build());
+
+                /*NamespacedKey soos2 = new NamespacedKey("paveral", "find_diary");
+                Advancement adv = Bukkit.getAdvancement(soos2);
+                *//*if(player.getAdvancementProgress(adv).isDone()){
+                    Bukkit.broadcast(Component.text("isDone!"));
+                } else {
+                    Bukkit.broadcast(Component.text("notDone!"));
+                }*//*
+
+                AdvancementProgress advcom = player.getAdvancementProgress(adv);
+                Collection<String> remainingcrit = advcom.getRemainingCriteria();
+                for(String crit : remainingcrit){
+                    advcom.awardCriteria(crit);
+                }*/
+
 
                 /*NamespacedKey key = ro;
                 AdvancementProgress progress = player.getAdvancementProgress(Bukkit.getAdvancement(key));
