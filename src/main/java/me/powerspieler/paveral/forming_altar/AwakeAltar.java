@@ -28,10 +28,6 @@ public class AwakeAltar implements Listener {
         // Enhancing (2)
         itemlist.add(Material.ENCHANTED_BOOK);
         itemlist.add(Material.NETHERITE_SCRAP);
-        // CreeperItem (3) // TODO MOVE TO FORGE!!!
-        itemlist.add(Material.CREEPER_HEAD);
-        itemlist.add(Material.FIREWORK_STAR);
-        itemlist.add(Material.SCULK_SENSOR);
         // Lightstaff (4)
         itemlist.add(Material.IRON_INGOT);
         itemlist.add(Material.COPPER_INGOT);

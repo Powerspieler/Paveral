@@ -3,7 +3,6 @@ package me.powerspieler.paveral.forge;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.forge.events.ForgeItemEvent;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,22 +42,16 @@ public class AwakeForge implements Listener {
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event){
         Item itementity = event.getItemDrop();
-        Bukkit.broadcast(Component.text("Item Dropped"));
         if(itemlist.contains(itementity.getItemStack().getType())){
-            Bukkit.broadcast(Component.text("Forgeitem Dropped"));
             new BukkitRunnable(){
                 @Override
                 public void run() {
                     if(itementity.isOnGround()){
-                        Bukkit.broadcast(Component.text("Item Landed"));
                         Location layingon = itementity.getLocation();
                         layingon.add(0,-1,0);
                         if(layingon.getBlock().getType() == Material.ANVIL){
-                            Bukkit.broadcast(Component.text("Item Landed on Anvil"));
                             if(onValidForge(layingon)){
-                                Bukkit.broadcast(Component.text("Forge Valid"));
                                 if(isForgeAvailable(itementity.getLocation())){
-                                    Bukkit.broadcast(Component.text("Forge Availabe"));
                                     itementity.getPersistentDataContainer().set(FORGING_CANDIDATE, PersistentDataType.INTEGER, 1);
                                     Bukkit.getPluginManager().callEvent(new ForgeItemEvent(itementity, itementity.getLocation().getBlock().getLocation().add(0.5,-0.5,0.5)));
                                 }

@@ -41,21 +41,6 @@ public class FormingListeners implements Listener {
     public void onIngredientDrop(FormItemEvent event){
         List<Item> raw = new ArrayList<>(event.getAltar().getNearbyEntitiesByType(Item.class, 1,1,1));
         List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(AwakeAltar.FORMING_CANDIDATE)).toList();
-        // AntiCreeperGrief
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.CREEPER_HEAD) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.FIREWORK_STAR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.SCULK_SENSOR)){
-            List<Item> formingitems = items.stream()
-                    .filter(item -> {
-                        Material type = item.getItemStack().getType();
-                        return (type == Material.CREEPER_HEAD && item.getItemStack().getAmount() == 1) || (type == Material.FIREWORK_STAR && item.getItemStack().getAmount() == 1) || (type == Material.SCULK_SENSOR  && item.getItemStack().getAmount() == 1);
-                    }).toList();
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.CREEPER_HEAD) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.FIREWORK_STAR) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.SCULK_SENSOR)){
-                if(isCharged(event.getAltar())){
-                    Items acg = new AntiCreeperGrief();
-                    formItem(event.getAltar(), formingitems, acg.build());
-                }
-            }
-            return;
-        }
         // Lightstaff
         if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.COPPER_INGOT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.REDSTONE_LAMP) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.WITHER_ROSE)){
             List<Item> formingitems = items.stream()
