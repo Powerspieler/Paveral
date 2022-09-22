@@ -33,8 +33,6 @@ public class ForgeListener implements Listener {
 
     @EventHandler
     public void onIngredientDrop(ForgeItemEvent event){
-        //TODO CREATE TUTORIAL BOOK
-        //TODO FINISH ADVANCEMENTS
         List<Item> raw = new ArrayList<>(event.getForge().getNearbyEntitiesByType(Item.class, 1,1,1));
         List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(AwakeForge.FORGING_CANDIDATE)).toList();
         //AntiCreeperGrief
