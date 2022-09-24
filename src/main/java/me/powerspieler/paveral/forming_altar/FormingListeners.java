@@ -1,8 +1,10 @@
 package me.powerspieler.paveral.forming_altar;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.discovery.Discovery;
 import me.powerspieler.paveral.discovery.tutorial.DisBook;
+import me.powerspieler.paveral.discovery.tutorial.TechBook;
 import me.powerspieler.paveral.forming_altar.events.FormItemEvent;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enchanced.Channeling;
@@ -76,7 +78,7 @@ public class FormingListeners implements Listener {
             List<Item> formingitems = items.stream()
                     .filter(item -> {
                         Material type = item.getItemStack().getType();
-                        return (type == Material.WRITTEN_BOOK && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.DISCOVERY, PersistentDataType.STRING) && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "altar_book")) || (type == Material.NETHERITE_SCRAP && item.getItemStack().getAmount() == 1);
+                        return (type == Material.WRITTEN_BOOK && item.getItemStack().getAmount() == 1 && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.DISCOVERY, PersistentDataType.STRING) && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "altar_book")) || (type == Material.NETHERITE_SCRAP && item.getItemStack().getAmount() == 1);
                     }).toList();
             if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.WRITTEN_BOOK) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
                 if(isCharged(event.getAltar())){
@@ -84,34 +86,19 @@ public class FormingListeners implements Listener {
                     formItem(event.getAltar(), formingitems, dis_book.build());
                 }
             }
-            return;
+            // No Return; Allow next Tutorial Book to be checked
         }
-        // Wrench
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT)){
+        // Forge Tutorial Book
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.WRITTEN_BOOK) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
             List<Item> formingitems = items.stream()
                     .filter(item -> {
                         Material type = item.getItemStack().getType();
-                        return type == Material.IRON_INGOT && item.getItemStack().getAmount() == 4;
+                        return (type == Material.WRITTEN_BOOK && item.getItemStack().getAmount() == 1 && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.DISCOVERY, PersistentDataType.STRING) && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "dis_book")) || (type == Material.NETHERITE_SCRAP && item.getItemStack().getAmount() == 1);
                     }).toList();
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT)){
+            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.WRITTEN_BOOK) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
                 if(isCharged(event.getAltar())){
-                    Items wrench = new Wrench();
-                    formItem(event.getAltar(), formingitems, wrench.build());
-                }
-            }
-            return;
-        }
-        // Chunkloader
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHER_STAR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.LODESTONE) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.ENCHANTING_TABLE)){
-            List<Item> formingitems = items.stream()
-                    .filter(item -> {
-                        Material type = item.getItemStack().getType();
-                        return (type == Material.NETHER_STAR && item.getItemStack().getAmount() == 3) || (type == Material.LODESTONE && item.getItemStack().getAmount() == 1) || (type == Material.OBSIDIAN  && item.getItemStack().getAmount() == 2) || (type == Material.ENCHANTING_TABLE  && item.getItemStack().getAmount() == 1);
-                    }).toList();
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHER_STAR) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.LODESTONE) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.ENCHANTING_TABLE)){
-                if(isCharged(event.getAltar())){
-                    Items cl = new Chunkloader();
-                    formItem(event.getAltar(), formingitems, cl.build());
+                    Discovery tech_book = new TechBook();
+                    formItem(event.getAltar(), formingitems, tech_book.build());
                 }
             }
             return;
@@ -203,6 +190,9 @@ public class FormingListeners implements Listener {
             if(entity instanceof Player player){
                 progress.addPlayer(player);
                 progress.setVisible(true);
+                if(AwardAdvancements.isAdvancementUndone(player, "first_forming")){
+                    AwardAdvancements.grantAdvancement(player, "first_forming");
+                }
             }
         }
 
@@ -281,7 +271,7 @@ public class FormingListeners implements Listener {
                         formingitem.remove();
                     }
                     deplete(location);
-                    location.getWorld().dropItemNaturally(location.add(0,1,0), result);
+                    location.getWorld().dropItem(location.add(0,1,0), result).setVelocity(new Vector(0,0.2,0));
                     progress.setVisible(false);
                     cancel();
                 }

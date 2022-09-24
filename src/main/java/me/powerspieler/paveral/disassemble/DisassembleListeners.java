@@ -1,6 +1,7 @@
 package me.powerspieler.paveral.disassemble;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.disassemble.events.DisassembleItemEvent;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enchanced.Channeling;
@@ -24,6 +25,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static me.powerspieler.paveral.disassemble.AwakeTable.ALREADY_DISASSEMBLING;
@@ -82,11 +84,11 @@ public class DisassembleListeners implements Listener {
                         disassembleItem(event.getTable(), first_match.get(), item.parts());
                     }
                     if(itemtype.equals("lightstaff")){
-                        Items item = new LightningRod();
+                        Items item = new LightStaff();
                         disassembleItem(event.getTable(), first_match.get(), item.parts());
                     }
                     if(itemtype.equals("wrench")){
-                        Items item = new LightningRod();
+                        Items item = new Wrench();
                         disassembleItem(event.getTable(), first_match.get(), item.parts());
                     }
                 }
@@ -123,6 +125,9 @@ public class DisassembleListeners implements Listener {
             if(entity instanceof Player player){
                 progress.addPlayer(player);
                 progress.setVisible(true);
+                if(AwardAdvancements.isAdvancementUndone(player, "first_dis")){
+                    AwardAdvancements.grantAdvancement(player, "first_dis");
+                }
             }
         }
 
@@ -176,10 +181,31 @@ public class DisassembleListeners implements Listener {
                 }
 
                 if(process >= 200){
+                    if(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff")){
+                        List<Entity> entities = new ArrayList<>(location.getNearbyEntities(15,15,15));
+                        for(Entity entity : entities){
+                            if(entity instanceof Player player){
+                                if(AwardAdvancements.isAdvancementUndone(player, "dis_lightstaff")){
+                                    AwardAdvancements.grantAdvancement(player, "dis_lightstaff");
+                                }
+                            }
+                        }
+                    }
+                    if(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "wrench")){
+                        List<Entity> entities = new ArrayList<>(location.getNearbyEntities(15,15,15));
+                        for(Entity entity : entities){
+                            if(entity instanceof Player player){
+                                if(AwardAdvancements.isAdvancementUndone(player, "dis_wrench")){
+                                    AwardAdvancements.grantAdvancement(player, "dis_wrench");
+                                }
+                            }
+                        }
+                    }
+
                     item.remove();
 
                     for(ItemStack part : parts){
-                        location.getWorld().dropItemNaturally(location, part);
+                        location.getWorld().dropItem(location, part);
                     }
 
                     progress.setVisible(false);

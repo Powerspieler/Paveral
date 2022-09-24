@@ -317,7 +317,7 @@ public class ForgeListener implements Listener {
                     for(Item item : forgeitems){
                         item.remove();
                     }
-                    location.getWorld().dropItemNaturally(location.add(0,1,0), result);
+                    location.getWorld().dropItem(location.add(0,1,0), result).setVelocity(new Vector(0,0.2,0));
                     progress.setVisible(false);
                     cancel();
                 }

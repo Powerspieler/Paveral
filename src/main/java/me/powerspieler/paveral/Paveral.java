@@ -71,7 +71,6 @@ public final class Paveral extends JavaPlugin {
 
         //Advancements
         pm.registerEvents(new AwardAdvancements(), this);
-        //TODO FINISH ADVANCEMENTS
     }
     public static Paveral getPlugin(){
         return plugin;

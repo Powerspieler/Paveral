@@ -30,7 +30,6 @@ public class TechBook implements Discovery {
         final Component page11 = GsonComponentSerializer.gson().deserialize("[{\"text\":\"Creeper Defuser\n\n\",\"color\":\"dark_blue\"},{\"text\":\"Prevents creeper explosions\n\n\",\"color\":\"dark_purple\"},{\"text\":\"\uEE02\",\"color\":\"white\"},{\"text\":\"\n\n\n\n1x Creeper Head\n1x Firework Star\n1x Sculk Sensor\",\"color\":\"green\"}]");
         final Component page12 = GsonComponentSerializer.gson().deserialize("[{\"text\":\"Chunkloader\n\n\",\"color\":\"dark_red\"},{\"text\":\"Loads 3x3 Chunks\n\",\"color\":\"dark_purple\"},{\"text\":\"Does not support random ticks!\n\n\",\"color\":\"red\"},{\"text\":\"\uEE03\",\"color\":\"white\"},{\"text\":\"\n\n\n\n3x Nether Star\n2x Obsidian\n1x Enchanting Table\n1x Lodestone\",\"color\":\"green\"}]");
         final Component page13 = GsonComponentSerializer.gson().deserialize("[{\"text\":\"Wrench\n\n\",\"color\":\"dark_aqua\"},{\"text\":\"Toggles iron trapdoors\nMore Features will be added in the future\n\n\",\"color\":\"dark_purple\"},{\"text\":\"\uEE01\",\"color\":\"white\"},{\"text\":\"\n\n\n\n4x Iron Ingot\",\"color\":\"green\"}]");
-        //TODO Implement Book (Formable)
 
         bookmeta.addPages(page1, page2, page3, page4, page5, page6, page7, page8, page9, page10, page11, page12, page13);
         book.setItemMeta(bookmeta);

@@ -2,6 +2,7 @@ package me.powerspieler.paveral.items;
 
 import com.destroystokyo.paper.event.entity.PhantomPreSpawnEvent;
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -145,6 +146,9 @@ public class LightningRod implements Listener, Items {
                                 if(isCancelled()){
                                     if(kills >= 3){
                                         paralyzer.put(player.getUniqueId(), System.currentTimeMillis());
+                                        if(AwardAdvancements.isAdvancementUndone(player, "lightning_rod_phantom")){
+                                            AwardAdvancements.grantAdvancement(player, "lightning_rod_phantom");
+                                        }
                                         player.playSound(Sound.sound(Key.key("block.conduit.activate"), Sound.Source.AMBIENT, 1f, 0f));
                                         player.playSound(Sound.sound(Key.key("block.conduit.ambient"), Sound.Source.AMBIENT, 1f, 0f));
                                         player.getWorld().spawnParticle(Particle.NAUTILUS, player.getLocation(),1,0,0,0,1);

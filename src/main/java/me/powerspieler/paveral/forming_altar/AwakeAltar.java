@@ -146,7 +146,7 @@ public class AwakeAltar implements Listener {
     }
 
     private boolean isAltarAvailable(Location lodestone){
-        List<Item> raw = new ArrayList<>(lodestone.getNearbyEntitiesByType(Item.class,5, 5,5));
+        List<Item> raw = new ArrayList<>(lodestone.getNearbyEntitiesByType(Item.class,2, 2,2));
         List<Item> itemsforming = raw.stream().filter(item -> item.getPersistentDataContainer().has(ALREADY_FORMING)).toList();
         return itemsforming.isEmpty();
     }

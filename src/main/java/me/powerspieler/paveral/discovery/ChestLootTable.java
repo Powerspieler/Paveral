@@ -7,8 +7,6 @@ import me.powerspieler.paveral.discovery.diaries.LightningRod;
 import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.items.Wrench;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.LootGenerateEvent;
@@ -22,7 +20,6 @@ public class ChestLootTable implements Listener {
 
     @EventHandler
     public void onChestGenerate(LootGenerateEvent event){
-        Bukkit.broadcast(Component.text("" + event.getLootTable().getKey()));
         String chesttype = event.getLootTable().getKey().asString();
         // Bonk - Book
         if(chesttype.equals("minecraft:chests/woodland_mansion")){
