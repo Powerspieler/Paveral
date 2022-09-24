@@ -35,7 +35,7 @@ public class AwardAdvancements implements Listener {
     public void onDiaryFind(InventoryClickEvent event){
         Player player = (Player) event.getWhoClicked();
         if(isAdvancementUndone(player , "find_diary")){
-            if(event.getCurrentItem() != null && event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(Constant.IS_DIARY)){
+            if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(Constant.IS_DIARY)){
                 grantAdvancement(player, "find_diary");
             }
         }
