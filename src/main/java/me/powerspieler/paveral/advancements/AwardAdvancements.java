@@ -1,6 +1,9 @@
 package me.powerspieler.paveral.advancements;
 
 import me.powerspieler.paveral.util.Constant;
+import me.powerspieler.paveral.util.RecipeLoader;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
@@ -13,6 +16,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Collection;
@@ -20,6 +24,16 @@ import java.util.Objects;
 import java.util.logging.Level;
 
 public class AwardAdvancements implements Listener {
+    // Award Recipe for Altar Book
+    @EventHandler
+    public void onRootAdvGrant(PlayerAdvancementDoneEvent event){
+        NamespacedKey root = new NamespacedKey("paveral", "root");
+        if(event.getAdvancement().getKey().equals(root)){
+            Player player = event.getPlayer();
+            player.discoverRecipe(RecipeLoader.altarbookrecipekey);
+            player.sendMessage(Component.text("You have unlocked a valuable recipe! Check your recipe book!" , NamedTextColor.DARK_PURPLE));
+        }
+    }
     // craft Tutorial Book
     @EventHandler
     public void onCraftTutorialBook(CraftItemEvent event){
@@ -34,7 +48,7 @@ public class AwardAdvancements implements Listener {
     @EventHandler
     public void onDiaryFind(InventoryClickEvent event){
         Player player = (Player) event.getWhoClicked();
-        if(isAdvancementUndone(player , "find_diary")){
+        if(!isAdvancementUndone(player, "root") && isAdvancementUndone(player , "find_diary")){
             if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(Constant.IS_DIARY)){
                 grantAdvancement(player, "find_diary");
             }

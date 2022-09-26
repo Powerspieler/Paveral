@@ -16,6 +16,7 @@ import me.powerspieler.paveral.forming_altar.FormingListeners;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
+import me.powerspieler.paveral.misc.HandlePlayerJoin;
 import me.powerspieler.paveral.util.AdvancementLoader;
 import me.powerspieler.paveral.util.RecipeLoader;
 import org.bukkit.Bukkit;
@@ -31,6 +32,8 @@ public final class Paveral extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+
+        //TODO Add a way to find out how to craft the tutorial book
 
         AdvancementLoader.copyAdvancements();
         new RecipeLoader().registerRecipes();
@@ -71,6 +74,9 @@ public final class Paveral extends JavaPlugin {
 
         //Advancements
         pm.registerEvents(new AwardAdvancements(), this);
+
+        // Misc
+        pm.registerEvents(new HandlePlayerJoin(), this);
     }
     public static Paveral getPlugin(){
         return plugin;
