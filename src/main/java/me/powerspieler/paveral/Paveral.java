@@ -33,8 +33,6 @@ public final class Paveral extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
-        //TODO Add a way to find out how to craft the tutorial book
-
         AdvancementLoader.copyAdvancements();
         new RecipeLoader().registerRecipes();
 
