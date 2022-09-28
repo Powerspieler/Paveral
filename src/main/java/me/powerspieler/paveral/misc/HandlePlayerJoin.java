@@ -31,7 +31,7 @@ public class HandlePlayerJoin implements Listener {
         if(player.getPersistentDataContainer().get(msg, PersistentDataType.INTEGER) != null && player.getPersistentDataContainer().get(msg, PersistentDataType.INTEGER) > 0){
             player.sendMessage(Component.text("\"Paveralicious Additions - Datapack\" has been ported to a Java-Plugin \"Paveral\" due to performance reasons!", NamedTextColor.GOLD));
             player.sendMessage(Component.text("Every item / tool crafted so far will NOT work any longer and need to be recrafted! Some tweaks have also been made:", NamedTextColor.DARK_PURPLE));
-            player.sendMessage(Component.text("+ Added a new multistructure to craft tech-related items\n* Behaviour of Lightning Rod has been tweaked\n* Many many more minor tweaks\n- Removed Golden Crook (Sheepfreeze)", NamedTextColor.YELLOW));
+            player.sendMessage(Component.text("+ Added a new multistructure to craft tech-related items\n* Layout of Formingaltar has changed; recraft the tutorial books!\n* Advancements have been reset\n* Some recipes have changed\n* Behaviour of Lightning Rod has been tweaked\n* Many many more minor tweaks\n- Removed Golden Crook (Sheepfreeze)", NamedTextColor.YELLOW));
 
             int msg_remain = player.getPersistentDataContainer().get(msg, PersistentDataType.INTEGER);
             msg_remain --;

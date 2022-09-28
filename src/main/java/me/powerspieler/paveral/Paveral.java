@@ -1,9 +1,6 @@
 package me.powerspieler.paveral;
 
 import me.powerspieler.paveral.advancements.AwardAdvancements;
-import me.powerspieler.paveral.commands.CooldownCommand;
-import me.powerspieler.paveral.commands.ItemsCommand;
-import me.powerspieler.paveral.commands.TestCommand;
 import me.powerspieler.paveral.disassemble.AwakeTable;
 import me.powerspieler.paveral.disassemble.DisassembleListeners;
 import me.powerspieler.paveral.discovery.CatMorningGiftLootTable;
@@ -23,8 +20,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Objects;
-
 
 public final class Paveral extends JavaPlugin {
     private static Paveral plugin;
@@ -36,9 +31,9 @@ public final class Paveral extends JavaPlugin {
         AdvancementLoader.copyAdvancements();
         new RecipeLoader().registerRecipes();
 
-        Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
-        Objects.requireNonNull(getCommand("cooldown")).setExecutor(new CooldownCommand());
-        Objects.requireNonNull(getCommand("items")).setExecutor(new ItemsCommand());
+        //Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
+        //Objects.requireNonNull(getCommand("cooldown")).setExecutor(new CooldownCommand());
+        //Objects.requireNonNull(getCommand("items")).setExecutor(new ItemsCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
         // Items

@@ -1,13 +1,8 @@
 package me.powerspieler.paveral.commands;
 
 
-import me.powerspieler.paveral.discovery.Discovery;
-import me.powerspieler.paveral.discovery.tutorial.TechBook;
-import me.powerspieler.paveral.util.Constant;
-import me.powerspieler.paveral.util.RecipeLoader;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
