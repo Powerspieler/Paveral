@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -16,8 +17,8 @@ public class AdvancementLoader {
 
         try {
             Files.walk(Path.of(path)).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+        } catch (IOException ignored) {
+            Bukkit.getLogger().log(Level.WARNING, "Could not delete / readd Paveral's advancements. Is this the first enable?");
         }
 
         new File(path).mkdirs();
