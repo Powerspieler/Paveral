@@ -10,12 +10,10 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Slab;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -188,25 +186,6 @@ public class Chunkloader implements Listener, Items {
         if(event.blockList().stream().anyMatch(block -> block.getType() == Material.PETRIFIED_OAK_SLAB)){
             List<Block> cl = event.blockList().stream().filter(block -> block.getType() == Material.PETRIFIED_OAK_SLAB).toList();
             event.blockList().removeAll(cl);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    // Disable Enderman Grief - THIS DOES NOT BELONG HERE
-    @EventHandler
-    public void onPickup(EntityChangeBlockEvent event){
-        if(event.getEntityType() == EntityType.ENDERMAN){
-            event.setCancelled(true);
         }
     }
 }
