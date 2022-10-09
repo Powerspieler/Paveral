@@ -7,6 +7,7 @@ import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
 import me.powerspieler.paveral.util.Constant;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.*;
@@ -111,6 +112,7 @@ public class DisassembleListeners implements Listener {
     }
 
     private void disassembleItem(Location location, Item item, List<ItemStack> parts){
+        final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
         item.setVelocity(new Vector(0,0,0));
         item.setCanPlayerPickup(false);
         item.setGravity(false);
@@ -118,7 +120,7 @@ public class DisassembleListeners implements Listener {
         item.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,item.getLocation(), 100, 0,0,0, 0.2);
         item.getPersistentDataContainer().set(ALREADY_DISASSEMBLING, PersistentDataType.INTEGER, 1);
 
-        location.getWorld().playSound(Sound.sound(Key.key("entity.evoker.prepare_attack"), Sound.Source.AMBIENT, 1f, 1f));
+        targets.playSound(Sound.sound(Key.key("entity.evoker.prepare_attack"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
         BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Disassembling...", BarColor.PURPLE, BarStyle.SOLID);
         List<Entity> entities = new ArrayList<>(location.getNearbyEntities(25,25,25));
         for(Entity entity : entities){
@@ -140,7 +142,7 @@ public class DisassembleListeners implements Listener {
 
                 if(process == 25){
                     item.getWorld().spawnParticle(Particle.GLOW, item.getLocation(), 100, 0,0,0, 1);
-                    item.getWorld().playSound(Sound.sound(Key.key("block.portal.ambient"), Sound.Source.AMBIENT, 1f, 1.75f));
+                    targets.playSound(Sound.sound(Key.key("block.portal.ambient"), Sound.Source.AMBIENT, 1f, 1.75f), Sound.Emitter.self());
                 }
 
                 if(process >= 40 && process <= 80){
@@ -148,19 +150,19 @@ public class DisassembleListeners implements Listener {
                     location.getWorld().spawnParticle(Particle.REVERSE_PORTAL, particleloc.add(0,1.5,0), 10, 0,0,0, 0.1);
                 }
                 if(process >= 40 && process <= 60){
-                    item.getWorld().playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.50f));
+                    targets.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.50f), Sound.Emitter.self());
                 }
                 if(process >= 60 && process <= 75){
-                    item.getWorld().playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.55f));
+                    targets.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.55f), Sound.Emitter.self());
                 }
                 if(process >= 75 && process <= 85){
-                    item.getWorld().playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.65f));
+                    targets.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.65f), Sound.Emitter.self());
                 }
                 if(process >= 85 && process <= 90){
-                    item.getWorld().playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.80f));
+                    targets.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.80f), Sound.Emitter.self());
                 }
                 if(process == 90){
-                    item.getWorld().playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 2.00f));
+                    targets.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 2.00f), Sound.Emitter.self());
                 }
 
                 if(process >= 100 && process <= 120){
@@ -168,16 +170,16 @@ public class DisassembleListeners implements Listener {
                     location.getWorld().spawnParticle(Particle.END_ROD, particleloc.add(0,1,0), 5, 0,0.25,0, 0);
                 }
                 if(process == 100){
-                    item.getWorld().playSound(Sound.sound(Key.key("item.trident.thunder"), Sound.Source.AMBIENT, 1f, 1f));
+                    targets.playSound(Sound.sound(Key.key("item.trident.thunder"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
                 }
 
                 if(process == 135){
-                    item.getWorld().playSound(Sound.sound(Key.key("entity.zombie.attack_iron_door"), Sound.Source.AMBIENT, 1f, 1f));
+                    targets.playSound(Sound.sound(Key.key("entity.zombie.attack_iron_door"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
                     item.getWorld().spawnParticle(Particle.TOTEM, item.getLocation(), 50, 0,0.25,0, 0.1);
                 }
 
                 if(process == 168){
-                    item.getWorld().playSound(Sound.sound(Key.key("block.anvil.destroy"), Sound.Source.AMBIENT, 1f, 0.5f));
+                    targets.playSound(Sound.sound(Key.key("block.anvil.destroy"), Sound.Source.AMBIENT, 1f, 0.5f), Sound.Emitter.self());
                 }
 
                 if(process >= 200){

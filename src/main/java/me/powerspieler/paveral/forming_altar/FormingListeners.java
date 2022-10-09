@@ -12,6 +12,7 @@ import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
 import me.powerspieler.paveral.util.Constant;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.*;
@@ -139,6 +140,7 @@ public class FormingListeners implements Listener {
     }
 
     private boolean isCharged(Location location){
+        final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
         Location NW = location.getBlock().getRelative(-2,1,-2).getLocation().add(0.5,0.5,0.5);
         Location NE = location.getBlock().getRelative(2,1,-2).getLocation().add(0.5,0.5,0.5);
         Location SW = location.getBlock().getRelative(-2,1,2).getLocation().add(0.5,0.5,0.5);
@@ -155,28 +157,29 @@ public class FormingListeners implements Listener {
 
         if(NW_RA.getCharges() == 0){
             NW.getWorld().spawnParticle(Particle.WAX_OFF, NW, 50, 0.5,0,0.5);
-            NW.getWorld().playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 1f));
+            targets.playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
             return false;
         }
         if(NE_RA.getCharges() == 0){
             NE.getWorld().spawnParticle(Particle.WAX_OFF, NE, 50, 0.5,0,0.5);
-            NE.getWorld().playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 1f));
+            targets.playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
             return false;
         }
         if(SW_RA.getCharges() == 0){
             SW.getWorld().spawnParticle(Particle.WAX_OFF, SW, 50, 0.5,0,0.5);
-            SW.getWorld().playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 1f));
+            targets.playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
             return false;
         }
         if(SE_RA.getCharges() == 0){
             SE.getWorld().spawnParticle(Particle.WAX_OFF, SE, 50, 0.5,0,0.5);
-            SE.getWorld().playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 1f));
+            targets.playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
             return false;
         }
         return true;
     }
 
     private void formItem(Location location, List<Item> formingitems, ItemStack result){
+        final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
         for(Item formingitem : formingitems){
             formingitem.setVelocity(new Vector(0,0,0));
             formingitem.setCanPlayerPickup(false);
@@ -185,7 +188,7 @@ public class FormingListeners implements Listener {
             formingitem.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, formingitem.getLocation(), 100, 0,0,0,0.3);
             formingitem.getPersistentDataContainer().set(ALREADY_FORMING, PersistentDataType.INTEGER, 1);
         }
-        location.getWorld().playSound(Sound.sound(Key.key("entity.wither.spawn"), Sound.Source.AMBIENT, 1f, 1f));
+        targets.playSound(Sound.sound(Key.key("entity.wither.spawn"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
         BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Forming...", BarColor.PURPLE, BarStyle.SOLID);
         List<Entity> entities = new ArrayList<>(location.getNearbyEntities(25,25,25));
         for(Entity entity : entities){
@@ -211,8 +214,8 @@ public class FormingListeners implements Listener {
                         formingitem.setWillAge(true);
                         formingitem.getPersistentDataContainer().remove(ALREADY_FORMING);
                     }
-                    location.getWorld().playSound(Sound.sound(Key.key("entity.lightning_bolt.impact"), Sound.Source.AMBIENT, 1f, 0.75f));
-                    location.getWorld().playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 0.25f));
+                    targets.playSound(Sound.sound(Key.key("entity.lightning_bolt.impact"), Sound.Source.AMBIENT, 1f, 0.75f), Sound.Emitter.self());
+                    targets.playSound(Sound.sound(Key.key("block.respawn_anchor.deplete"), Sound.Source.AMBIENT, 1f, 0.25f), Sound.Emitter.self());
                     progress.setVisible(false);
                     cancel();
                 }
@@ -229,19 +232,19 @@ public class FormingListeners implements Listener {
                     location.getWorld().spawnParticle(Particle.GLOW, particleloc.add(2,2.5,2), 10, 0,1,0,0);
                 }
                 if(process >= 60 && process <= 80){
-                    location.getWorld().playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.5f));
+                    targets.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.5f), Sound.Emitter.self());
                 }
                 if(process >= 80 && process <= 95){
-                    location.getWorld().playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.55f));
+                    targets.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.55f), Sound.Emitter.self());
                 }
                 if(process >= 95 && process <= 105){
-                    location.getWorld().playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.65f));
+                    targets.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.65f), Sound.Emitter.self());
                 }
                 if(process >= 105 && process <= 110){
-                    location.getWorld().playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.8f));
+                    targets.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 1.8f), Sound.Emitter.self());
                 }
                 if(process >= 110){
-                    location.getWorld().playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 2.0f));
+                    targets.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 1f, 2.0f), Sound.Emitter.self());
                 }
 
 
@@ -264,10 +267,10 @@ public class FormingListeners implements Listener {
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                     location.getWorld().spawnParticle(Particle.GLOW_SQUID_INK, particleloc.add(2,1,2), 25,0,0,0,0.1);
 
-                    location.getWorld().playSound(Sound.sound(Key.key("entity.firework_rocket.twinkle_far"), Sound.Source.AMBIENT, 1f, 1.0f));
-                    location.getWorld().playSound(Sound.sound(Key.key("block.beacon.activate"), Sound.Source.AMBIENT, 1f, 0.75f));
-                    location.getWorld().playSound(Sound.sound(Key.key("block.end_gateway.spawn"), Sound.Source.AMBIENT, 1f, 1f));
-                    location.getWorld().playSound(Sound.sound(Key.key("block.end_portal.spawn"), Sound.Source.AMBIENT, 1f, 1.13f));
+                    targets.playSound(Sound.sound(Key.key("entity.firework_rocket.twinkle_far"), Sound.Source.AMBIENT, 1f, 1.0f), Sound.Emitter.self());
+                    targets.playSound(Sound.sound(Key.key("block.beacon.activate"), Sound.Source.AMBIENT, 1f, 0.75f), Sound.Emitter.self());
+                    targets.playSound(Sound.sound(Key.key("block.end_gateway.spawn"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
+                    targets.playSound(Sound.sound(Key.key("block.end_portal.spawn"), Sound.Source.AMBIENT, 1f, 1.13f), Sound.Emitter.self());
 
                     for(Item formingitem : formingitems){
                         formingitem.remove();
@@ -294,7 +297,8 @@ public class FormingListeners implements Listener {
     }
 
     private void applyDeplete(Location location){
-        location.getWorld().playSound(Sound.sound(Key.key("block.respawn_anchor.set_spawn"), Sound.Source.AMBIENT, 1f, 1f));
+        final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
+        targets.playSound(Sound.sound(Key.key("block.respawn_anchor.set_spawn"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
         Block ra = location.getBlock();
         RespawnAnchor ra_data = (RespawnAnchor) ra.getBlockData();
 

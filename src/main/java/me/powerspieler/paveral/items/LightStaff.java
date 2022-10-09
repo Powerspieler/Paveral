@@ -3,6 +3,7 @@ package me.powerspieler.paveral.items;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -198,6 +199,7 @@ public class LightStaff implements Listener,Items {
 
 
     private void setLightblock(Location location, int lightlevel, ItemStack lightstaff){
+        final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 25);
         Damageable itemdamage = (Damageable) lightstaff.getItemMeta();
         if(location.getBlock().getType() == Material.LIGHT){
 
@@ -217,7 +219,7 @@ public class LightStaff implements Listener,Items {
                 Levelled light = (Levelled) block.getBlockData();
                 light.setLevel(lightlevel);
                 block.setBlockData(light);
-                location.getWorld().playSound(Sound.sound(Key.key("item.flintandsteel.use"), Sound.Source.BLOCK, 1f, 1f));
+                targets.playSound(Sound.sound(Key.key("item.flintandsteel.use"), Sound.Source.BLOCK, 1f, 1f), Sound.Emitter.self());
                 ItemsUtil.applyDamage(lightstaff, 1);
 
                 location.add(0.5, 0.5, 0.5);

@@ -2,6 +2,7 @@ package me.powerspieler.paveral.items;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.util.Constant;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -83,9 +84,10 @@ public class Chunkloader implements Listener, Items {
                 }
                 event.getBlock().getWorld().spawnParticle(Particle.REVERSE_PORTAL, event.getBlock().getLocation().add(0.5,0.55,0.5), 100, 0,0,0, 0.5);
                 Location location = event.getBlock().getLocation().add(0.5,0.5,0.5);
-                location.getWorld().playSound(Sound.sound(Key.key("block.beacon.activate"), Sound.Source.BLOCK, 1f, 0.5f));
-                location.getWorld().playSound(Sound.sound(Key.key("entity.ghast.scream"), Sound.Source.BLOCK, 1f, 0.5f));
-                location.getWorld().playSound(Sound.sound(Key.key("block.stone.place"), Sound.Source.BLOCK, 1f, 0.5f));
+                final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 100);
+                targets.playSound(Sound.sound(Key.key("block.beacon.activate"), Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
+                targets.playSound(Sound.sound(Key.key("entity.ghast.scream"), Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
+                targets.playSound(Sound.sound(Key.key("block.stone.place"), Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
                 showActionbar(event.getPlayer());
             }
         }
@@ -114,7 +116,8 @@ public class Chunkloader implements Listener, Items {
             }
             event.getBlock().getWorld().spawnParticle(Particle.PORTAL, event.getBlock().getLocation().add(0.5,0.55,0.5), 100, 0,0,0, 0.5);
             Location location = event.getBlock().getLocation().add(0.5,0.5,0.5);
-            location.getWorld().playSound(Sound.sound(Key.key("block.beacon.deactivate"), Sound.Source.BLOCK, 1f, 0.5f));
+            final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 100);
+            targets.playSound(Sound.sound(Key.key("block.beacon.deactivate"), Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
             showActionbar(event.getPlayer());
         }
     }

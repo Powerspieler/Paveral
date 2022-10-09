@@ -3,6 +3,7 @@ package me.powerspieler.paveral.items;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -13,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -87,19 +89,21 @@ public class BedrockBreaker implements Listener,Items {
                         Damageable itemdamage = (Damageable) event.getItem().getItemMeta();
                         Block block = event.getClickedBlock();
                         if (block != null && block.getType() == Material.BEDROCK && itemdamage.getDamage() < 100) {
+                            final Audience targets = block.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(block.getLocation()) < 25);
                             block.setType(Material.AIR);
                             block.getWorld().spawnParticle(Particle.ASH, block.getLocation().add(0.5, 0.5, 0.5), 500, 0.25, 0.25, 0.25);
-                            block.getWorld().playSound(Sound.sound(Key.key("entity.elder_guardian.death"), Sound.Source.AMBIENT, 1f, 0.75f));
-                            block.getWorld().playSound(Sound.sound(Key.key("entity.wither.break_block"), Sound.Source.AMBIENT, 1f, 0.25f));
+                            targets.playSound(Sound.sound(Key.key("entity.elder_guardian.death"), Sound.Source.AMBIENT, 1f, 0.75f), Sound.Emitter.self());
+                            targets.playSound(Sound.sound(Key.key("entity.wither.break_block"), Sound.Source.AMBIENT, 1f, 0.25f), Sound.Emitter.self());
                             ItemsUtil.applyDamage(event.getItem(), 2);
                         } else if (block != null && block.getType() == Material.ANCIENT_DEBRIS) {
+                            final Audience targets = block.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(block.getLocation()) < 25);
                             block.setType(Material.AIR);
                             block.getWorld().spawnParticle(Particle.DUST_COLOR_TRANSITION, block.getLocation().add(0.5, 0.5, 0.5), 100, 0.25, 0.25, 0.25, new Particle.DustTransition(Color.BLACK, Color.WHITE, 2));
-                            block.getWorld().stopSound(Sound.sound(Key.key("entity.ender_dragon.death"), Sound.Source.AMBIENT, 1f, 2f));
-                            block.getWorld().playSound(Sound.sound(Key.key("block.ancient_debris.break"), Sound.Source.BLOCK, 1f, 1f));
-                            block.getWorld().playSound(Sound.sound(Key.key("ui.stonecutter.take_result"), Sound.Source.AMBIENT, 1f, 0.25f));
-                            block.getWorld().playSound(Sound.sound(Key.key("entity.wither.ambient"), Sound.Source.AMBIENT, 1f, 0.5f));
-                            block.getWorld().playSound(Sound.sound(Key.key("entity.ender_dragon.death"), Sound.Source.AMBIENT, 1f, 2f));
+                            targets.stopSound(Sound.sound(Key.key("entity.ender_dragon.death"), Sound.Source.AMBIENT, 1f, 2f));
+                            targets.playSound(Sound.sound(Key.key("block.ancient_debris.break"), Sound.Source.BLOCK, 1f, 1f), Sound.Emitter.self());
+                            targets.playSound(Sound.sound(Key.key("ui.stonecutter.take_result"), Sound.Source.AMBIENT, 1f, 0.25f), Sound.Emitter.self());
+                            targets.playSound(Sound.sound(Key.key("entity.wither.ambient"), Sound.Source.AMBIENT, 1f, 0.5f), Sound.Emitter.self());
+                            targets.playSound(Sound.sound(Key.key("entity.ender_dragon.death"), Sound.Source.AMBIENT, 1f, 2f), Sound.Emitter.self());
                             ItemsUtil.repair(event.getItem(), 25);
                         }
                     }

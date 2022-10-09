@@ -6,6 +6,7 @@ import me.powerspieler.paveral.items.AntiCreeperGrief;
 import me.powerspieler.paveral.items.Chunkloader;
 import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.Wrench;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.*;
@@ -83,35 +84,37 @@ public class ForgeListener implements Listener {
     }
 
     private static boolean isFueled(Location location){
+        final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
         Block center = location.getBlock();
         if(!(center.getRelative(3, 2, 0).getType() == Material.LAVA_CAULDRON)){
             location.add(3, 2, 0);
             location.getWorld().spawnParticle(Particle.FLAME, location, 50, 0,0,0, 0.05);
-            location.getWorld().playSound(Sound.sound(Key.key("block.lava.extinguish"), Sound.Source.AMBIENT, 1f, 0.33f));
+            targets.playSound(Sound.sound(Key.key("block.lava.extinguish"), Sound.Source.AMBIENT, 1f, 0.33f), Sound.Emitter.self());
             return false;
         }
         if(!(center.getRelative(-3, 2, 0).getType() == Material.LAVA_CAULDRON)){
             location.add(-3, 2, 0);
             location.getWorld().spawnParticle(Particle.FLAME, location, 50, 0,0,0, 0.05);
-            location.getWorld().playSound(Sound.sound(Key.key("block.lava.extinguish"), Sound.Source.AMBIENT, 1f, 0.33f));
+            targets.playSound(Sound.sound(Key.key("block.lava.extinguish"), Sound.Source.AMBIENT, 1f, 0.33f), Sound.Emitter.self());
             return false;
         }
         if(!(center.getRelative(0, 2, 3).getType() == Material.LAVA_CAULDRON)){
             location.add(0, 2, 3);
             location.getWorld().spawnParticle(Particle.FLAME, location, 50, 0,0,0, 0.05);
-            location.getWorld().playSound(Sound.sound(Key.key("block.lava.extinguish"), Sound.Source.AMBIENT, 1f, 0.33f));
+            targets.playSound(Sound.sound(Key.key("block.lava.extinguish"), Sound.Source.AMBIENT, 1f, 0.33f), Sound.Emitter.self());
             return false;
         }
         if(!(center.getRelative(0, 2, -3).getType() == Material.LAVA_CAULDRON)){
             location.add(0, 2, -3);
             location.getWorld().spawnParticle(Particle.FLAME, location, 50, 0,0,0, 0.05);
-            location.getWorld().playSound(Sound.sound(Key.key("block.lava.extinguish"), Sound.Source.AMBIENT, 1f, 0.33f));
+            targets.playSound(Sound.sound(Key.key("block.lava.extinguish"), Sound.Source.AMBIENT, 1f, 0.33f), Sound.Emitter.self());
             return false;
         }
         return true;
     }
 
     private void forgeItem(Location location, List<Item> forgeitems, ItemStack result){
+        final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
         for(Item item : forgeitems){
             item.setVelocity(new Vector(0,0,0));
             item.setCanPlayerPickup(false);
@@ -120,7 +123,7 @@ public class ForgeListener implements Listener {
             item.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, item.getLocation(), 100, 0,0,0,0.3);
             item.getPersistentDataContainer().set(ALREADY_FORGING, PersistentDataType.INTEGER, 1);
         }
-        location.getWorld().playSound(Sound.sound(Key.key("block.anvil.use"), Sound.Source.AMBIENT, 1f, 0.5f));
+        targets.playSound(Sound.sound(Key.key("block.anvil.use"), Sound.Source.AMBIENT, 1f, 0.5f), Sound.Emitter.self());
         BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Forging...", BarColor.PURPLE, BarStyle.SOLID);
         List<Entity> entities = new ArrayList<>(location.getNearbyEntities(25,25,25));
         for(Entity entity : entities){
@@ -146,14 +149,14 @@ public class ForgeListener implements Listener {
                                 item.setWillAge(true);
                                 item.getPersistentDataContainer().remove(ALREADY_FORMING);
                             }
-                            location.getWorld().playSound(Sound.sound(Key.key("block.ender_chest.open"), Sound.Source.AMBIENT, 1f, 2f));
+                            targets.playSound(Sound.sound(Key.key("block.ender_chest.open"), Sound.Source.AMBIENT, 1f, 2f), Sound.Emitter.self());
                             particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                             location.getWorld().spawnParticle(Particle.ASH, particleloc.add(3, 3, 0), 100, 0.5,0.5,0.5, 0.1);
                             progress.setVisible(false);
                             cancel();
                         } else {
                             location.getBlock().getRelative(3,2,0).setType(Material.CAULDRON);
-                            location.getWorld().playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.AMBIENT, 1f, 1.75f));
+                            targets.playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.AMBIENT, 1f, 1.75f), Sound.Emitter.self());
                         }
                     }
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
@@ -161,7 +164,7 @@ public class ForgeListener implements Listener {
                 }
                 if(process >= 80 && process <= 100){
                     if(process == 80){
-                        location.getWorld().playSound(Sound.sound(Key.key("entity.ghast.shoot"), Sound.Source.AMBIENT, 1f, 0.75f));
+                        targets.playSound(Sound.sound(Key.key("entity.ghast.shoot"), Sound.Source.AMBIENT, 1f, 0.75f), Sound.Emitter.self());
                     }
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                     location.getWorld().spawnParticle(Particle.FLAME, particleloc.add(1.5, -0.4, 0), 2, 0.75,0,0, 0);
@@ -176,14 +179,14 @@ public class ForgeListener implements Listener {
                                 item.setWillAge(true);
                                 item.getPersistentDataContainer().remove(ALREADY_FORMING);
                             }
-                            location.getWorld().playSound(Sound.sound(Key.key("block.ender_chest.open"), Sound.Source.AMBIENT, 1f, 2f));
+                            targets.playSound(Sound.sound(Key.key("block.ender_chest.open"), Sound.Source.AMBIENT, 1f, 2f), Sound.Emitter.self());
                             particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                             location.getWorld().spawnParticle(Particle.ASH, particleloc.add(0, 3, -3), 100, 0.5,0.5,0.5, 0.1);
                             progress.setVisible(false);
                             cancel();
                         } else {
                             location.getBlock().getRelative(0,2,-3).setType(Material.CAULDRON);
-                            location.getWorld().playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.AMBIENT, 1f, 1.75f));
+                            targets.playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.AMBIENT, 1f, 1.75f), Sound.Emitter.self());
                         }
                     }
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
@@ -191,7 +194,7 @@ public class ForgeListener implements Listener {
                 }
                 if(process >= 120 && process <= 140){
                     if(process == 120){
-                        location.getWorld().playSound(Sound.sound(Key.key("entity.ghast.shoot"), Sound.Source.AMBIENT, 1f, 0.75f));
+                        targets.playSound(Sound.sound(Key.key("entity.ghast.shoot"), Sound.Source.AMBIENT, 1f, 0.75f), Sound.Emitter.self());
                     }
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                     location.getWorld().spawnParticle(Particle.FLAME, particleloc.add(0, -0.4, -1.5), 2, 0,0,0.75, 0);
@@ -207,14 +210,14 @@ public class ForgeListener implements Listener {
                                 item.setWillAge(true);
                                 item.getPersistentDataContainer().remove(ALREADY_FORMING);
                             }
-                            location.getWorld().playSound(Sound.sound(Key.key("block.ender_chest.open"), Sound.Source.AMBIENT, 1f, 2f));
+                            targets.playSound(Sound.sound(Key.key("block.ender_chest.open"), Sound.Source.AMBIENT, 1f, 2f), Sound.Emitter.self());
                             particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                             location.getWorld().spawnParticle(Particle.ASH, particleloc.add(0, 3, 3), 100, 0.5,0.5,0.5, 0.1);
                             progress.setVisible(false);
                             cancel();
                         } else {
                             location.getBlock().getRelative(0,2,3).setType(Material.CAULDRON);
-                            location.getWorld().playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.AMBIENT, 1f, 1.75f));
+                            targets.playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.AMBIENT, 1f, 1.75f), Sound.Emitter.self());
                         }
                     }
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
@@ -222,7 +225,7 @@ public class ForgeListener implements Listener {
                 }
                 if(process >= 160 && process <= 180){
                     if(process == 160){
-                        location.getWorld().playSound(Sound.sound(Key.key("entity.ghast.shoot"), Sound.Source.AMBIENT, 1f, 0.75f));
+                        targets.playSound(Sound.sound(Key.key("entity.ghast.shoot"), Sound.Source.AMBIENT, 1f, 0.75f), Sound.Emitter.self());
                     }
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                     location.getWorld().spawnParticle(Particle.FLAME, particleloc.add(0, -0.4, 1.5), 2, 0,0,0.75, 0);
@@ -238,14 +241,14 @@ public class ForgeListener implements Listener {
                                 item.setWillAge(true);
                                 item.getPersistentDataContainer().remove(ALREADY_FORMING);
                             }
-                            location.getWorld().playSound(Sound.sound(Key.key("block.ender_chest.open"), Sound.Source.AMBIENT, 1f, 2f));
+                            targets.playSound(Sound.sound(Key.key("block.ender_chest.open"), Sound.Source.AMBIENT, 1f, 2f), Sound.Emitter.self());
                             particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                             location.getWorld().spawnParticle(Particle.ASH, particleloc.add(-3, 3, 0), 100, 0.5,0.5,0.5, 0.1);
                             progress.setVisible(false);
                             cancel();
                         } else {
                             location.getBlock().getRelative(-3,2,0).setType(Material.CAULDRON);
-                            location.getWorld().playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.AMBIENT, 1f, 1.75f));
+                            targets.playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.AMBIENT, 1f, 1.75f), Sound.Emitter.self());
                         }
                     }
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
@@ -253,14 +256,14 @@ public class ForgeListener implements Listener {
                 }
                 if(process >= 200 && process <= 220){
                     if(process == 200){
-                        location.getWorld().playSound(Sound.sound(Key.key("entity.ghast.shoot"), Sound.Source.AMBIENT, 1f, 0.75f));
+                        targets.playSound(Sound.sound(Key.key("entity.ghast.shoot"), Sound.Source.AMBIENT, 1f, 0.75f), Sound.Emitter.self());
                     }
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                     location.getWorld().spawnParticle(Particle.FLAME, particleloc.add(-1.5, -0.4, 0), 2, 0.75,0,0, 0);
                 }
 
                 if(process == 220){
-                    location.getWorld().playSound(Sound.sound(Key.key("block.end_portal.spawn"), Sound.Source.AMBIENT, 1f, 1.4f));
+                    targets.playSound(Sound.sound(Key.key("block.end_portal.spawn"), Sound.Source.AMBIENT, 1f, 1.4f), Sound.Emitter.self());
                 }
                 if(process >= 220 && process <= 280){
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
@@ -270,30 +273,30 @@ public class ForgeListener implements Listener {
 
                 if(process >= 220 && process <= 240){
                     if(process % 2 == 0){
-                        location.getWorld().playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.AMBIENT, 1f, 1.5f));
+                        targets.playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.AMBIENT, 1f, 1.5f), Sound.Emitter.self());
                     }
                 }
                 if(process >= 240 && process <= 255){
                     if(process % 2 == 0){
-                        location.getWorld().playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.AMBIENT, 1f, 1.55f));
+                        targets.playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.AMBIENT, 1f, 1.55f), Sound.Emitter.self());
                     }
 
                 }
                 if(process >= 255 && process <= 265){
                     if(process % 2 == 0){
-                        location.getWorld().playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.AMBIENT, 1f, 1.65f));
+                        targets.playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.AMBIENT, 1f, 1.65f), Sound.Emitter.self());
                     }
 
                 }
                 if(process >= 265 && process <= 270){
                     if(process % 2 == 0){
-                        location.getWorld().playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.AMBIENT, 1f, 1.8f));
+                        targets.playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.AMBIENT, 1f, 1.8f), Sound.Emitter.self());
                     }
 
                 }
                 if(process >= 270 && process <= 280){
                     if(process % 2 == 0){
-                        location.getWorld().playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.AMBIENT, 1f, 2.0f));
+                        targets.playSound(Sound.sound(Key.key("entity.illusioner.prepare_blindness"), Sound.Source.AMBIENT, 1f, 2.0f), Sound.Emitter.self());
                     }
                 }
 
@@ -309,10 +312,10 @@ public class ForgeListener implements Listener {
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                     location.getWorld().spawnParticle(Particle.REVERSE_PORTAL, particleloc.add(0,1,0), 256,0,0,0,0.3);
 
-                    location.getWorld().playSound(Sound.sound(Key.key("entity.firework_rocket.twinkle_far"), Sound.Source.AMBIENT, 1f, 1.0f));
-                    location.getWorld().playSound(Sound.sound(Key.key("block.beacon.activate"), Sound.Source.AMBIENT, 1f, 0.75f));
-                    location.getWorld().playSound(Sound.sound(Key.key("block.end_gateway.spawn"), Sound.Source.AMBIENT, 1f, 1f));
-                    location.getWorld().playSound(Sound.sound(Key.key("entity.wither.death"), Sound.Source.AMBIENT, 1f, 1.25f));
+                    targets.playSound(Sound.sound(Key.key("entity.firework_rocket.twinkle_far"), Sound.Source.AMBIENT, 1f, 1.0f), Sound.Emitter.self());
+                    targets.playSound(Sound.sound(Key.key("block.beacon.activate"), Sound.Source.AMBIENT, 1f, 0.75f), Sound.Emitter.self());
+                    targets.playSound(Sound.sound(Key.key("block.end_gateway.spawn"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
+                    targets.playSound(Sound.sound(Key.key("entity.wither.death"), Sound.Source.AMBIENT, 1f, 1.25f), Sound.Emitter.self());
 
                     for(Item item : forgeitems){
                         item.remove();

@@ -2,11 +2,13 @@ package me.powerspieler.paveral.forming_altar;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.forming_altar.events.FormItemEvent;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -76,6 +78,7 @@ public class AwakeAltar implements Listener {
     }
 
     private boolean onValidAltar(Location lodestone){
+        final Audience targets = lodestone.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(lodestone) < 625);
         lodestone.add(0,-1,0);
         Block center = lodestone.getBlock();
         int x;
@@ -135,7 +138,7 @@ public class AwakeAltar implements Listener {
                     if(!(center.getRelative(x,0,z).getType() == Material.CUT_COPPER)){
                         if(!(center.getRelative(x,0,z).getType() == Material.AIR)){
                             center.getWorld().spawnParticle(Particle.WAX_ON, center.getLocation().add(x + 0.5,1,z + 0.5), 50, 0.25,0,0.25, 1);
-                            center.getWorld().playSound(Sound.sound(Key.key("item.axe.scrape"), Sound.Source.BLOCK, 1f, 1f));
+                            targets.playSound(Sound.sound(Key.key("item.axe.scrape"), Sound.Source.BLOCK, 1f, 1f), Sound.Emitter.self());
                         }
                         return false;
                     }

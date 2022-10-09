@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.entity.PhantomPreSpawnEvent;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.util.Constant;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -88,8 +89,9 @@ public class LightningRod implements Listener, Items {
                     Player player = event.getPlayer();
                     if(!cooldown.containsKey(player.getUniqueId()) || (System.currentTimeMillis() - cooldown.get(player.getUniqueId())) >= 1500){
                         cooldown.put(player.getUniqueId(), System.currentTimeMillis());
-                        player.getWorld().playSound(Sound.sound(Key.key("entity.lightning_bolt.thunder"), Sound.Source.MASTER, 1f, 1.8f));
-                        player.getWorld().playSound(Sound.sound(Key.key("item.trident.thunder"), Sound.Source.MASTER, 1f, 1f));
+                        final Audience targets = player.getWorld().filterAudience(member -> member instanceof Player playermember && playermember.getLocation().distanceSquared(player.getLocation()) < 2500);
+                        targets.playSound(Sound.sound(Key.key("entity.lightning_bolt.thunder"), Sound.Source.MASTER, 1f, 1.8f), Sound.Emitter.self());
+                        targets.playSound(Sound.sound(Key.key("item.trident.thunder"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
 
                         Location loc = player.getEyeLocation();
                         Vector direction = loc.getDirection().multiply(0.5);
@@ -149,15 +151,15 @@ public class LightningRod implements Listener, Items {
                                         if(AwardAdvancements.isAdvancementUndone(player, "lightning_rod_phantom")){
                                             AwardAdvancements.grantAdvancement(player, "lightning_rod_phantom");
                                         }
-                                        player.playSound(Sound.sound(Key.key("block.conduit.activate"), Sound.Source.AMBIENT, 1f, 0f));
-                                        player.playSound(Sound.sound(Key.key("block.conduit.ambient"), Sound.Source.AMBIENT, 1f, 0f));
+                                        player.playSound(Sound.sound(Key.key("block.conduit.activate"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
+                                        player.playSound(Sound.sound(Key.key("block.conduit.ambient"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
                                         player.getWorld().spawnParticle(Particle.NAUTILUS, player.getLocation(),1,0,0,0,1);
                                     }
                                 }
                             }
                         }.runTaskTimer(Paveral.getPlugin(),0,1);
                     } else {
-                        player.playSound(Sound.sound(Key.key("block.note_block.basedrum"), Sound.Source.AMBIENT, 1f, 0f));
+                        player.playSound(Sound.sound(Key.key("block.note_block.basedrum"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
                         showActionbar(player);
 
                     }
