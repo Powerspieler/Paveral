@@ -1,5 +1,5 @@
 # Paveral
-This is a Paper-Java-Plugin which adds a few items and a way of crafting them. This is meant to be a little addition to tweak the vanilla survival gameplay.
+This is a ****Java-Plugin for 1.19.2 Paper-Servers**** which adds a few items and a way of crafting them. This is meant to be a little addition to tweak the vanilla survival gameplay.
 
 Resourcepack: [https://github.com/Powerspieler/Paveral-Resourcepack](https://github.com/Powerspieler/Paveral-Resourcepack)
 
