@@ -1,12 +1,20 @@
 name: Paveral
-version: 1.0
+version: 1.0.1
 main: me.powerspieler.paveral.Paveral
 api-version: 1.19
 
 commands:
   test:
     description: Execute Test Code
+    permission: paveral.dev
   cooldown:
     description: Soosmose
+    permission: paveral.dev
   items:
     description: Request a paveral item
+    permission: paveral.dev
+
+permissions:
+  paveral.dev:
+    description: Allows Paveral Development Commands
+    default: op
