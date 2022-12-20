@@ -30,7 +30,7 @@ public class HandlePlayerJoin implements Listener {
 
     @EventHandler
     public void onResourcepackFailure(PlayerResourcePackStatusEvent event){
-        /*if(event.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED){
+        /* if(event.getStatus() == PlayerResourcePackStatusEvent.Status.DECLINED){
             event.getPlayer().sendMessage(Component.text("You decline the Resourcepack!\n", NamedTextColor.DARK_RED)
                     .append(Component.text("Most custom items will appear as warped funguns on a stick but still work the same way they should\n", NamedTextColor.GRAY))
                     .append(Component.text("If you wish to remove the loading screen download the resourcepack yourself ", NamedTextColor.GOLD)
