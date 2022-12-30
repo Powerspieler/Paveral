@@ -1,5 +1,6 @@
 package me.powerspieler.paveral.commands;
 
+import me.powerspieler.paveral.discovery.Discovery;
 import me.powerspieler.paveral.items.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -29,6 +30,14 @@ public class ItemsCommand implements CommandExecutor {
                     }
                     if(args[0].equalsIgnoreCase("bb")){
                         Items item = new BedrockBreaker();
+                        player.getInventory().addItem(item.build());
+                    }
+                    if(args[0].equalsIgnoreCase("ls")){
+                        Items item = new LightStaff();
+                        player.getInventory().addItem(item.build());
+                    }
+                    if(args[0].equalsIgnoreCase("w")){
+                        Items item = new Wrench();
                         player.getInventory().addItem(item.build());
                     }
                 }

@@ -125,8 +125,8 @@ public class AntiCreeperGrief implements Listener, Items {
         if (!(event.getEntityType() == EntityType.CREEPER)) return;
         creeper = event.getEntity();
         if(checkForPlayer(creeper) || checkForItemframe(creeper)){
-            defineFirework();
             event.setCancelled(true);
+            defineFirework();
         }
     }
 

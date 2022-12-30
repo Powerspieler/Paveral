@@ -1,12 +1,16 @@
 package me.powerspieler.paveral.commands;
 
 
+import me.powerspieler.paveral.discovery.Discovery;
+import me.powerspieler.paveral.discovery.diaries.BedrockBreaker;
+import me.powerspieler.paveral.items.Items;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -15,6 +19,8 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
             if(player.isOp()){
+                Discovery soos = new BedrockBreaker();
+                player.getInventory().addItem(soos.build());
                 /*NamespacedKey soos2 = new NamespacedKey("paveral", "find_diary");
                 Advancement adv = Bukkit.getAdvancement(soos2);
                 *//*if(player.getAdvancementProgress(adv).isDone()){
