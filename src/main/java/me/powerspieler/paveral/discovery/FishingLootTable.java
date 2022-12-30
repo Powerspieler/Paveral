@@ -28,7 +28,7 @@ public class FishingLootTable implements Listener {
         if(event.getState() == PlayerFishEvent.State.CAUGHT_FISH){
             if(event.getCaught() instanceof Item item){
                 if(!hasLightstaff(event.getPlayer())){
-                    if(Math.random() <= 0.1){
+                    if(Math.random() <= 0.01){
                         Items lightstaff = new LightStaff();
                         ItemStack lsStack = lightstaff.build();
 
@@ -39,8 +39,8 @@ public class FishingLootTable implements Listener {
                     }
                 }
 
-                if(AwardAdvancements.isAdvancementUndone(event.getPlayer(), "fishing")){
-                    if(Math.random() <= 0.05){
+                if(!AwardAdvancements.isAdvancementUndone(event.getPlayer(), "root") && AwardAdvancements.isAdvancementUndone(event.getPlayer(), "fishing")){
+                    if(Math.random() <= 0.02){
                         AwardAdvancements.grantAdvancement(event.getPlayer(), "fishing");
                         ItemStack wetPaper = new ItemStack(Material.PAPER);
                         ItemMeta wetPaperMeta = wetPaper.getItemMeta();
