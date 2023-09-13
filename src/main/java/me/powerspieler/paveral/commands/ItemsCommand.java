@@ -1,6 +1,5 @@
 package me.powerspieler.paveral.commands;
 
-import me.powerspieler.paveral.discovery.Discovery;
 import me.powerspieler.paveral.items.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

@@ -127,9 +127,7 @@ public class LightStaff implements Listener,Items {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event){
         Player player = event.getPlayer();
-        ItemStack MainHand = player.getInventory().getItemInMainHand();
-        ItemStack OffHand = player.getInventory().getItemInOffHand();
-        if((MainHand.hasItemMeta() && MainHand.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(MainHand.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff")) || OffHand.hasItemMeta() && (OffHand.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(OffHand.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff"))){
+        if(player.getPersistentDataContainer().has(Constant.IS_HOLDING, PersistentDataType.STRING) && player.getPersistentDataContainer().get(Constant.IS_HOLDING, PersistentDataType.STRING).equals("lightstaff")){
             if(!particlecooldown) {
                 particlecooldown = true;
                 Bukkit.getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), () -> particlecooldown = false, 80);
@@ -181,7 +179,7 @@ public class LightStaff implements Listener,Items {
                         }
                     }
                     lightstaffmeta.getPersistentDataContainer().set(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER, lightlevel);
-                    lightstaff.add().setItemMeta(lightstaffmeta);
+                    lightstaff.setItemMeta(lightstaffmeta);
                     showActionbar(event.getPlayer(), lightlevel);
                     event.setCancelled(true);
                 }

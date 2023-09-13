@@ -2,6 +2,7 @@ package me.powerspieler.paveral;
 
 import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.commands.ItemsCommand;
+import me.powerspieler.paveral.commands.TestCommand;
 import me.powerspieler.paveral.disassemble.AwakeTable;
 import me.powerspieler.paveral.disassemble.DisassembleListeners;
 import me.powerspieler.paveral.discovery.CatMorningGiftLootTable;
@@ -17,15 +18,19 @@ import me.powerspieler.paveral.items.enchanced.Knockback;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;
 import me.powerspieler.paveral.util.AdvancementLoader;
 import me.powerspieler.paveral.util.RecipeLoader;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
+import java.util.logging.Filter;
+import java.util.logging.LogRecord;
 
 
 public final class Paveral extends JavaPlugin {
     private static Paveral plugin;
+
 
     @Override
     public void onEnable() {
@@ -34,17 +39,20 @@ public final class Paveral extends JavaPlugin {
         AdvancementLoader.copyAdvancements();
         new RecipeLoader().registerRecipes();
 
-        //Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
+        Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
         //Objects.requireNonNull(getCommand("cooldown")).setExecutor(new CooldownCommand());
         Objects.requireNonNull(getCommand("items")).setExecutor(new ItemsCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
         // Items
+        pm.registerEvents(new ItemHoldingController(), this);
+
         pm.registerEvents(new AntiCreeperGrief(), this);
         pm.registerEvents(new BedrockBreaker(), this);
         pm.registerEvents(new Chunkloader(), this);
         pm.registerEvents(new LightStaff(), this);
         pm.registerEvents(new LightningRod(), this);
+        pm.registerEvents(new Worldalterer(), this);
         pm.registerEvents(new Wrench(), this);
 
         // Enhanced Enchantments
