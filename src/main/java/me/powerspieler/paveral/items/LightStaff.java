@@ -41,36 +41,36 @@ public class LightStaff implements Listener,Items {
         lightstaffmeta.getPersistentDataContainer().set(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER, 15);
         lightstaffmeta.setCustomModelData(4);
 
-        lightstaffmeta.displayName(Component.text("Lightstaff", NamedTextColor.GOLD)
+        lightstaffmeta.displayName(Component.text("Lightstaff", NamedTextColor.DARK_PURPLE)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("Press ")
+        lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(
                         Component.keybind("key.use", NamedTextColor.YELLOW)
                                 .decoration(TextDecoration.ITALIC, false)
                 )
-                .append(Component.text(" to place and remove lightblocks")));
-        lore.add(Component.text("Press (")
+                .append(Component.text(" to place and remove lightblocks", NamedTextColor.DARK_AQUA)));
+        lore.add(Component.text("Press (", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(
                         Component.keybind("key.sneak", NamedTextColor.GREEN)
                                 .decoration(TextDecoration.ITALIC, false)
                 )
-                .append(Component.text(" + ) ")
+                .append(Component.text(" + ) ", NamedTextColor.DARK_AQUA)
                         .decoration(TextDecoration.ITALIC, false))
                 .append(Component.keybind("key.attack", NamedTextColor.YELLOW)
                         .decoration(TextDecoration.ITALIC, false)
                         )
-                .append(Component.text(" to change lightlevel")
+                .append(Component.text(" to change lightlevel", NamedTextColor.DARK_AQUA)
                         .decoration(TextDecoration.ITALIC,false)));
         lore.add(Component.text(""));
-        lore.add(Component.text("Enchantable with ")
+        lore.add(Component.text("Enchantable with ", NamedTextColor.BLUE)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.text("Unbreaking",NamedTextColor.GRAY)
                         .decoration(TextDecoration.ITALIC, false)
                 )
-                .append(Component.text(" and ")
+                .append(Component.text(" and ", NamedTextColor.BLUE)
                         .decoration(TextDecoration.ITALIC, false)
                 )
                 .append(Component.text("Mending", NamedTextColor.GRAY)

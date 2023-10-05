@@ -2,6 +2,7 @@ package me.powerspieler.paveral.items;
 
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -29,11 +30,12 @@ public class Wrench implements Listener,Items {
         wrenchmeta.setUnbreakable(true);
         wrenchmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 
-        wrenchmeta.displayName(Component.text("Wrench")
+        wrenchmeta.displayName(Component.text("Wrench", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Open iron trapdoors")
                 .decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("Experimental", NamedTextColor.RED).decoration(TextDecoration.ITALIC, false));
         wrenchmeta.lore(lore);
 
         wrench.setItemMeta(wrenchmeta);

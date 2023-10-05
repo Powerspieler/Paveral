@@ -33,14 +33,14 @@ public class AntiCreeperGrief implements Listener, Items {
         creeperitemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "anticreepergrief");
         creeperitemmeta.setCustomModelData(1);
 
-        creeperitemmeta.displayName(Component.text("Creeper Defuser", NamedTextColor.BLUE)
+        creeperitemmeta.displayName(Component.text("Creeper Defuser", NamedTextColor.GOLD)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("Keep in inventory to prevent creepers from exploding nearby")
+        lore.add(Component.text("Keep in inventory to prevent creepers from exploding nearby", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Can be placed in an itemframe to protect a whole area")
+        lore.add(Component.text("Can be placed in an itemframe to protect a whole area", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("When hold in hand it displays if you're in a safe area")
+        lore.add(Component.text("When hold in hand it displays if you're in a safe area", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
         creeperitemmeta.lore(lore);
 

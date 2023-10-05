@@ -1,8 +1,6 @@
 package me.powerspieler.paveral.commands;
 
 
-import me.powerspieler.paveral.items.Worldalterer;
-import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -17,10 +15,33 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
             if(player.isOp()){
-                player.getInventory().addItem(new Worldalterer().build());
-                player.getPersistentDataContainer().remove(Constant.WA_POS1);
-                player.getPersistentDataContainer().remove(Constant.WA_POS2);
-                player.getPersistentDataContainer().remove(Constant.WA_FACING);
+
+
+
+                /*
+                BlockDisplay errglow = (BlockDisplay) player.getWorld().spawnEntity(player.getLocation(), EntityType.BLOCK_DISPLAY);
+                errglow.setBlock(Material.NETHERITE_BLOCK.createBlockData());
+                errglow.setGlowing(true);
+                errglow.setBrightness(new Display.Brightness(15,15));
+
+                Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+                Team error = scoreboard.registerNewTeam("WA_ERRORTEST");
+                error.prefix(Component.text("AMOGUS", NamedTextColor.RED));
+                Bukkit.broadcast(Component.text(scoreboard.getTeams().stream().findFirst().get().getName()));
+                error.color(NamedTextColor.RED);
+                error.addEntity(errglow);
+                error.addPlayer(player);
+
+                Bukkit.broadcast(Component.text("Teams: " + scoreboard.getTeams().toString()));
+                //scoreboard.getTeams().forEach(t -> Bukkit.broadcast(Component.text(t.toString())));
+
+
+
+
+                //player.getInventory().addItem(new Worldalterer().build());
+                //player.getPersistentDataContainer().remove(Constant.WA_POS1);
+                //player.getPersistentDataContainer().remove(Constant.WA_POS2);
+                //player.getPersistentDataContainer().remove(Constant.WA_FACING);
 
                 /*NamespacedKey soos2 = new NamespacedKey("paveral", "find_diary");
                 Advancement adv = Bukkit.getAdvancement(soos2);

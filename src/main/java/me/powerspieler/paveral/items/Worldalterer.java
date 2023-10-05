@@ -6,6 +6,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -18,15 +19,19 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
+import org.bukkit.util.Vector;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public class Worldalterer implements Listener,Items {
     Map<UUID, Integer> runnableMap = new HashMap<>();
+
+    // Cooldown before commiting - depends on amount of blocks selected
+    private final HashMap<UUID, Long> cooldownuntil = new HashMap<>();
 
     @Override
     public ItemStack build() {
@@ -35,6 +40,30 @@ public class Worldalterer implements Listener,Items {
         itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "worldalterer");
         itemmeta.setCustomModelData(6);
 
+        itemmeta.displayName(Component.text("||", NamedTextColor.LIGHT_PURPLE)
+                .decoration(TextDecoration.OBFUSCATED, true).decoration(TextDecoration.ITALIC, true)
+                .append(Component.text(" Worldalterer ", NamedTextColor.GOLD)
+                        .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.ITALIC, false))
+                        .append(Component.text("||", NamedTextColor.LIGHT_PURPLE)
+                                .decoration(TextDecoration.OBFUSCATED, true).decoration(TextDecoration.ITALIC, true)));
+
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Press (", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)
+                        .append(Component.keybind("key.sneak", NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false))
+                        .append(Component.text(" + ) ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false))
+                        .append(Component.keybind("key.attack", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false))
+                        .append(Component.text(" or ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false))
+                        .append(Component.keybind("key.use", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false))
+                        .append(Component.text(" to select Positions", NamedTextColor.DARK_AQUA)));
+        lore.add(Component.text("Look in the desired direction and press ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)
+                        .append(Component.keybind("key.attack", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false))
+                        .append(Component.text(" to set the direction", NamedTextColor.DARK_AQUA)));
+        lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)
+                        .append(Component.keybind("key.use", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false))
+                        .append(Component.text(" to commit alteration", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)));
+        lore.add(Component.text("Does not move entites!", NamedTextColor.RED).decoration(TextDecoration.ITALIC, false));
+
+        itemmeta.lore(lore);
         item.setItemMeta(itemmeta);
         return item;
     }
@@ -45,6 +74,9 @@ public class Worldalterer implements Listener,Items {
     }
 
     // TODO Only allow players with crafting advance use this tool
+    // TODO CRAFTING RECIPE -> Multipart Custom Ingredient? match with texture
+    // TODO Bea book writing
+    // TODO RECHARGE (ECHO SHARDS) (MAYBE SMITHING / OR FORGE) -> Add Durability
     @EventHandler
     public void onPlayerUse(PlayerInteractEvent event){
         Player player = event.getPlayer();
@@ -54,9 +86,14 @@ public class Worldalterer implements Listener,Items {
                 return;
             }
 
+            // Disable until move is finished
+            if(cooldownuntil.containsKey(player.getUniqueId()) && System.currentTimeMillis() - cooldownuntil.get(player.getUniqueId()) <= 0){
+                return;
+            }
+
             if(!player.isSneaking()){
-                // Change Mode
                 if(event.getAction().isLeftClick()){
+                    // Change Direction
                     String facing = player.getFacing().name();
                     if(player.getLocation().getPitch() >= 40){
                         facing = "DOWN";
@@ -65,25 +102,66 @@ public class Worldalterer implements Listener,Items {
                         facing = "UP";
                     }
                     player.getPersistentDataContainer().set(Constant.WA_FACING, PersistentDataType.STRING, facing);
+                    player.playSound(Sound.sound(Key.key("item.lodestone_compass.lock"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
                     cancelActionbar(player);
                     runActionbar(player, 0);
                     return;
                 }
-
-
-
+                // Commit move
                 if(player.getPersistentDataContainer().has(Constant.WA_POS1) && player.getPersistentDataContainer().has(Constant.WA_POS2) && player.getPersistentDataContainer().has(Constant.WA_FACING)) {
                     int[] pos1 = player.getPersistentDataContainer().get(Constant.WA_POS1, PersistentDataType.INTEGER_ARRAY);
                     int[] pos2 = player.getPersistentDataContainer().get(Constant.WA_POS2, PersistentDataType.INTEGER_ARRAY);
                     assert pos1 != null;
                     assert pos2 != null;
 
+                    // max blocks = 32768
+                    int blockCount = (Math.abs(pos1[0] - pos2[0]) + 1) * (Math.abs(pos1[1] - pos2[1]) + 1) * (Math.abs(pos1[2] - pos2[2]) + 1);
+                    if(blockCount > 32768){
+                        cancelActionbar(player);
+                        player.sendActionBar(Component.text("Too many blocks selected! Max: 32768", NamedTextColor.RED));
+                        player.playSound(Sound.sound(Key.key("block.note_block.bass"), Sound.Source.AMBIENT, 1f, 0.2f), Sound.Emitter.self());
+                        runActionbar(player, 40);
+                        return;
+                    }
 
+                    // Chunks loaded?
+                    if(!isChunkLoaded(player, pos1, pos2)){
+                        return;
+                    }
+
+                    // Check for Illegal Blocks
                     for (int x = Math.min(pos1[0], pos2[0]); x <= Math.max(pos1[0], pos2[0]); x++) {
                         for (int y = Math.min(pos1[1], pos2[1]); y <= Math.max(pos1[1], pos2[1]); y++) {
                             for (int z = Math.min(pos1[2], pos2[2]); z <= Math.max(pos1[2], pos2[2]); z++) {
                                 if (Tag.WITHER_IMMUNE.getValues().contains(player.getWorld().getBlockAt(x, y, z).getType())) {
                                     cancelActionbar(player);
+
+                                    Location illegalloc = new Location(player.getWorld(), x, y, z);
+                                    BlockDisplay errglow = (BlockDisplay) player.getWorld().spawnEntity(illegalloc, EntityType.BLOCK_DISPLAY);
+                                    errglow.setBlock(Material.RED_STAINED_GLASS.createBlockData());
+                                    errglow.setGlowing(true);
+                                    errglow.setBrightness(new Display.Brightness(15,15));
+                                    Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+                                    Team error;
+                                    if(scoreboard.getTeams().stream().noneMatch(t -> t.getName().equals("WA_ERROR"))){
+                                        error = scoreboard.registerNewTeam("WA_ERROR");
+                                    } else {
+                                        error = scoreboard.getTeam("WA_ERROR");
+                                    }
+                                    assert error != null;
+                                    error.color(NamedTextColor.RED);
+                                    error.addEntity(errglow);
+
+                                    new BukkitRunnable() {
+                                        @Override
+                                        public void run() {
+                                            errglow.remove();
+                                            if(error.getEntries().size() == 0){
+                                                error.unregister();
+                                            }
+                                        }
+                                    }.runTaskLater(Paveral.getPlugin(), 40L);
+
                                     player.sendActionBar(Component.text("Unmovable block at " + x + ", " + y + ", " + z, NamedTextColor.RED));
                                     player.playSound(Sound.sound(Key.key("block.note_block.basedrum"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
                                     runActionbar(player, 40);
@@ -93,6 +171,7 @@ public class Worldalterer implements Listener,Items {
                         }
                     }
 
+                    // Apply Direction
                     String facing = player.getPersistentDataContainer().get(Constant.WA_FACING, PersistentDataType.STRING);
 
                     int[] paste = new int[3];
@@ -112,7 +191,8 @@ public class Worldalterer implements Listener,Items {
                         }
 
                     }
-                    // Check if air
+
+                    // Check if air - creating area to be moved in
                     int rx = Math.abs(pos1[0] - pos2[0]) + 1;
                     int ry = Math.abs(pos1[1] - pos2[1]) + 1;
                     int rz = Math.abs(pos1[2] - pos2[2]) + 1;
@@ -146,12 +226,40 @@ public class Worldalterer implements Listener,Items {
                             aircheck2[0] = Math.max(pos1[0], pos2[0]) + 1;
                         }
                     }
+                    // check for non-air in destination
                     for(int x = Math.min(aircheck1[0], aircheck2[0]); x <= Math.max(aircheck1[0], aircheck2[0]); x++){
                         for(int y = Math.min(aircheck1[1], aircheck2[1]); y <= Math.max(aircheck1[1], aircheck2[1]); y++){
                             for(int z = Math.min(aircheck1[2], aircheck2[2]); z <= Math.max(aircheck1[2], aircheck2[2]); z++){
                                 if(!player.getWorld().getBlockAt(x,y,z).isEmpty()){
                                     cancelActionbar(player);
-                                    player.sendActionBar(Component.text("Collision at " + x + ", " + y + ", " + z, NamedTextColor.GREEN));
+
+                                    Location collloc = new Location(player.getWorld(), x, y, z);
+                                    BlockDisplay collglow = (BlockDisplay) player.getWorld().spawnEntity(collloc, EntityType.BLOCK_DISPLAY);
+                                    collglow.setBlock(Material.YELLOW_STAINED_GLASS.createBlockData());
+                                    collglow.setGlowing(true);
+                                    collglow.setBrightness(new Display.Brightness(15,15));
+                                    Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+                                    Team coll;
+                                    if(scoreboard.getTeams().stream().noneMatch(t -> t.getName().equals("WA_COLL"))){
+                                        coll = scoreboard.registerNewTeam("WA_COLL");
+                                    } else {
+                                        coll = scoreboard.getTeam("WA_COLL");
+                                    }
+                                    assert coll != null;
+                                    coll.color(NamedTextColor.YELLOW);
+                                    coll.addEntity(collglow);
+
+                                    new BukkitRunnable() {
+                                        @Override
+                                        public void run() {
+                                            collglow.remove();
+                                            if(coll.getEntries().size() == 0){
+                                                coll.unregister();
+                                            }
+                                        }
+                                    }.runTaskLater(Paveral.getPlugin(), 40L);
+
+                                    player.sendActionBar(Component.text("Collision at " + x + ", " + y + ", " + z, NamedTextColor.YELLOW));
                                     player.playSound(Sound.sound(Key.key("entity.allay.hurt"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
                                     runActionbar(player, 40);
                                     return;
@@ -160,50 +268,32 @@ public class Worldalterer implements Listener,Items {
                         }
                     }
 
+                    // Set a future time for re-enabling / prevent spamming for larger selects: e.g. max: 32768 = 8,192s Cooldown ( / 20 (ticks to s) [/ 100] / 2 * 1000 (-> ms))
+                    cooldownuntil.put(player.getUniqueId(), System.currentTimeMillis() + (blockCount / 4));
 
 
+                    new BukkitRunnable() {
+                        long duration;
+                        @Override
+                        public void run() {
+                            if(System.currentTimeMillis() - cooldownuntil.get(player.getUniqueId()) >= 0){
+                                if(isChunkLoaded(player, pos1, pos2)){
+                                    moveBlocks(player, pos1, pos2, paste, facing);
+                                }
 
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "clone " +
-                            pos1[0] + " " + pos1[1] + " " + pos1[2] + " " +
-                            pos2[0] + " " + pos2[1] + " " + pos2[2] + " " +
-                            paste[0] + " " + paste[1] + " " + paste[2] +
-                            " replace move");
+                                // damage
 
-                    player.playSound(Sound.sound(Key.key("block.end_portal_frame.fill"), Sound.Source.AMBIENT, 1f, 1.75f), Sound.Emitter.self());
+                                cancel();
+                            }
+                            duration = cooldownuntil.get(player.getUniqueId()) - System.currentTimeMillis();
 
-
-
-                    // Move SelectionBlocks
-                    switch (facing) {
-                        case "UP" -> {
-                            pos1[1]++;
-                            pos2[1]++;
+                            // help -> https://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio
+                            // NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
+                            float pitch = ((float) ((duration - 0) * (20 - 0)) / (blockCount / 4 - 0)) / 10;
+                            player.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 0.5f, pitch * -1 + 2), Sound.Emitter.self());
+                            player.spawnParticle(Particle.PORTAL, getRightSide(player.getEyeLocation(), 0.45).subtract(0, .6, 0), 1);
                         }
-                        case "DOWN" -> {
-                            pos1[1]--;
-                            pos2[1]--;
-                        }
-                        case "NORTH" -> {
-                            pos1[2]--;
-                            pos2[2]--;
-                        }
-                        case "SOUTH" -> {
-                            pos1[2]++;
-                            pos2[2]++;
-                        }
-                        case "WEST" -> {
-                            pos1[0]--;
-                            pos2[0]--;
-                        }
-                        case "EAST" -> {
-                            pos1[0]++;
-                            pos2[0]++;
-                        }
-                    }
-                    setPosition(player, Action.LEFT_CLICK_BLOCK, pos1);
-                    setPosition(player, Action.RIGHT_CLICK_BLOCK, pos2);
-
-
+                    }.runTaskTimer(Paveral.getPlugin(), 0, 1);
                 }
             } else {
                 // Set Pos
@@ -211,9 +301,69 @@ public class Worldalterer implements Listener,Items {
                 if(block != null){
                     int[] pos = new int[]{block.getX(), block.getY(), block.getZ()};
                     setPosition(event.getPlayer(), event.getAction(), pos);
+                    player.playSound(Sound.sound(Key.key("block.respawn_anchor.set_spawn"), Sound.Source.AMBIENT, 1f, 1.75f), Sound.Emitter.self());
                 }
             }
         }
+    }
+
+    public static Location getRightSide(Location location, double distance) {
+        float angle = location.getYaw() / 60;
+        return location.clone().subtract(new Vector(Math.cos(angle), 0, Math.sin(angle)).normalize().multiply(distance));
+    }
+
+    private void moveBlocks(Player player, int[] pos1, int[] pos2, int[] paste, String facing){
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "clone " +
+                pos1[0] + " " + pos1[1] + " " + pos1[2] + " " +
+                pos2[0] + " " + pos2[1] + " " + pos2[2] + " " +
+                paste[0] + " " + paste[1] + " " + paste[2] +
+                " replace move");
+
+        player.playSound(Sound.sound(Key.key("block.end_portal_frame.fill"), Sound.Source.AMBIENT, 1f, 1.75f), Sound.Emitter.self());
+
+        // Move SelectionBlocks
+        switch (facing) {
+            case "UP" -> {
+                pos1[1]++;
+                pos2[1]++;
+            }
+            case "DOWN" -> {
+                pos1[1]--;
+                pos2[1]--;
+            }
+            case "NORTH" -> {
+                pos1[2]--;
+                pos2[2]--;
+            }
+            case "SOUTH" -> {
+                pos1[2]++;
+                pos2[2]++;
+            }
+            case "WEST" -> {
+                pos1[0]--;
+                pos2[0]--;
+            }
+            case "EAST" -> {
+                pos1[0]++;
+                pos2[0]++;
+            }
+        }
+        setPosition(player, Action.LEFT_CLICK_BLOCK, pos1);
+        setPosition(player, Action.RIGHT_CLICK_BLOCK, pos2);
+    }
+
+    private boolean isChunkLoaded(Player player, int[] pos1, int[] pos2){
+        Location pos1loc = new Location(player.getWorld(), pos1[0], pos1[1], pos1[2]);
+        Location pos2loc = new Location(player.getWorld(), pos2[0], pos2[1], pos2[2]);
+        if(pos1loc.isChunkLoaded() && pos2loc.isChunkLoaded()){
+            return true;
+        }
+        cancelActionbar(player);
+        player.sendActionBar(Component.text("Selection is too far away! - CANCELLED", NamedTextColor.RED));
+        player.playSound(Sound.sound(Key.key("block.note_block.bass"), Sound.Source.AMBIENT, 1f, 0.2f), Sound.Emitter.self());
+        runActionbar(player, 40);
+        return false;
     }
 
     @EventHandler
@@ -257,7 +407,11 @@ public class Worldalterer implements Listener,Items {
             if(player.getWorld().isChunkLoaded(pos1[0] / 16 + 1, pos1[2] / 16 + 1)){
                 Location pos1loc = new Location(player.getWorld(), pos1[0], pos1[1], pos1[2]);
                 BlockDisplay pos1glow = (BlockDisplay) player.getWorld().spawnEntity(pos1loc, EntityType.BLOCK_DISPLAY);
-                pos1glow.setBlock(pos1loc.getBlock().getBlockData());
+
+                if(pos1loc.getBlock().isSolid()){
+                    pos1glow.setBlock(pos1loc.getBlock().getBlockData());
+                } else pos1glow.setBlock(Material.GLASS.createBlockData());
+
                 pos1glow.setGlowing(true);
                 pos1glow.setBrightness(new Display.Brightness(15,15));
                 pos1glow.getPersistentDataContainer().set(Constant.WA_GLOWOWNER, PersistentDataType.STRING, String.valueOf(player.getUniqueId()));
@@ -265,7 +419,11 @@ public class Worldalterer implements Listener,Items {
             if(player.getWorld().isChunkLoaded(pos2[0] / 16 + 1, pos2[2] / 16 + 1)){
                 Location pos2loc = new Location(player.getWorld(), pos2[0], pos2[1], pos2[2]);
                 BlockDisplay pos2glow = (BlockDisplay) player.getWorld().spawnEntity(pos2loc, EntityType.BLOCK_DISPLAY);
-                pos2glow.setBlock(pos2loc.getBlock().getBlockData());
+
+                if(pos2loc.getBlock().isSolid()){
+                    pos2glow.setBlock(pos2loc.getBlock().getBlockData());
+                } else pos2glow.setBlock(Material.GLASS.createBlockData());
+
                 pos2glow.setGlowing(true);
                 pos2glow.setBrightness(new Display.Brightness(15,15));
                 pos2glow.getPersistentDataContainer().set(Constant.WA_GLOWOWNER, PersistentDataType.STRING, String.valueOf(player.getUniqueId()));

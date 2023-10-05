@@ -39,20 +39,20 @@ public class BedrockBreaker implements Listener,Items {
         bedrockbreakermeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "bedrock_breaker");
         bedrockbreakermeta.setCustomModelData(5);
 
-        bedrockbreakermeta.displayName(Component.text("Bedrock Breaker", NamedTextColor.GRAY)
+        bedrockbreakermeta.displayName(Component.text("Bedrock Breaker", NamedTextColor.DARK_PURPLE)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("Press ")
+        lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.keybind("key.mouse.right", NamedTextColor.YELLOW)
                         .decoration(TextDecoration.ITALIC, false)
                 )
-                .append(Component.text(" to break bedrock or")
+                .append(Component.text(" to break bedrock or", NamedTextColor.DARK_AQUA)
                         .decoration(TextDecoration.ITALIC, false)));
-        lore.add(Component.text("repair using ancient debris")
+        lore.add(Component.text("repair using ancient debris", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text(""));
-        lore.add(Component.text("Only enchantable with ")
+        lore.add(Component.text("Only enchantable with ", NamedTextColor.BLUE)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.text("Unbreaking", NamedTextColor.GRAY)
                         .decoration(TextDecoration.ITALIC, false)));

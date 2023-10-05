@@ -32,10 +32,10 @@ public class Chunkloader implements Listener, Items {
         ItemMeta itemmeta = item.getItemMeta();
         itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "chunkloader");
 
-        itemmeta.displayName(Component.text("Chunkloader", NamedTextColor.LIGHT_PURPLE)
+        itemmeta.displayName(Component.text("Chunkloader", NamedTextColor.GOLD)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("Loads 3x3 Chunks")
+        lore.add(Component.text("Loads 3x3 Chunks", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC,false));
         lore.add(Component.text("Does not support random ticks!",NamedTextColor.RED)
                 .decoration(TextDecoration.ITALIC,false));

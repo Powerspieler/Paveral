@@ -15,17 +15,15 @@ import me.powerspieler.paveral.forming_altar.FormingListeners;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
+import me.powerspieler.paveral.items.parts.worldalterer.SonicEssence;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;
 import me.powerspieler.paveral.util.AdvancementLoader;
 import me.powerspieler.paveral.util.RecipeLoader;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
-import java.util.logging.Filter;
-import java.util.logging.LogRecord;
 
 
 public final class Paveral extends JavaPlugin {
@@ -37,7 +35,7 @@ public final class Paveral extends JavaPlugin {
         plugin = this;
 
         AdvancementLoader.copyAdvancements();
-        new RecipeLoader().registerRecipes();
+        RecipeLoader.registerRecipes();
 
         Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
         //Objects.requireNonNull(getCommand("cooldown")).setExecutor(new CooldownCommand());
@@ -53,6 +51,7 @@ public final class Paveral extends JavaPlugin {
         pm.registerEvents(new LightStaff(), this);
         pm.registerEvents(new LightningRod(), this);
         pm.registerEvents(new Worldalterer(), this);
+        pm.registerEvents(new SonicEssence(), this);
         pm.registerEvents(new Wrench(), this);
 
         // Enhanced Enchantments

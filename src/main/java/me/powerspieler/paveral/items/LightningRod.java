@@ -44,20 +44,20 @@ public class LightningRod implements Listener, Items {
         lrmeta.setUnbreakable(true);
         lrmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 
-        lrmeta.displayName(Component.text("Lightning Rod", NamedTextColor.LIGHT_PURPLE)
+        lrmeta.displayName(Component.text("Lightning Rod", NamedTextColor.DARK_PURPLE)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("Press ")
+        lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.keybind("key.mouse.right",NamedTextColor.YELLOW)
                         .decoration(TextDecoration.ITALIC, false))
-                .append(Component.text(" to cast lightning")
+                .append(Component.text(" to cast lightning", NamedTextColor.DARK_AQUA)
                         .decoration(TextDecoration.ITALIC, false)));
         lore.add(Component.text("Kills phantoms instantly", NamedTextColor.RED)
                 .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Kill three phantoms at once to")
+        lore.add(Component.text("Kill three phantoms at once to", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("prevent them spawning for five minutes")
+        lore.add(Component.text("prevent them spawning for five minutes", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
         lrmeta.lore(lore);
 

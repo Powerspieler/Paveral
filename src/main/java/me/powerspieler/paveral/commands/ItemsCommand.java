@@ -39,6 +39,10 @@ public class ItemsCommand implements CommandExecutor {
                         Items item = new Wrench();
                         player.getInventory().addItem(item.build());
                     }
+                    if(args[0].equalsIgnoreCase("wa")){
+                        Items item = new Worldalterer();
+                        player.getInventory().addItem(item.build());
+                    }
                 }
             } else player.sendMessage(Component.text("ERROR: No Op", NamedTextColor.RED));
         }
