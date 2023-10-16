@@ -1,5 +1,6 @@
 package me.powerspieler.paveral.items.parts.worldalterer;
 
+import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -17,12 +18,12 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.HashMap;
 
 public class SonicEssence implements Listener {
-    private static ItemStack build() {
+    protected static ItemStack build() {
         ItemStack item = new ItemStack(Material.JIGSAW);
         ItemMeta itemmeta = item.getItemMeta();
         itemmeta.setCustomModelData(2);
-        itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "echo_container");
-        itemmeta.displayName(Component.text("Sonic Essense", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false)); // Name by Raphilius
+        itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "sonic_essence");
+        itemmeta.displayName(Component.text("Sonic Essence", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false)); // Name by Raphilius
         item.setItemMeta(itemmeta);
         return item;
     }
@@ -33,6 +34,11 @@ public class SonicEssence implements Listener {
             ItemStack bottle = player.getInventory().getItemInMainHand();
             if(bottle.getType() == Material.GLASS_BOTTLE){
                 bottle.setAmount(bottle.getAmount() - 1);
+
+                if(AwardAdvancements.isAdvancementUndone(player, "sonic_essence")){
+                    AwardAdvancements.grantAdvancement(player, "sonic_essence");
+                }
+
                 HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(SonicEssence.build());
                 if(!leftover.isEmpty()){
                     for(ItemStack item : leftover.values()){

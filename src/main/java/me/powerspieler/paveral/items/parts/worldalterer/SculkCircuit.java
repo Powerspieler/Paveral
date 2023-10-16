@@ -31,7 +31,7 @@ public class SculkCircuit {
         recipe.setIngredient('P', Material.PISTON);
         recipe.setIngredient('D', Material.DIAMOND);
         recipe.setIngredient('R', Material.REDSTONE);
-        recipe.setIngredient('W', Material.DRAGON_BREATH); // TODO Warden Power
+        recipe.setIngredient('W', SonicEssence.build());
         recipe.setIngredient('S', Material.CALIBRATED_SCULK_SENSOR);
         recipe.setIngredient('N', Material.NETHERITE_BLOCK);
         return recipe;

@@ -183,6 +183,7 @@ public class DisassembleListeners implements Listener {
                 }
 
                 if(process >= 200){
+                    /* // Advancements moved to other sources - Keeping old code
                     if(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff")){
                         List<Entity> entities = new ArrayList<>(location.getNearbyEntities(15,15,15));
                         for(Entity entity : entities){
@@ -193,16 +194,7 @@ public class DisassembleListeners implements Listener {
                             }
                         }
                     }
-                    if(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "wrench")){
-                        List<Entity> entities = new ArrayList<>(location.getNearbyEntities(15,15,15));
-                        for(Entity entity : entities){
-                            if(entity instanceof Player player){
-                                if(AwardAdvancements.isAdvancementUndone(player, "dis_wrench")){
-                                    AwardAdvancements.grantAdvancement(player, "dis_wrench");
-                                }
-                            }
-                        }
-                    }
+                     */
 
                     item.remove();
 

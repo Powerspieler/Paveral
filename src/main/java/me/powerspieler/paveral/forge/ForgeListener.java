@@ -1,11 +1,10 @@
 package me.powerspieler.paveral.forge;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.forge.events.ForgeItemEvent;
-import me.powerspieler.paveral.items.AntiCreeperGrief;
-import me.powerspieler.paveral.items.Chunkloader;
-import me.powerspieler.paveral.items.Items;
-import me.powerspieler.paveral.items.Wrench;
+import me.powerspieler.paveral.items.*;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -26,6 +25,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static me.powerspieler.paveral.forge.AwakeForge.ALREADY_FORGING;
 import static me.powerspieler.paveral.forming_altar.AwakeAltar.ALREADY_FORMING;
@@ -77,6 +77,20 @@ public class ForgeListener implements Listener {
                 if(isFueled(event.getForge())){
                     Items acg = new Wrench();
                     forgeItem(event.getForge(), formingitems, acg.build());
+                }
+            }
+            return;
+        }
+        //Handel JIGSAWs
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW)){
+            List<Item> formingitems = items.stream()
+                    .filter(item -> item.getItemStack().getType() == Material.JIGSAW && item.getItemStack().getAmount() == 1 && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)).toList();
+            // WORLDALTERER
+            if(formingitems.stream().anyMatch(item -> item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals("amethyst_laser")) &&
+                    formingitems.stream().anyMatch(item -> item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals("alteration_core")) &&
+                    formingitems.stream().anyMatch(item -> item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals("echo_container"))){
+                if(isFueled(event.getForge())){
+                    forgeItem(event.getForge(), formingitems, Worldalterer.build());
                 }
             }
             // INSERT RETURN HERE!
@@ -316,6 +330,17 @@ public class ForgeListener implements Listener {
                     targets.playSound(Sound.sound(Key.key("block.beacon.activate"), Sound.Source.AMBIENT, 1f, 0.75f), Sound.Emitter.self());
                     targets.playSound(Sound.sound(Key.key("block.end_gateway.spawn"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
                     targets.playSound(Sound.sound(Key.key("entity.wither.death"), Sound.Source.AMBIENT, 1f, 1.25f), Sound.Emitter.self());
+
+                    // Advancement
+                    if(result.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals("worldalterer")){
+                        UUID uuid = forgeitems.get(0).getThrower();
+                        if(uuid != null){
+                            Player player = (Player) Bukkit.getOfflinePlayer(uuid);
+                            if(AwardAdvancements.isAdvancementUndone(player, "worldalterer")){
+                                AwardAdvancements.grantAdvancement(player, "worldalterer");
+                            }
+                        }
+                    }
 
                     for(Item item : forgeitems){
                         item.remove();

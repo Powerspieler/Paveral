@@ -3,10 +3,13 @@ package me.powerspieler.paveral.commands;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -15,6 +18,16 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
             if(player.isOp()){
+
+                ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+                BookMeta bookmeta = (BookMeta) book.getItemMeta();
+                bookmeta.setAuthor("");
+                bookmeta.setTitle("Diary [#17]");
+                for (int i = 0; i < 210; i++) {
+                    bookmeta.addPages(Component.text("Soos"));
+                }
+                book.setItemMeta(bookmeta);
+                player.getInventory().addItem(book);
 
 
 

@@ -96,6 +96,48 @@ public class AwardAdvancements implements Listener {
             }
         }
     }
+    // Wrench
+    @EventHandler
+    public void onWrenchPickup(EntityPickupItemEvent event){
+        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "wrench")){
+            if(event.getEntity() instanceof Player player){
+                if(isAdvancementUndone(player, "wrench")){
+                    grantAdvancement(player, "wrench");
+                }
+            }
+        }
+    }
+    @EventHandler
+    public void onWrenchClick(InventoryClickEvent event){
+        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "wrench")){
+            if(event.getWhoClicked() instanceof Player player){
+                if(isAdvancementUndone(player, "wrench")){
+                    grantAdvancement(player, "wrench");
+                }
+            }
+        }
+    }
+    // Lightstaff
+    @EventHandler
+    public void onLightstaffPickup(EntityPickupItemEvent event){
+        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff")){
+            if(event.getEntity() instanceof Player player){
+                if(isAdvancementUndone(player, "lightstaff")){
+                    grantAdvancement(player, "lightstaff");
+                }
+            }
+        }
+    }
+    @EventHandler
+    public void onLightstaffClick(InventoryClickEvent event){
+        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff")){
+            if(event.getWhoClicked() instanceof Player player){
+                if(isAdvancementUndone(player, "lightstaff")){
+                    grantAdvancement(player, "lightstaff");
+                }
+            }
+        }
+    }
     // Anti Creeper Grief
     @EventHandler
     public void onACGPickup(EntityPickupItemEvent event){

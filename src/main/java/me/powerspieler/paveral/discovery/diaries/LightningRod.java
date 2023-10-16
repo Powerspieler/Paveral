@@ -24,9 +24,9 @@ public class LightningRod implements Discovery {
         bookmeta.addPages(Component.text("Day 03: \nThe waves are as high as never before. I had no time writing an \"Day 02\" entry yesterday, because i needed to save my house from the waves.\nI hope the ocean can chill down a bit the next week."));
         bookmeta.addPages(Component.text("Day 04: \nIt's pretty interesting what junk the ocean is washing to my house. Ok, it's not only junk. There is a lot of fish - it's like I can work from home.\nBut back to the junk: Kelp, some interesting looking Eggs, and a lot of shells. Oh, i almost forgot, there was"));
         bookmeta.addPages(Component.text("some kind of stone plate before.\nThere was something drawn on it. I think it was like a staff with three sharp parts on the top of it and a book. There was also something written on the book but I can't remember..."));
-        bookmeta.addPages(Component.text("Day 07: \nThere is a storm outside. The waves are becoming higher and higher. I hope this nightmare will end soon. It least i saved this weird stone plate from a few days ago.\n\nI can't read the text written on that book.\nI have never seen this language before,"));
+        bookmeta.addPages(Component.text("Day 07: \nThere is a storm outside. The waves are becoming higher and higher. I hope this nightmare will end soon. At least I saved this weird stone plate from a few days ago.\n\nI can't read the text written on that book.\nI have never seen this language before,"));
         bookmeta.addPages(Component.text("even the letters seem odd. The only thing I can do is copying them. Maybe someone will understand this, someday:\n\n\n\nŀリ〒ᔑリᓵŀ↸ ᓵ〒ᔑリリŀꖎ╎リㅓ"));
-        bookmeta.addPages(Component.text("Day 12: \nThe ocean has reached into my house. I think this will not end. I have to move out and leave may home behind.\nI will ask my friend if I could stay a while at his house.\nNew adventures are waiting for me!"));
+        bookmeta.addPages(Component.text("Day 12: \nThe ocean has reached into my house. I think this will not end. I have to move out and leave my home behind.\nI will ask my friend if I could stay a while at his house.\nNew adventures are waiting for me!"));
         book.setItemMeta(bookmeta);
         return book;
     }

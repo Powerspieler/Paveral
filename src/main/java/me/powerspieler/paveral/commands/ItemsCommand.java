@@ -40,8 +40,8 @@ public class ItemsCommand implements CommandExecutor {
                         player.getInventory().addItem(item.build());
                     }
                     if(args[0].equalsIgnoreCase("wa")){
-                        Items item = new Worldalterer();
-                        player.getInventory().addItem(item.build());
+                        //Items item = new Worldalterer();
+                        player.getInventory().addItem(Worldalterer.build());
                     }
                 }
             } else player.sendMessage(Component.text("ERROR: No Op", NamedTextColor.RED));

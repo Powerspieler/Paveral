@@ -1,9 +1,6 @@
 package me.powerspieler.paveral.discovery;
 
-import me.powerspieler.paveral.discovery.diaries.AntiCreeperGrief;
-import me.powerspieler.paveral.discovery.diaries.Bonk;
-import me.powerspieler.paveral.discovery.diaries.Enhancing;
-import me.powerspieler.paveral.discovery.diaries.LightningRod;
+import me.powerspieler.paveral.discovery.diaries.*;
 import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.items.Wrench;
@@ -78,6 +75,15 @@ public class ChestLootTable implements Listener {
                 List<ItemStack> loot = new ArrayList<>(event.getLoot());
                 Items item = new Wrench();
                 loot.add(item.build());
+                event.setLoot(loot);
+            }
+        }
+        // Worldalterer - Book
+        if(chesttype.equals("minecraft:chests/ancient_city_ice_box")){
+            if (Math.random() <= 0.5) {
+                List<ItemStack> loot = new ArrayList<>(event.getLoot());
+                Discovery book = new Worldalterer();
+                loot.add(book.build());
                 event.setLoot(loot);
             }
         }

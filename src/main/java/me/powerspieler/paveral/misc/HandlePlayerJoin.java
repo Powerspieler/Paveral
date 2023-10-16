@@ -20,7 +20,7 @@ public class HandlePlayerJoin implements Listener {
         Player player = event.getPlayer();
         // Check and provide Resourcepack
         if(!player.hasResourcePack()){
-            player.setResourcePack("https://github.com/Powerspieler/Paveral-Resourcepack/releases/download/v1.3/Paveral-Resourcepack_v1.3.zip", "44c0d27e276bad84b51b4012d6ded4539c868e5d", false, Component.text("Custom items have been added to this server and therefore require custom textures!", NamedTextColor.GOLD));
+            player.setResourcePack("https://github.com/Powerspieler/Paveral-Resourcepack/releases/download/v1.4/Paveral-Resourcepack_v1.4.zip", "0501fba9c9c382d6f8f2dd6998e28f04667ede95", false, Component.text("Custom items have been added to this server and therefore require custom textures!", NamedTextColor.GOLD));
         }
         // Altarbook Reminder Message
         if(player.hasDiscoveredRecipe(RecipeLoader.altarbookrecipekey) && AwardAdvancements.isAdvancementUndone(player, "craft_tutorial_book")){

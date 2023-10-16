@@ -37,6 +37,8 @@ public class AwakeForge implements Listener {
         itemlist.add(Material.CREEPER_HEAD);
         itemlist.add(Material.FIREWORK_STAR);
         itemlist.add(Material.SCULK_SENSOR);
+        // Jigsaw (1) (Worldalterer)
+        itemlist.add(Material.JIGSAW);
     }
 
     @EventHandler
