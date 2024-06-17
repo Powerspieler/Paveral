@@ -147,9 +147,11 @@ public class LightStaff implements Listener,Items {
             }
 
             int lightlevel = 0;
-            if(player.getInventory().getItemInOffHand().hasItemMeta()) {
-                lightlevel = player.getInventory().getItemInOffHand().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
-            } else if (player.getInventory().getItemInMainHand().hasItemMeta()){
+//            if(player.getInventory().getItemInOffHand().hasItemMeta()) {
+//                lightlevel = player.getInventory().getItemInOffHand().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
+//            } else
+            ItemStack itemStack = player.getInventory().getItemInMainHand();
+            if (itemStack.hasItemMeta() && itemStack.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)){ // TODO Revisit when reworking is_holding
                 lightlevel = player.getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
             }
             showActionbar(player, lightlevel);

@@ -17,6 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ItemHoldingController implements Listener {
+    // TODO EINHEITLICH IS_HOLDING VERTEILEN (VANILLA BEHAVIOUR)
     @EventHandler
     public void onItemSwitch(PlayerItemHeldEvent event){
         Player player = event.getPlayer();
