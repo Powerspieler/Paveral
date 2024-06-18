@@ -134,7 +134,7 @@ public class ForgeListener implements Listener {
             item.setCanPlayerPickup(false);
             item.setGravity(false);
             item.setWillAge(false);
-            item.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, item.getLocation(), 100, 0,0,0,0.3);
+            item.getWorld().spawnParticle(Particle.ENCHANT, item.getLocation(), 100, 0,0,0,0.3);
             item.getPersistentDataContainer().set(ALREADY_FORGING, PersistentDataType.INTEGER, 1);
         }
         targets.playSound(Sound.sound(Key.key("block.anvil.use"), Sound.Source.AMBIENT, 1f, 0.5f), Sound.Emitter.self());

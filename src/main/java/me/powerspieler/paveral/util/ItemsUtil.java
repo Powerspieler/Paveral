@@ -8,7 +8,7 @@ public class ItemsUtil {
     private ItemsUtil(){}
 
     public static void applyDamage(ItemStack item, int damagevalue) {
-        int unbreakinglvl = item.getEnchantmentLevel(Enchantment.DURABILITY);
+        int unbreakinglvl = item.getEnchantmentLevel(Enchantment.UNBREAKING);
         boolean shoulddamage = ((Math.random()) < (1 / (unbreakinglvl + 1.0)));
         if (shoulddamage) {
             Damageable itemvalue = (Damageable) item.getItemMeta();

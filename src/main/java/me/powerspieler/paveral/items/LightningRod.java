@@ -124,7 +124,7 @@ public class LightningRod implements Listener, Items {
                                                 phantom.setHealth(0);
                                                 phantom.getLocation().getWorld().strikeLightningEffect(phantom.getLocation());
                                                 phantom.getLocation().getWorld().spawnParticle(Particle.FLASH, phantom.getLocation(),5,0,0,0,1,null,true);
-                                                phantom.getLocation().getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, phantom.getLocation().add(0,1.5,0), 1000,0,0,0,10);
+                                                phantom.getLocation().getWorld().spawnParticle(Particle.ENCHANT, phantom.getLocation().add(0,1.5,0), 1000,0,0,0,10);
                                                 phantom.remove();
                                             }
                                             else if(entity instanceof Monster monster){
