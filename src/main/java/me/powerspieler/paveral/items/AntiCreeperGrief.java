@@ -210,7 +210,7 @@ public class AntiCreeperGrief implements Listener, Items {
 
     //Define FireworkVisual
     public void defineFirework(){
-        Firework fw = (Firework) creeper.getWorld().spawnEntity(creeper.getLocation(), EntityType.FIREWORK);
+        Firework fw = (Firework) creeper.getWorld().spawnEntity(creeper.getLocation(), EntityType.FIREWORK_ROCKET);
         FireworkMeta fwm = fw.getFireworkMeta();
         Random r = new Random();
         int r1i = r.nextInt(17) + 1;

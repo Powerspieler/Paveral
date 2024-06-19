@@ -13,7 +13,7 @@ import java.util.zip.ZipInputStream;
 public class AdvancementLoader {
     public static void copyAdvancements() {
 
-        String path = Bukkit.getServer().getWorlds().get(0).getWorldFolder().getAbsolutePath() + "/datapacks/bukkit/data/paveral/advancements";
+        String path = Bukkit.getServer().getWorlds().get(0).getWorldFolder().getAbsolutePath() + "/datapacks/bukkit/data/paveral/advancement";
 
         try {
             Files.walk(Path.of(path)).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
@@ -25,7 +25,7 @@ public class AdvancementLoader {
 
         ClassLoader classloader = AdvancementLoader.class.getClassLoader() == null ? Thread.currentThread().getContextClassLoader() : AdvancementLoader.class.getClassLoader();
 
-        try(InputStream is = classloader.getResourceAsStream("advancements.zip")){
+        try(InputStream is = classloader.getResourceAsStream("advancement.zip")){
             byte[] buffer = new byte[1024];
             ZipInputStream zis = new ZipInputStream(is);
             ZipEntry entry;

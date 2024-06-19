@@ -185,7 +185,7 @@ public class FormingListeners implements Listener {
             formingitem.setCanPlayerPickup(false);
             formingitem.setGravity(false);
             formingitem.setWillAge(false);
-            formingitem.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, formingitem.getLocation(), 100, 0,0,0,0.3);
+            formingitem.getWorld().spawnParticle(Particle.ENCHANT, formingitem.getLocation(), 100, 0,0,0,0.3);
             formingitem.getPersistentDataContainer().set(ALREADY_FORMING, PersistentDataType.INTEGER, 1);
         }
         targets.playSound(Sound.sound(Key.key("entity.wither.spawn"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
@@ -250,7 +250,7 @@ public class FormingListeners implements Listener {
 
                 if(process == 120){
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
-                    location.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, particleloc.add(0,1,0), 25,0,0,0,1);
+                    location.getWorld().spawnParticle(Particle.FIREWORK, particleloc.add(0,1,0), 25,0,0,0,1);
 
                     particleloc = new Location(location.getWorld(), location.getX(),location.getY(),location.getZ());
                     location.getWorld().spawnParticle(Particle.REVERSE_PORTAL, particleloc.add(0,1,0), 256,0,0,0,0.3);

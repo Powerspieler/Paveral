@@ -122,7 +122,7 @@ public class BedrockBreaker implements Listener,Items {
                 }
                 result.setItemMeta(resultmeta);
                 event.setResult(result);
-                if (!event.getResult().containsEnchantment(Enchantment.DURABILITY)) {
+                if (!event.getResult().containsEnchantment(Enchantment.UNBREAKING)) {
                     event.setResult(new ItemStack(Material.AIR));
                 }
             }

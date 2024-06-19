@@ -498,7 +498,7 @@ public class Worldalterer implements Listener {
     public static SmithingTransformRecipe registerRecipe(){
         return new SmithingTransformRecipe(recipeKey,
                 new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK),
-                new RecipeChoice.MaterialChoice(Material.AIR),
+                RecipeChoice.empty(),
                 new RecipeChoice.MaterialChoice(Material.WARPED_FUNGUS_ON_A_STICK),
                 new RecipeChoice.MaterialChoice(Material.ECHO_SHARD));
     }

@@ -117,7 +117,7 @@ public class DisassembleListeners implements Listener {
         item.setCanPlayerPickup(false);
         item.setGravity(false);
         item.setWillAge(false);
-        item.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,item.getLocation(), 100, 0,0,0, 0.2);
+        item.getWorld().spawnParticle(Particle.ENCHANT,item.getLocation(), 100, 0,0,0, 0.2);
         item.getPersistentDataContainer().set(ALREADY_DISASSEMBLING, PersistentDataType.INTEGER, 1);
 
         targets.playSound(Sound.sound(Key.key("entity.evoker.prepare_attack"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
@@ -175,7 +175,7 @@ public class DisassembleListeners implements Listener {
 
                 if(process == 135){
                     targets.playSound(Sound.sound(Key.key("entity.zombie.attack_iron_door"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
-                    item.getWorld().spawnParticle(Particle.TOTEM, item.getLocation(), 50, 0,0.25,0, 0.1);
+                    item.getWorld().spawnParticle(Particle.TOTEM_OF_UNDYING, item.getLocation(), 50, 0,0.25,0, 0.1);
                 }
 
                 if(process == 168){
