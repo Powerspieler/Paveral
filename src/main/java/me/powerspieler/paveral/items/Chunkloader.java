@@ -23,7 +23,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Chunkloader implements Listener, Items {
     @Override
@@ -124,10 +123,7 @@ public class Chunkloader implements Listener, Items {
 
     @EventHandler
     public void onChunkloaderMove(PlayerMoveEvent event){
-        Player player = event.getPlayer();
-        ItemStack MainHand = player.getInventory().getItemInMainHand();
-        ItemStack OffHand = player.getInventory().getItemInOffHand();
-        if((MainHand.hasItemMeta() && MainHand.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(MainHand.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "chunkloader")) || OffHand.hasItemMeta() && (OffHand.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(OffHand.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "chunkloader"))){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "chunkloader")){
             showActionbar(event.getPlayer());
         }
     }

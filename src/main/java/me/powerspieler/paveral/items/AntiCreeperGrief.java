@@ -142,29 +142,26 @@ public class AntiCreeperGrief implements Listener, Items {
 
     @EventHandler //handle HangingDamage Inflicted by Creeper
     public void onCreeperDamageHanging(HangingBreakByEntityEvent event){
-        if(event.getRemover() != null){
-            if(!(event.getRemover().getType() == EntityType.CREEPER)) return;
-            Entity remover = event.getRemover();
-            if(checkForPlayer(remover) || checkForItemframe(remover)){
-                event.setCancelled(true);
-            }
+        if (!(event.getRemover().getType() == EntityType.CREEPER)) return;
+        Entity remover = event.getRemover();
+        if(checkForPlayer(remover) || checkForItemframe(remover)){
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onCreeperItemHold(PlayerMoveEvent event){
-        if(event.getPlayer().getInventory().getItemInMainHand().getItemMeta() != null && event.getPlayer().getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)){
-            if(Objects.equals(event.getPlayer().getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")){
-                Player player = event.getPlayer();
-                if (checkForItemframe(player)) {
-                    player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                            .append(Component.text("Save",NamedTextColor.GREEN))
-                            .append(Component.text(" ]",NamedTextColor.GOLD)));
-                } else
-                    player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                            .append(Component.text("Unsave",NamedTextColor.RED))
-                            .append(Component.text(" ]",NamedTextColor.GOLD)));
-            }
+        // TODO FÜR JEDES ITEM DAS HIER FIXEN
+        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "anticreepergrief")){
+            Player player = event.getPlayer();
+            if (checkForItemframe(player)) {
+                player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                        .append(Component.text("Save",NamedTextColor.GREEN))
+                        .append(Component.text(" ]",NamedTextColor.GOLD)));
+            } else
+                player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                        .append(Component.text("Unsave",NamedTextColor.RED))
+                        .append(Component.text(" ]",NamedTextColor.GOLD)));
         }
     }
 

@@ -29,7 +29,10 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class LightningRod implements Listener, Items {
     public LightningRod() {
@@ -83,86 +86,84 @@ public class LightningRod implements Listener, Items {
 
     @EventHandler
     public void onPlayerRightclick(PlayerInteractEvent event){
-        if(event.getItem() != null && event.getItem().hasItemMeta() && event.getItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)){
-            if(Objects.equals(event.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightning_rod")){
-                if(event.getAction().isRightClick()) {
-                    Player player = event.getPlayer();
-                    if(!cooldown.containsKey(player.getUniqueId()) || (System.currentTimeMillis() - cooldown.get(player.getUniqueId())) >= 1500){
-                        cooldown.put(player.getUniqueId(), System.currentTimeMillis());
-                        final Audience targets = player.getWorld().filterAudience(member -> member instanceof Player playermember && playermember.getLocation().distanceSquared(player.getLocation()) < 2500);
-                        targets.playSound(Sound.sound(Key.key("entity.lightning_bolt.thunder"), Sound.Source.MASTER, 1f, 1.8f), Sound.Emitter.self());
-                        targets.playSound(Sound.sound(Key.key("item.trident.thunder"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
+        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "lightning_rod")){
+            if (event.getAction().isRightClick()) {
+                Player player = event.getPlayer();
+                if (!cooldown.containsKey(player.getUniqueId()) || (System.currentTimeMillis() - cooldown.get(player.getUniqueId())) >= 1500) {
+                    cooldown.put(player.getUniqueId(), System.currentTimeMillis());
+                    final Audience targets = player.getWorld().filterAudience(member -> member instanceof Player playermember && playermember.getLocation().distanceSquared(player.getLocation()) < 2500);
+                    targets.playSound(Sound.sound(Key.key("entity.lightning_bolt.thunder"), Sound.Source.MASTER, 1f, 1.8f), Sound.Emitter.self());
+                    targets.playSound(Sound.sound(Key.key("item.trident.thunder"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
 
-                        Location loc = player.getEyeLocation();
-                        Vector direction = loc.getDirection().multiply(0.5);
-                        for (int i = 10; i > 0; i--) {
-                            if(loc.getBlock().isSolid()){
-                                return;
-                            }
-                            loc.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, loc, 1, 0, 0, 0, 0);
-                            loc.add(direction);
+                    Location loc = player.getEyeLocation();
+                    Vector direction = loc.getDirection().multiply(0.5);
+                    for (int i = 10; i > 0; i--) {
+                        if (loc.getBlock().isSolid()) {
+                            return;
                         }
-                        new BukkitRunnable() {
-                            int joints = 20;
-                            int kills = 0;
-                            @Override
-                            public void run() {
-                                direction.setX(direction.getX() + ((Math.random() - Math.random()) / 7));
-                                direction.setY(direction.getY() + ((Math.random() - Math.random()) / 7));
-                                direction.setZ(direction.getZ() + ((Math.random() - Math.random()) / 7));
+                        loc.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, loc, 1, 0, 0, 0, 0);
+                        loc.add(direction);
+                    }
+                    new BukkitRunnable() {
+                        int joints = 20;
+                        int kills = 0;
 
-                                for(int i = 20; i > 0; i--) {
-                                    if(loc.getBlock().isSolid()) {
-                                        cancel();
-                                        break;
-                                    }
-                                    List<Entity> raw = new ArrayList<>(loc.getNearbyEntities(3,3,3));
-                                    for(Entity entity : raw){
-                                        if(entity.customName() == null){
-                                            if(entity instanceof Phantom phantom){
-                                                kills++;
-                                                phantom.setHealth(0);
-                                                phantom.getLocation().getWorld().strikeLightningEffect(phantom.getLocation());
-                                                phantom.getLocation().getWorld().spawnParticle(Particle.FLASH, phantom.getLocation(),5,0,0,0,1,null,true);
-                                                phantom.getLocation().getWorld().spawnParticle(Particle.ENCHANT, phantom.getLocation().add(0,1.5,0), 1000,0,0,0,10);
-                                                phantom.remove();
-                                            }
-                                            else if(entity instanceof Monster monster){
-                                                monster.setFireTicks(100);
-                                                double health = monster.getHealth() - 0.5;
-                                                if(health < 0){
-                                                    health = 0;
-                                                }
-                                                monster.setHealth(health);
-                                            }
-                                        }
-                                    }
-                                    loc.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, loc, 1, 0, 0, 0, 0, null, true);
-                                    loc.add(direction);
+                        @Override
+                        public void run() {
+                            direction.setX(direction.getX() + ((Math.random() - Math.random()) / 7));
+                            direction.setY(direction.getY() + ((Math.random() - Math.random()) / 7));
+                            direction.setZ(direction.getZ() + ((Math.random() - Math.random()) / 7));
 
-                                }
-                                joints--;
-                                if(joints <= 0){
+                            for (int i = 20; i > 0; i--) {
+                                if (loc.getBlock().isSolid()) {
                                     cancel();
+                                    break;
                                 }
-                                if(isCancelled()){
-                                    if(kills >= 3){
-                                        paralyzer.put(player.getUniqueId(), System.currentTimeMillis());
-                                        if(AwardAdvancements.isAdvancementUndone(player, "lightning_rod_phantom")){
-                                            AwardAdvancements.grantAdvancement(player, "lightning_rod_phantom");
+                                List<Entity> raw = new ArrayList<>(loc.getNearbyEntities(3, 3, 3));
+                                for (Entity entity : raw) {
+                                    if (entity.customName() == null) {
+                                        if (entity instanceof Phantom phantom) {
+                                            kills++;
+                                            phantom.setHealth(0);
+                                            phantom.getLocation().getWorld().strikeLightningEffect(phantom.getLocation());
+                                            phantom.getLocation().getWorld().spawnParticle(Particle.FLASH, phantom.getLocation(), 5, 0, 0, 0, 1, null, true);
+                                            phantom.getLocation().getWorld().spawnParticle(Particle.ENCHANT, phantom.getLocation().add(0, 1.5, 0), 1000, 0, 0, 0, 10);
+                                            phantom.remove();
+                                        } else if (entity instanceof Monster monster) {
+                                            monster.setFireTicks(100);
+                                            double health = monster.getHealth() - 0.5;
+                                            if (health < 0) {
+                                                health = 0;
+                                            }
+                                            monster.setHealth(health);
                                         }
-                                        player.playSound(Sound.sound(Key.key("block.conduit.activate"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
-                                        player.playSound(Sound.sound(Key.key("block.conduit.ambient"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
-                                        player.getWorld().spawnParticle(Particle.NAUTILUS, player.getLocation(),1,0,0,0,1);
                                     }
+                                }
+                                loc.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, loc, 1, 0, 0, 0, 0, null, true);
+                                loc.add(direction);
+
+                            }
+                            joints--;
+                            if (joints <= 0) {
+                                cancel();
+                            }
+                            if (isCancelled()) {
+                                if (kills >= 3) {
+                                    paralyzer.put(player.getUniqueId(), System.currentTimeMillis());
+                                    if (AwardAdvancements.isAdvancementUndone(player, "lightning_rod_phantom")) {
+                                        AwardAdvancements.grantAdvancement(player, "lightning_rod_phantom");
+                                    }
+                                    player.playSound(Sound.sound(Key.key("block.conduit.activate"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
+                                    player.playSound(Sound.sound(Key.key("block.conduit.ambient"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
+                                    player.getWorld().spawnParticle(Particle.NAUTILUS, player.getLocation(), 1, 0, 0, 0, 1);
                                 }
                             }
-                        }.runTaskTimer(Paveral.getPlugin(),0,1);
-                    } else {
-                        player.playSound(Sound.sound(Key.key("block.note_block.basedrum"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
-                        showActionbar(player);
+                        }
+                    }.runTaskTimer(Paveral.getPlugin(), 0, 1);
+                } else {
+                    player.playSound(Sound.sound(Key.key("block.note_block.basedrum"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
+                    showActionbar(player);
 
-                    }
                 }
             }
         }
@@ -171,9 +172,7 @@ public class LightningRod implements Listener, Items {
     @EventHandler
     public void onLightningRodMove(PlayerMoveEvent event){
         Player player = event.getPlayer();
-        ItemStack MainHand = player.getInventory().getItemInMainHand();
-        ItemStack OffHand = player.getInventory().getItemInOffHand();
-        if((MainHand.hasItemMeta() && MainHand.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(MainHand.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightning_rod")) || OffHand.hasItemMeta() && (OffHand.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(OffHand.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightning_rod"))){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(player, "lightning_rod")){
             showActionbar(player);
         }
     }
