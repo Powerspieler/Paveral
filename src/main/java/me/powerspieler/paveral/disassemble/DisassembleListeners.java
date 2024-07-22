@@ -26,7 +26,6 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static me.powerspieler.paveral.disassemble.AwakeTable.ALREADY_DISASSEMBLING;
