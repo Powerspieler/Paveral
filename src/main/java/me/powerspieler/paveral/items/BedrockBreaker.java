@@ -81,7 +81,7 @@ public class BedrockBreaker implements Listener,Items {
 
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
-        if (event.getItem() != null && Objects.equals(event.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bedrock_breaker")) {
+        if (ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "bedrock_breaker")) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 new BukkitRunnable() {
                     @Override

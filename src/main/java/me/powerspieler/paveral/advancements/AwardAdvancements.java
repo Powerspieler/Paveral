@@ -1,5 +1,6 @@
 package me.powerspieler.paveral.advancements;
 
+import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.RecipeLoader;
 import net.kyori.adventure.text.Component;
@@ -274,7 +275,7 @@ public class AwardAdvancements implements Listener {
             for(String crit : remCrits){
                 player.getAdvancementProgress(adv).awardCriteria(crit);
             }
-        } else Bukkit.getLogger().log(Level.WARNING,"Failed to grant Advancement! Advancement: \"" + advkey.getKey() + "\" does not exist");
+        } else Paveral.getPlugin().getLogger().log(Level.WARNING,"Failed to grant Advancement! Advancement: \"" + advkey.getKey() + "\" does not exist");
     }
 
     public static boolean isAdvancementUndone(Player player, String key) {
@@ -283,7 +284,7 @@ public class AwardAdvancements implements Listener {
         if (adv != null) {
             return !player.getAdvancementProgress(adv).isDone();
         } else {
-            Bukkit.getLogger().log(Level.WARNING, "Failed to check advancement! Advancement: \"" + advkey.getKey() + "\" does not exist");
+            Paveral.getPlugin().getLogger().log(Level.WARNING, "Failed to check advancement! Advancement: \"" + advkey.getKey() + "\" does not exist");
         }
         return true;
     }

@@ -18,7 +18,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Wrench implements Listener,Items {
     @Override
@@ -52,16 +51,14 @@ public class Wrench implements Listener,Items {
 
     @EventHandler
     public void onPlayerRightclick(PlayerInteractEvent event){
-        if(event.getItem() != null && event.getItem().hasItemMeta() && event.getItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)){
-            if(Objects.equals(event.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "wrench")){
-                if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
-                    if(event.getClickedBlock() != null){
-                        Block block = event.getClickedBlock();
-                        if(block.getType() == Material.IRON_TRAPDOOR){
-                            TrapDoor td = (TrapDoor) block.getBlockData();
-                            td.setOpen(!td.isOpen());
-                            block.setBlockData(td);
-                        }
+        if(event.hasItem() && ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "wrench")){
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (event.getClickedBlock() != null) {
+                    Block block = event.getClickedBlock();
+                    if (block.getType() == Material.IRON_TRAPDOOR) {
+                        TrapDoor td = (TrapDoor) block.getBlockData();
+                        td.setOpen(!td.isOpen());
+                        block.setBlockData(td);
                     }
                 }
             }
