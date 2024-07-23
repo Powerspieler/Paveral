@@ -44,10 +44,15 @@ public class AwakeAltar implements Listener {
         itemlist.add(Material.ANCIENT_DEBRIS);
         // Disassemble Tutorial Book (1)
         itemlist.add(Material.WRITTEN_BOOK);
-        // Chunkloader
+        // Chunkloader (3)
         itemlist.add(Material.ENCHANTING_TABLE);
         itemlist.add(Material.LODESTONE);
         itemlist.add(Material.NETHER_STAR);
+        // Piano Sword (4)
+        itemlist.add(Material.JIGSAW);
+        itemlist.add(Material.NETHERITE_SWORD);
+        itemlist.add(Material.QUARTZ);
+        itemlist.add(Material.BLACKSTONE);
     }
 
 

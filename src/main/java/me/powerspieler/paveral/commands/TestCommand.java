@@ -1,6 +1,7 @@
 package me.powerspieler.paveral.commands;
 
 
+import me.powerspieler.paveral.items.musicpack.RhytmsAwakening;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -18,12 +19,19 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
             if(player.isOp()){
-                if(player.getPersistentDataContainer().has(Constant.IS_HOLDING)){
-                    String string = player.getPersistentDataContainer().get(Constant.IS_HOLDING, PersistentDataType.STRING);
+                player.getInventory().addItem(new RhytmsAwakening().build());
 
-                    Bukkit.broadcast(Component.text("Holding: " + string));
-                } else
-                    Bukkit.broadcast(Component.text("Holding nothing!"));
+
+
+
+
+
+//                if(player.getPersistentDataContainer().has(Constant.IS_HOLDING)){
+//                    String string = player.getPersistentDataContainer().get(Constant.IS_HOLDING, PersistentDataType.STRING);
+//
+//                    Bukkit.broadcast(Component.text("Holding: " + string));
+//                } else
+//                    Bukkit.broadcast(Component.text("Holding nothing!"));
 
 
 

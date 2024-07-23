@@ -15,6 +15,7 @@ import me.powerspieler.paveral.forming_altar.FormingListeners;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
+import me.powerspieler.paveral.items.musicpack.RhytmsAwakening;
 import me.powerspieler.paveral.items.parts.worldalterer.SonicEssence;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;
 import me.powerspieler.paveral.util.AdvancementLoader;
@@ -53,6 +54,8 @@ public final class Paveral extends JavaPlugin {
         pm.registerEvents(new Worldalterer(), this);
         pm.registerEvents(new SonicEssence(), this);
         pm.registerEvents(new Wrench(), this);
+
+        pm.registerEvents(new RhytmsAwakening(), this);
 
         // Enhanced Enchantments
         pm.registerEvents(new Knockback(), this);

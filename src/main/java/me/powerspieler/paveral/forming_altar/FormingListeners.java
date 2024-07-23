@@ -11,6 +11,7 @@ import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
+import me.powerspieler.paveral.items.musicpack.RhytmsAwakening;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -102,6 +103,20 @@ public class FormingListeners implements Listener {
                 if(isCharged(event.getAltar())){
                     Discovery tech_book = new TechBook();
                     formItem(event.getAltar(), formingitems, tech_book.build());
+                }
+            }
+            return;
+        }
+        // Piano Sword / Rhytms Awakening
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SWORD) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.BLACKSTONE) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.QUARTZ)){
+            List<Item> formingitems = items.stream()
+                    .filter(item -> {
+                        Material type = item.getItemStack().getType();
+                        return (type == Material.JIGSAW && item.getItemStack().getAmount() == 1 && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE, PersistentDataType.STRING) && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "music_core")) || (type == Material.NETHERITE_SWORD && item.getItemStack().getAmount() == 1 ) || (type == Material.BLACKSTONE && item.getItemStack().getAmount() == 8) || (type == Material.QUARTZ && item.getItemStack().getAmount() == 16);
+                    }).toList();
+            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SWORD) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.BLACKSTONE) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.QUARTZ)){
+                if(isCharged(event.getAltar())){
+                    formItem(event.getAltar(), formingitems, new RhytmsAwakening().build());
                 }
             }
             return;
