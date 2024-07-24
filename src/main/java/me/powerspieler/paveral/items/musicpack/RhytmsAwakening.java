@@ -122,7 +122,7 @@ public class RhytmsAwakening implements Listener, Items {
 
             List<Entity> raw = new ArrayList<>(location.getNearbyEntities(0.3, 0.3, 0.3));
             for (Entity entity : raw) {
-                if (entity instanceof LivingEntity target && target.customName() == null) {
+                if (entity instanceof LivingEntity target && target.customName() == null && !target.equals(player)) {
                     if(target.getType() == EntityType.PLAYER){
                         target.damage(5.0, player);
                     } else {

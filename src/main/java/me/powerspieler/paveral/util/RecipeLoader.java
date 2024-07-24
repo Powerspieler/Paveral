@@ -4,7 +4,7 @@ import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.discovery.Discovery;
 import me.powerspieler.paveral.discovery.tutorial.AltarBook;
 import me.powerspieler.paveral.items.Worldalterer;
-import me.powerspieler.paveral.items.parts.rhytms_awakening.MusicCore;
+import me.powerspieler.paveral.items.parts.MusicCore;
 import me.powerspieler.paveral.items.parts.worldalterer.AlterationCore;
 import me.powerspieler.paveral.items.parts.worldalterer.AmethystLaser;
 import me.powerspieler.paveral.items.parts.worldalterer.EchoContainer;

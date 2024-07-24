@@ -45,6 +45,20 @@ public class AwardAdvancements implements Listener {
             }
         }
     }
+    // Crafte Music Core
+    @EventHandler
+    public void onCraftMusicCore(CraftItemEvent event){
+        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "music_core")){
+            Player player = (Player) event.getWhoClicked();
+            if(isAdvancementUndone(player, "music_core")){
+                grantAdvancement(player, "music_core");
+            }
+        }
+    }
+
+
+
+
     // find Diary
     @EventHandler
     public void onDiaryFind(InventoryClickEvent event){
@@ -257,6 +271,27 @@ public class AwardAdvancements implements Listener {
                             grantAdvancement(player, "flying_pig");
                         }
                     }
+                }
+            }
+        }
+    }
+    // Piano Sword
+    @EventHandler
+    public void onPianoSwordPickup(EntityPickupItemEvent event){
+        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "rhytms_awakening")){
+            if(event.getEntity() instanceof Player player){
+                if(isAdvancementUndone(player, "piano_sword")){
+                    grantAdvancement(player, "piano_sword");
+                }
+            }
+        }
+    }
+    @EventHandler
+    public void onPianoSwordClick(InventoryClickEvent event){
+        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "rhytms_awakening")){
+            if(event.getWhoClicked() instanceof Player player){
+                if(isAdvancementUndone(player, "piano_sword")){
+                    grantAdvancement(player, "piano_sword");
                 }
             }
         }
