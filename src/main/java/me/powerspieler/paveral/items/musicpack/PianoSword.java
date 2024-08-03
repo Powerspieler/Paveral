@@ -121,7 +121,7 @@ public class PianoSword implements Listener, Items {
 
             List<Entity> raw = new ArrayList<>(location.getNearbyEntities(0.3, 0.3, 0.3));
             for (Entity entity : raw) {
-                if (entity instanceof LivingEntity target && target.customName() == null && !target.equals(player)) {
+                if (entity instanceof LivingEntity target && target.customName() == null && !target.equals(player)) { //TODO Exclude Tamed
                     if(target.getType() == EntityType.PLAYER){
                         target.damage(5.0, player);
                     } else {

@@ -120,7 +120,7 @@ public class StringBlade implements Listener, Items {
                 List<Entity> raw = new ArrayList<>(projectileLocation.getNearbyEntities(0.5, 0.5, 0.5));
                 if(!raw.isEmpty()){
                     Entity entity = raw.stream().findFirst().get();
-                    if (entity instanceof LivingEntity target && target.customName() == null && !target.equals(player)) {
+                    if (entity instanceof LivingEntity target && target.customName() == null && !target.equals(player)) { //TODO Exclude Tamed
                         if(target.getType() == EntityType.PLAYER){
                             target.damage(3.0, player);
                         } else {
