@@ -23,7 +23,7 @@ public class SonicEssence implements Listener {
         ItemMeta itemmeta = item.getItemMeta();
         itemmeta.setCustomModelData(2);
         itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "sonic_essence");
-        itemmeta.displayName(Component.text("Sonic Essence", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false)); // Name by Raphilius
+        itemmeta.itemName(Component.text("Sonic Essence", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false)); // Name by Raphilius
         item.setItemMeta(itemmeta);
         return item;
     }

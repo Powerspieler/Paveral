@@ -18,7 +18,7 @@ public class EchoContainer {
         ItemMeta itemmeta = item.getItemMeta();
         itemmeta.setCustomModelData(6);
         itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "echo_container");
-        itemmeta.displayName(Component.text("Echo Container", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
+        itemmeta.itemName(Component.text("Echo Container", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
         item.setItemMeta(itemmeta);
         return item;
 

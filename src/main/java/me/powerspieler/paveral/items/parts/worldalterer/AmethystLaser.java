@@ -18,7 +18,7 @@ public class AmethystLaser {
         ItemMeta itemmeta = item.getItemMeta();
         itemmeta.setCustomModelData(3);
         itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "amethyst_laser");
-        itemmeta.displayName(Component.text("Amethyst Laser", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
+        itemmeta.itemName(Component.text("Amethyst Laser", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
         item.setItemMeta(itemmeta);
         return item;
 

@@ -47,7 +47,7 @@ public class LightningRod implements Listener, Items {
         lrmeta.setUnbreakable(true);
         lrmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 
-        lrmeta.displayName(Component.text("Lightning Rod", NamedTextColor.DARK_PURPLE)
+        lrmeta.itemName(Component.text("Lightning Rod", NamedTextColor.DARK_PURPLE)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)

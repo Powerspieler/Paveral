@@ -3,6 +3,7 @@ package me.powerspieler.paveral.items;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
+import me.powerspieler.paveral.util.MarkerDataStorage;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -40,7 +41,7 @@ public class LightStaff implements Listener,Items {
         lightstaffmeta.getPersistentDataContainer().set(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER, 15);
         lightstaffmeta.setCustomModelData(4);
 
-        lightstaffmeta.displayName(Component.text("Lightstaff", NamedTextColor.DARK_PURPLE)
+        lightstaffmeta.itemName(Component.text("Lightstaff", NamedTextColor.DARK_PURPLE)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
@@ -143,14 +144,17 @@ public class LightStaff implements Listener,Items {
                 }
             }
 
-            int lightlevel = 0;
-            ItemStack itemStack = player.getInventory().getItemInMainHand();
-            if (itemStack.hasItemMeta() && itemStack.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)){
-                lightlevel = itemStack.getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
-            } else {
+            int lightlevel = -1;
+            ItemStack mainHand = player.getInventory().getItemInMainHand();
+            ItemStack offHand = player.getInventory().getItemInOffHand();
+            if (mainHand.hasItemMeta() && mainHand.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)){
+                lightlevel = mainHand.getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
+            } else if(offHand.hasItemMeta() && offHand.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)) {
                 lightlevel = player.getInventory().getItemInOffHand().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
             }
-            showActionbar(player, lightlevel);
+            if(lightlevel != -1){
+                showActionbar(player, lightlevel);
+            }
         }
     }
 
@@ -217,7 +221,8 @@ public class LightStaff implements Listener,Items {
                 location.add(0.5, 0.5, 0.5);
                 location.getWorld().spawnParticle(Particle.BLOCK_MARKER, location, 1, block.getBlockData());
 
-                location.getWorld().spawn(location, Marker.class, marker -> marker.getPersistentDataContainer().set(LIGHTBLOCKMARKER, PersistentDataType.INTEGER, 1));
+                MarkerDataStorage.createMarker(block);
+                MarkerDataStorage.getMarkerDataContainer(block).set(LIGHTBLOCKMARKER, PersistentDataType.INTEGER, 1);
             }, 1);
         }
     }

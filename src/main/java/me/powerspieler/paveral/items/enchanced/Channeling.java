@@ -27,7 +27,7 @@ public class Channeling implements Listener, Items {
         itemmeta.addStoredEnchant(Enchantment.CHANNELING, 10, true);
         itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "enhanced_channeling");
 
-        itemmeta.displayName(Component.text("Enhanced Book", NamedTextColor.LIGHT_PURPLE)
+        itemmeta.itemName(Component.text("Enhanced Book", NamedTextColor.LIGHT_PURPLE)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Compatible with: ")

@@ -11,11 +11,14 @@ import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
-import me.powerspieler.paveral.items.musicpack.RhytmsAwakening;
+import me.powerspieler.paveral.items.musicpack.PianoSword;
+import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
+import me.powerspieler.paveral.items.musicpack.StringBlade;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.RespawnAnchor;
@@ -116,7 +119,35 @@ public class FormingListeners implements Listener {
                     }).toList();
             if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SWORD) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.BLACKSTONE) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.QUARTZ)){
                 if(isCharged(event.getAltar())){
-                    formItem(event.getAltar(), formingitems, new RhytmsAwakening().build());
+                    formItem(event.getAltar(), formingitems, new PianoSword().build());
+                }
+            }
+            return;
+        }
+        // String Blade
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SWORD) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.ORANGE_DYE)){
+            List<Item> formingitems = items.stream()
+                    .filter(item -> {
+                        Material type = item.getItemStack().getType();
+                        return (type == Material.JIGSAW && item.getItemStack().getAmount() == 1 && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE, PersistentDataType.STRING) && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "music_core")) || (type == Material.NETHERITE_SWORD && item.getItemStack().getAmount() == 1 ) || (type == Material.ORANGE_DYE && item.getItemStack().getAmount() == 1);
+                    }).toList();
+            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SWORD) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.ORANGE_DYE)){
+                if(isCharged(event.getAltar())){
+                    formItem(event.getAltar(), formingitems, new StringBlade().build());
+                }
+            }
+            return;
+        }
+        // Scythe_of_Harmony
+        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_HOE)){
+            List<Item> formingitems = items.stream()
+                    .filter(item -> {
+                        Material type = item.getItemStack().getType();
+                        return (type == Material.JIGSAW && item.getItemStack().getAmount() == 1 && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE, PersistentDataType.STRING) && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "music_core")) || (type == Material.NETHERITE_HOE && item.getItemStack().getAmount() == 1 );
+                    }).toList();
+            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_HOE)){
+                if(isCharged(event.getAltar())){
+                    formItem(event.getAltar(), formingitems, new ScytheOfHarmony().build());
                 }
             }
             return;

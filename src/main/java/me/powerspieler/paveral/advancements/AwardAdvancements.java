@@ -8,6 +8,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +19,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Collection;
@@ -35,229 +37,6 @@ public class AwardAdvancements implements Listener {
             player.sendMessage(Component.text("You have unlocked a valuable recipe! Check your recipe book!" , NamedTextColor.DARK_PURPLE));
         }
     }
-    // craft Tutorial Book
-    @EventHandler
-    public void onCraftTutorialBook(CraftItemEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "altar_book")){
-            Player player = (Player) event.getWhoClicked();
-            if(isAdvancementUndone(player, "craft_tutorial_book")){
-                grantAdvancement(player, "craft_tutorial_book");
-            }
-        }
-    }
-    // Crafte Music Core
-    @EventHandler
-    public void onCraftMusicCore(CraftItemEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "music_core")){
-            Player player = (Player) event.getWhoClicked();
-            if(isAdvancementUndone(player, "music_core")){
-                grantAdvancement(player, "music_core");
-            }
-        }
-    }
-
-
-
-
-    // find Diary
-    @EventHandler
-    public void onDiaryFind(InventoryClickEvent event){
-        Player player = (Player) event.getWhoClicked();
-        if(!isAdvancementUndone(player, "root") && isAdvancementUndone(player , "find_diary")){
-            if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(Constant.IS_DIARY)){
-                grantAdvancement(player, "find_diary");
-            }
-        }
-    }
-    // Forge Tutorial Book
-    @EventHandler
-    public void onForgeTutorialBookPickup(EntityPickupItemEvent event){
-        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "tech_book")){
-            if(event.getEntity() instanceof Player player){
-                if(isAdvancementUndone(player, "craft_tutorial_book_forge")){
-                    grantAdvancement(player, "craft_tutorial_book_forge");
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onForgeTutorialBookClick(InventoryClickEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "tech_book")){
-            if(event.getWhoClicked() instanceof Player player){
-                if(isAdvancementUndone(player, "craft_tutorial_book_forge")){
-                    grantAdvancement(player, "craft_tutorial_book_forge");
-                }
-            }
-        }
-    }
-    // Chunkloader
-    @EventHandler
-    public void onChunkloaderPickup(EntityPickupItemEvent event){
-        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "chunkloader")){
-            if(event.getEntity() instanceof Player player){
-                if(isAdvancementUndone(player, "chunkloader")){
-                    grantAdvancement(player, "chunkloader");
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onChunkloaderClick(InventoryClickEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "chunkloader")){
-            if(event.getWhoClicked() instanceof Player player){
-                if(isAdvancementUndone(player, "chunkloader")){
-                    grantAdvancement(player, "chunkloader");
-                }
-            }
-        }
-    }
-    // Wrench
-    @EventHandler
-    public void onWrenchPickup(EntityPickupItemEvent event){
-        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "wrench")){
-            if(event.getEntity() instanceof Player player){
-                if(isAdvancementUndone(player, "wrench")){
-                    grantAdvancement(player, "wrench");
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onWrenchClick(InventoryClickEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "wrench")){
-            if(event.getWhoClicked() instanceof Player player){
-                if(isAdvancementUndone(player, "wrench")){
-                    grantAdvancement(player, "wrench");
-                }
-            }
-        }
-    }
-    // Lightstaff
-    @EventHandler
-    public void onLightstaffPickup(EntityPickupItemEvent event){
-        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff")){
-            if(event.getEntity() instanceof Player player){
-                if(isAdvancementUndone(player, "lightstaff")){
-                    grantAdvancement(player, "lightstaff");
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onLightstaffClick(InventoryClickEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff")){
-            if(event.getWhoClicked() instanceof Player player){
-                if(isAdvancementUndone(player, "lightstaff")){
-                    grantAdvancement(player, "lightstaff");
-                }
-            }
-        }
-    }
-    // Anti Creeper Grief
-    @EventHandler
-    public void onACGPickup(EntityPickupItemEvent event){
-        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")){
-            if(event.getEntity() instanceof Player player){
-                if(isAdvancementUndone(player, "anti_creeper_grief")){
-                    grantAdvancement(player, "anti_creeper_grief");
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onACGClick(InventoryClickEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")){
-            if(event.getWhoClicked() instanceof Player player){
-                if(isAdvancementUndone(player, "anti_creeper_grief")){
-                    grantAdvancement(player, "anti_creeper_grief");
-                }
-            }
-        }
-    }
-    // Bedrock Breaker DIARY
-    @EventHandler
-    public void onBBDiaryPickup(EntityPickupItemEvent event){
-        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "bedrock_breaker")){
-            if(event.getEntity() instanceof Player player){
-                if(isAdvancementUndone(player, "sleep_with_cat")){
-                    grantAdvancement(player, "sleep_with_cat");
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onBBDiaryClick(InventoryClickEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "bedrock_breaker")){
-            if(event.getWhoClicked() instanceof Player player){
-                if(isAdvancementUndone(player, "sleep_with_cat")){
-                    grantAdvancement(player, "sleep_with_cat");
-                }
-            }
-        }
-    }
-    // Bonk
-    @EventHandler
-    public void onBonkPickup(EntityPickupItemEvent event){
-        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bonk")){
-            if(event.getEntity() instanceof Player player){
-                if(isAdvancementUndone(player, "bonk")){
-                    grantAdvancement(player, "bonk");
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onBonkClick(InventoryClickEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bonk")){
-            if(event.getWhoClicked() instanceof Player player){
-                if(isAdvancementUndone(player, "bonk")){
-                    grantAdvancement(player, "bonk");
-                }
-            }
-        }
-    }
-    // Bedrock Breaker
-    @EventHandler
-    public void onBBPickup(EntityPickupItemEvent event){
-        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bedrock_breaker")){
-            if(event.getEntity() instanceof Player player){
-                if(isAdvancementUndone(player, "bedrock_breaker")){
-                    grantAdvancement(player, "bedrock_breaker");
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onBBClick(InventoryClickEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bedrock_breaker")){
-            if(event.getWhoClicked() instanceof Player player){
-                if(isAdvancementUndone(player, "bedrock_breaker")){
-                    grantAdvancement(player, "bedrock_breaker");
-                }
-            }
-        }
-    }
-    // Lightning Rod
-    @EventHandler
-    public void onLightningRodPickup(EntityPickupItemEvent event){
-        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightning_rod")){
-            if(event.getEntity() instanceof Player player){
-                if(isAdvancementUndone(player, "lightning_rod")){
-                    grantAdvancement(player, "lightning_rod");
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onLightningRodClick(InventoryClickEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightning_rod")){
-            if(event.getWhoClicked() instanceof Player player){
-                if(isAdvancementUndone(player, "lightning_rod")){
-                    grantAdvancement(player, "lightning_rod");
-                }
-            }
-        }
-    }
     // Flying Pig
     @EventHandler
     public void onPigBonk(EntityDeathEvent event){
@@ -266,41 +45,67 @@ public class AwardAdvancements implements Listener {
                 EntityDamageEvent.DamageCause deathcause = pig.getLastDamageCause().getCause();
                 if(deathcause == EntityDamageEvent.DamageCause.FALL){
                     Player player = pig.getKiller();
-                    if(player != null && player.getInventory().getItemInMainHand().hasItemMeta() && player.getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(player.getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bonk")){
-                        if(isAdvancementUndone(player, "flying_pig")){
-                            grantAdvancement(player, "flying_pig");
-                        }
+                    if(player != null && hasPaveralNamespacedKey(player.getInventory().getItemInMainHand(), Constant.ITEMTYPE) && Objects.equals(player.getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bonk")){
+                        checkAndGrandAdvancement(player, "flying_pig");
                     }
                 }
             }
         }
     }
-    // Piano Sword
+
     @EventHandler
-    public void onPianoSwordPickup(EntityPickupItemEvent event){
-        if(event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "rhytms_awakening")){
-            if(event.getEntity() instanceof Player player){
-                if(isAdvancementUndone(player, "piano_sword")){
-                    grantAdvancement(player, "piano_sword");
-                }
-            }
-        }
-    }
-    @EventHandler
-    public void onPianoSwordClick(InventoryClickEvent event){
-        if(event.getCurrentItem() != null && event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "rhytms_awakening")){
-            if(event.getWhoClicked() instanceof Player player){
-                if(isAdvancementUndone(player, "piano_sword")){
-                    grantAdvancement(player, "piano_sword");
-                }
-            }
-        }
+    public void onItemPickup(EntityPickupItemEvent event){
+        gotNewItem(event.getItem().getItemStack(), event.getEntity());
     }
 
+    @EventHandler
+    public void onItemClick(InventoryClickEvent event){
+        gotNewItem(event.getCurrentItem(), event.getWhoClicked());
+    }
+
+    @EventHandler
+    public void onItemCraft(CraftItemEvent event){
+        gotNewItem(event.getCurrentItem(), event.getWhoClicked());
+    }
+
+    private void gotNewItem(ItemStack item, Entity entity){
+        if(hasPaveralNamespacedKey(item, Constant.ITEMTYPE) && entity instanceof Player player){
+            String itemType = item.getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);
+            checkAndGrandAdvancement(player, itemType);
+        }
+
+        if(hasPaveralNamespacedKey(item, Constant.DISCOVERY) && entity instanceof Player player){
+            String discoveryType = item.getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING);
+            switch (Objects.requireNonNull(discoveryType)){
+                case "bedrock_breaker" -> checkAndGrandAdvancement(player, "sleep_with_cat");
+                case "altar_book" -> checkAndGrandAdvancement(player, "craft_tutorial_book");
+                case "tech_book" -> checkAndGrandAdvancement(player, "craft_tutorial_book_forge");
+                default -> checkAndGrandAdvancement(player, discoveryType);
+            }
+        }
+
+        if(hasPaveralNamespacedKey(item, Constant.IS_DIARY) && entity instanceof Player player){
+            checkAndGrandAdvancement(player, "find_diary");
+        }
+    }
+
+    public static boolean hasPaveralNamespacedKey(ItemStack item, NamespacedKey namespacedKey){
+        return item != null
+                && item.hasItemMeta()
+                && item.getItemMeta().getPersistentDataContainer().has(namespacedKey);
+    }
 
 
 
+    private static void checkAndGrandAdvancement(Player player, String key){
+        if(existsAdvancement(key) && isAdvancementUndone(player, key)){
+            grantAdvancement(player, key);
+        }
+    }
 
+    private static boolean existsAdvancement(String key){
+        return Bukkit.getAdvancement(new NamespacedKey("paveral", key)) != null;
+    }
 
     public static void grantAdvancement(Player player, String key){
         NamespacedKey advkey = new NamespacedKey("paveral", key);

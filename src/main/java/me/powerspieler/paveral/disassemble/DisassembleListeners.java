@@ -43,7 +43,7 @@ public class DisassembleListeners implements Listener {
             if(first_match.isPresent()){
                 String itemtype = first_match.get().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);
                 if(itemtype != null){
-                    if(itemtype.equals("anticreepergrief")){
+                    if(itemtype.equals("anti_creeper_grief")){
                         Items item = new AntiCreeperGrief();
                         disassembleItem(event.getTable(), first_match.get(), item.parts());
                     }

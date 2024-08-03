@@ -30,10 +30,10 @@ public class AntiCreeperGrief implements Listener, Items {
     public ItemStack build() {
         ItemStack creeperitem = new ItemStack(Material.JIGSAW);
         ItemMeta creeperitemmeta = creeperitem.getItemMeta();
-        creeperitemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "anticreepergrief");
+        creeperitemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "anti_creeper_grief");
         creeperitemmeta.setCustomModelData(1);
 
-        creeperitemmeta.displayName(Component.text("Creeper Defuser", NamedTextColor.GOLD)
+        creeperitemmeta.itemName(Component.text("Creeper Defuser", NamedTextColor.GOLD)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Keep in inventory to prevent creepers from exploding nearby", NamedTextColor.DARK_AQUA)
@@ -151,8 +151,7 @@ public class AntiCreeperGrief implements Listener, Items {
 
     @EventHandler
     public void onCreeperItemHold(PlayerMoveEvent event){
-        // TODO FÜR JEDES ITEM DAS HIER FIXEN
-        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "anticreepergrief")){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "anti_creeper_grief")){
             Player player = event.getPlayer();
             if (checkForItemframe(player)) {
                 player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
@@ -184,7 +183,7 @@ public class AntiCreeperGrief implements Listener, Items {
         for(Entity entity : itemframenearby){
             if(entity instanceof ItemFrame itemframe){
                 if(itemframe.getItem().hasItemMeta()){
-                    if(Objects.equals(itemframe.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")){
+                    if(Objects.equals(itemframe.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anti_creeper_grief")){
                         return true;
                     }
                 }
@@ -198,7 +197,7 @@ public class AntiCreeperGrief implements Listener, Items {
         final PlayerInventory inv = player.getInventory();
         final ItemStack[] contents = inv.getContents();
         for (final ItemStack stack : contents) {
-            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(stack.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")) {
+            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(stack.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anti_creeper_grief")) {
                 return true;
             }
         }

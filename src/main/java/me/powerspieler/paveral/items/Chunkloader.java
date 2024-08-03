@@ -31,7 +31,7 @@ public class Chunkloader implements Listener, Items {
         ItemMeta itemmeta = item.getItemMeta();
         itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "chunkloader");
 
-        itemmeta.displayName(Component.text("Chunkloader", NamedTextColor.GOLD)
+        itemmeta.itemName(Component.text("Chunkloader", NamedTextColor.GOLD)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Loads 3x3 Chunks", NamedTextColor.DARK_AQUA)

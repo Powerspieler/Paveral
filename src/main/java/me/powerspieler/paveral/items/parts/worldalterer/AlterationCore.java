@@ -18,7 +18,7 @@ public class AlterationCore {
         ItemMeta itemmeta = item.getItemMeta();
         itemmeta.setCustomModelData(5);
         itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "alteration_core");
-        itemmeta.displayName(Component.text("Alteration Core", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
+        itemmeta.itemName(Component.text("Alteration Core", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
         item.setItemMeta(itemmeta);
         return item;
 

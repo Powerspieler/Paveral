@@ -1,7 +1,8 @@
 package me.powerspieler.paveral.commands;
 
 
-import me.powerspieler.paveral.items.musicpack.RhytmsAwakening;
+import me.powerspieler.paveral.discovery.tutorial.AltarBook;
+import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -22,15 +23,14 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
             if(player.isOp()){
-                ItemStack item = new ItemStack(Material.JIGSAW);
-                ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.setCustomModelData(7);
-                item.setItemMeta(itemMeta);
-                player.getInventory().addItem(item);
+//                ItemStack item = new ItemStack(Material.NETHERITE_AXE);
+//                ItemMeta itemMeta = item.getItemMeta();
+//                itemMeta.setCustomModelData(1);
+//                item.setItemMeta(itemMeta);
+//                player.getInventory().addItem(item);
 
 
-
-                //player.getInventory().addItem(new RhytmsAwakening().build());
+                player.getInventory().addItem(new ScytheOfHarmony().build());
 
 
 
@@ -144,13 +144,13 @@ public class TestCommand implements CommandExecutor {
 
 
             ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-            ItemMeta itemMeta = item.getItemMeta();
+            ItemMeta itemMetap = item.getItemMeta();
             TextComponent test = Component.text("This is one too");
             List<Component> lore = new ArrayList<>();
             lore.add(Component.text("This is a test"));
             lore.add(test);
-            itemMeta.lore(lore);
-            item.setItemMeta(itemMeta);
+            itemMetap.lore(lore);
+            item.setItemMeta(itemMetap);
             Inventory inventory = Bukkit.createInventory(null, 9*3);
             inventory.addItem(item);
             player.openInventory(inventory);

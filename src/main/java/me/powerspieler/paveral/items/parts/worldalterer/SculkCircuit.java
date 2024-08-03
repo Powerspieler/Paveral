@@ -18,7 +18,7 @@ public class SculkCircuit {
         ItemMeta itemmeta = item.getItemMeta();
         itemmeta.setCustomModelData(4);
         itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "sculk_circuit");
-        itemmeta.displayName(Component.text("Sculk Circuit", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
+        itemmeta.itemName(Component.text("Sculk Circuit", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
         item.setItemMeta(itemmeta);
         return item;
 

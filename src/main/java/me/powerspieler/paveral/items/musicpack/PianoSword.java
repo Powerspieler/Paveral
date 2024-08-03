@@ -14,7 +14,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,12 +29,12 @@ import org.bukkit.util.Vector;
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class RhytmsAwakening implements Listener, Items {
+public class PianoSword implements Listener, Items {
     @Override
     public ItemStack build() {
         ItemStack itemStack = new ItemStack(Material.NETHERITE_SWORD);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "rhytms_awakening");
+        itemMeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "piano_sword");
         itemMeta.setCustomModelData(1);
 
         itemMeta.itemName(Component.text("Rhytms Awakening", NamedTextColor.DARK_PURPLE));
@@ -67,7 +66,7 @@ public class RhytmsAwakening implements Listener, Items {
 
     @EventHandler
     public void onUse(PlayerInteractEvent event){
-        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "rhytms_awakening")){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "piano_sword")){
             if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK){
                 Player player = event.getPlayer();
 
@@ -90,7 +89,7 @@ public class RhytmsAwakening implements Listener, Items {
                         final DecimalFormat df = new DecimalFormat("0.000");
                         @Override
                         public void run() {
-                            if(ItemHoldingController.checkIsHoldingPaveralItem(player, "rhytms_awakening")){
+                            if(ItemHoldingController.checkIsHoldingPaveralItem(player, "piano_sword")){
                                 double cooldownsec = ((2000.0 - (System.currentTimeMillis() - cooldown.get(player.getUniqueId()))) / 1000.0);
                                 player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
                                         .append(Component.text(df.format(cooldownsec), NamedTextColor.RED))

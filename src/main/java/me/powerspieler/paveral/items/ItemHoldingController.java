@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
@@ -49,6 +50,16 @@ public class ItemHoldingController implements Listener {
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event){
         Bukkit.getPluginManager().callEvent(new PlayerItemHeldEvent(event.getPlayer(), event.getPlayer().getInventory().getHeldItemSlot(), event.getPlayer().getInventory().getHeldItemSlot()));
+    }
+
+    @EventHandler
+    public void onEntityInteraction(PlayerInteractAtEntityEvent event){ // Allay, Armorstand
+        new BukkitRunnable() { // CANT BE EXECUTED INSTANT, SMALL DELAY IS NESSESSARY TO GET CORRECT ITEM IN SLOT
+            @Override
+            public void run() {
+                Bukkit.getPluginManager().callEvent(new PlayerItemHeldEvent(event.getPlayer(), event.getPlayer().getInventory().getHeldItemSlot(), event.getPlayer().getInventory().getHeldItemSlot()));
+            }
+        }.runTask(Paveral.getPlugin());
     }
 
     @EventHandler

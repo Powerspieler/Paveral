@@ -46,7 +46,7 @@ public class Worldalterer implements Listener {
         itemmeta.setCustomModelData(6);
         itemmeta.setDamage(100);
 
-        itemmeta.displayName(Component.text("||", NamedTextColor.LIGHT_PURPLE)
+        itemmeta.itemName(Component.text("||", NamedTextColor.LIGHT_PURPLE)
                 .decoration(TextDecoration.OBFUSCATED, true).decoration(TextDecoration.ITALIC, true)
                 .append(Component.text(" Worldalterer ", NamedTextColor.GOLD)
                         .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.ITALIC, false))
@@ -284,7 +284,7 @@ public class Worldalterer implements Listener {
         }
 
         // Set a future time for re-enabling / prevent spamming for larger selects: e.g. max: 32768 = 8,192s Cooldown ( / 20 (ticks to s) [/ 100] / 2 * 1000 (-> ms))
-        cooldownuntil.put(player.getUniqueId(), System.currentTimeMillis() + (blockCount / 4));
+        cooldownuntil.put(player.getUniqueId(), Math.max(System.currentTimeMillis() + (blockCount / 4), System.currentTimeMillis() + 150)); // Prevent Spamming,  Still Causes Bug and loss of blocks
 
         new BukkitRunnable() {
             long duration;
@@ -300,7 +300,7 @@ public class Worldalterer implements Listener {
 
                 // help -> https://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio
                 // NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
-                float pitch = ((float) ((duration - 0) * (20 - 0)) / (blockCount / 4 - 0)) / 10;
+                float pitch = ((float) ((duration - 0) * (20 - 0)) / (Math.max(blockCount / 4, 150) - 0)) / 10; // Math.max like above
                 player.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 0.5f, pitch * -1 + 2), Sound.Emitter.self());
                 player.spawnParticle(Particle.PORTAL, getRightSide(player.getEyeLocation(), 0.45).subtract(0, .6, 0), 1);
             }

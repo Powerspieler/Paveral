@@ -15,10 +15,13 @@ import me.powerspieler.paveral.forming_altar.FormingListeners;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enchanced.Channeling;
 import me.powerspieler.paveral.items.enchanced.Knockback;
-import me.powerspieler.paveral.items.musicpack.RhytmsAwakening;
+import me.powerspieler.paveral.items.musicpack.PianoSword;
+import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
+import me.powerspieler.paveral.items.musicpack.StringBlade;
 import me.powerspieler.paveral.items.parts.worldalterer.SonicEssence;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;
 import me.powerspieler.paveral.util.AdvancementLoader;
+import me.powerspieler.paveral.util.MarkerDataStorage;
 import me.powerspieler.paveral.util.RecipeLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -55,7 +58,11 @@ public final class Paveral extends JavaPlugin {
         pm.registerEvents(new SonicEssence(), this);
         pm.registerEvents(new Wrench(), this);
 
-        pm.registerEvents(new RhytmsAwakening(), this);
+        pm.registerEvents(new PianoSword(), this);
+        pm.registerEvents(new StringBlade(), this);
+
+
+        pm.registerEvents(new ScytheOfHarmony(), this);
 
         // Enhanced Enchantments
         pm.registerEvents(new Knockback(), this);
@@ -83,6 +90,7 @@ public final class Paveral extends JavaPlugin {
 
         // Misc
         pm.registerEvents(new HandlePlayerJoin(), this);
+        pm.registerEvents(new MarkerDataStorage(), this);
     }
     public static Paveral getPlugin(){
         return plugin;

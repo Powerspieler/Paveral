@@ -39,7 +39,7 @@ public class BedrockBreaker implements Listener,Items {
         bedrockbreakermeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "bedrock_breaker");
         bedrockbreakermeta.setCustomModelData(5);
 
-        bedrockbreakermeta.displayName(Component.text("Bedrock Breaker", NamedTextColor.DARK_PURPLE)
+        bedrockbreakermeta.itemName(Component.text("Bedrock Breaker", NamedTextColor.DARK_PURPLE)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
@@ -122,8 +122,11 @@ public class BedrockBreaker implements Listener,Items {
                 }
                 result.setItemMeta(resultmeta);
                 event.setResult(result);
-                if (!event.getResult().containsEnchantment(Enchantment.UNBREAKING)) {
-                    event.setResult(new ItemStack(Material.AIR));
+
+                if (event.getInventory().getSecondItem() != null && event.getInventory().getSecondItem().getType() == Material.ENCHANTED_BOOK) {
+                    if(event.getInventory().getFirstItem().getEnchantments().equals(event.getResult().getEnchantments())){
+                        event.setResult(new ItemStack(Material.AIR));
+                    }
                 }
             }
         }

@@ -29,7 +29,7 @@ public class Wrench implements Listener,Items {
         wrenchmeta.setUnbreakable(true);
         wrenchmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 
-        wrenchmeta.displayName(Component.text("Wrench", NamedTextColor.DARK_AQUA)
+        wrenchmeta.itemName(Component.text("Wrench", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Open iron trapdoors")

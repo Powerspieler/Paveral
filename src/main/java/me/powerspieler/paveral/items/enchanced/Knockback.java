@@ -28,7 +28,7 @@ public class Knockback implements Listener, Items {
         itemmeta.addStoredEnchant(Enchantment.KNOCKBACK, 5, true);
         itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "enhanced_knockback");
 
-        itemmeta.displayName(Component.text("Enhanced Book", NamedTextColor.LIGHT_PURPLE)
+        itemmeta.itemName(Component.text("Enhanced Book", NamedTextColor.LIGHT_PURPLE)
                 .decoration(TextDecoration.ITALIC, false));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Compatible with: ")
@@ -57,7 +57,7 @@ public class Knockback implements Listener, Items {
             ItemMeta itemmeta = item.getItemMeta();
             itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "bonk");
             itemmeta.addEnchant(Enchantment.KNOCKBACK, 5, true);
-            itemmeta.displayName(Component.text("Bonk", NamedTextColor.RED)
+            itemmeta.itemName(Component.text("Bonk", NamedTextColor.RED)
                     .decoration(TextDecoration.ITALIC, false));
             List<Component> lore = new ArrayList<>();
             lore.add(Component.text("Hornyjail certified", NamedTextColor.GOLD)
