@@ -33,6 +33,15 @@ import java.util.Objects;
 public final class Paveral extends JavaPlugin {
     private static Paveral plugin;
 
+    //TODO Forming Listner modularisieren
+    // TODO Forge Listner modularisieren
+    // TODO Vampires Bass
+    // TODO Music Pickaxe
+    // TODO Music Shovel
+    // TODO mit Forming Listner dann String Blades Colors einfacher machen
+    // TODO Advancement ohne zip; nicht immer kopieren nur bei Changes
+    // TODO Interface Items -> abstract PaveralItem und maybe Interface bzgl. enchantments und maybe auch disasseble optional interface machen
+    // TODO Worldalterer spam fix
 
     @Override
     public void onEnable() {
