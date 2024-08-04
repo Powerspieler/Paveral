@@ -94,7 +94,7 @@ public class BedrockBreaker implements Listener,Items {
                             block.getWorld().spawnParticle(Particle.ASH, block.getLocation().add(0.5, 0.5, 0.5), 500, 0.25, 0.25, 0.25);
                             targets.playSound(Sound.sound(Key.key("entity.elder_guardian.death"), Sound.Source.AMBIENT, 1f, 0.75f), Sound.Emitter.self());
                             targets.playSound(Sound.sound(Key.key("entity.wither.break_block"), Sound.Source.AMBIENT, 1f, 0.25f), Sound.Emitter.self());
-                            ItemsUtil.applyDamage(event.getItem(), 2);
+                            ItemsUtil.applyDamage(event.getItem(), 2, 100);
                         } else if (block != null && block.getType() == Material.ANCIENT_DEBRIS) {
                             final Audience targets = block.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(block.getLocation()) < 25);
                             block.setType(Material.AIR);

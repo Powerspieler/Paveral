@@ -216,7 +216,7 @@ public class LightStaff implements Listener,Items {
                 light.setLevel(lightlevel);
                 block.setBlockData(light);
                 targets.playSound(Sound.sound(Key.key("item.flintandsteel.use"), Sound.Source.BLOCK, 1f, 1f), Sound.Emitter.self());
-                ItemsUtil.applyDamage(lightstaff, 1);
+                ItemsUtil.applyDamage(lightstaff, 1, 100);
 
                 location.add(0.5, 0.5, 0.5);
                 location.getWorld().spawnParticle(Particle.BLOCK_MARKER, location, 1, block.getBlockData());

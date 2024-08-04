@@ -18,6 +18,7 @@ import me.powerspieler.paveral.items.enchanced.Knockback;
 import me.powerspieler.paveral.items.musicpack.PianoSword;
 import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
 import me.powerspieler.paveral.items.musicpack.StringBlade;
+import me.powerspieler.paveral.items.musicpack.VampiresBass;
 import me.powerspieler.paveral.items.parts.worldalterer.SonicEssence;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;
 import me.powerspieler.paveral.util.AdvancementLoader;
@@ -71,8 +72,9 @@ public final class Paveral extends JavaPlugin {
 
         pm.registerEvents(new PianoSword(), this);
         pm.registerEvents(new StringBlade(), this);
-
-
+        // pickaxe
+        pm.registerEvents(new VampiresBass(), this);
+        //shovel
         pm.registerEvents(new ScytheOfHarmony(), this);
 
         // Enhanced Enchantments

@@ -13,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Farmland;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -53,10 +52,16 @@ public class ScytheOfHarmony implements Listener, Items {
                 .append(Component.text("Unbreaking",NamedTextColor.GRAY)
                         .decoration(TextDecoration.ITALIC, false)
                 )
-                .append(Component.text(" and ", NamedTextColor.BLUE)
+                .append(Component.text(", ", NamedTextColor.BLUE)
                         .decoration(TextDecoration.ITALIC, false)
                 )
                 .append(Component.text("Mending", NamedTextColor.GRAY)
+                        .decoration(TextDecoration.ITALIC, false)
+                )
+                .append(Component.text(" and ", NamedTextColor.BLUE)
+                        .decoration(TextDecoration.ITALIC, false)
+                )
+                .append(Component.text("Fortune", NamedTextColor.GRAY)
                         .decoration(TextDecoration.ITALIC, false)));
         itemMeta.lore(lore);
 
@@ -142,7 +147,7 @@ public class ScytheOfHarmony implements Listener, Items {
 
 
     @EventHandler
-    public void onMendingAttempt(PrepareAnvilEvent event) {
+    public void onEnchantingAttempt(PrepareAnvilEvent event) {
         if (event.getInventory().getFirstItem() != null && event.getResult() != null && event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)) {
             if (Objects.equals(event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "scythe_of_harmony")) {
                 ItemStack result = event.getResult();

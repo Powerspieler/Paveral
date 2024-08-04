@@ -3,6 +3,7 @@ package me.powerspieler.paveral.commands;
 
 import me.powerspieler.paveral.discovery.tutorial.AltarBook;
 import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
+import me.powerspieler.paveral.items.musicpack.VampiresBass;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -30,7 +31,7 @@ public class TestCommand implements CommandExecutor {
 //                player.getInventory().addItem(item);
 
 
-                player.getInventory().addItem(new ScytheOfHarmony().build());
+                player.getInventory().addItem(new VampiresBass().build());
 
 
 
