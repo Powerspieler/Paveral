@@ -109,7 +109,7 @@ public class FormingListeners implements Listener {
             }
             return;
         }
-        // Piano Sword / Rhytms Awakening
+        // Piano Sword / Rhythms Awakening
         if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SWORD) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.BLACKSTONE) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.QUARTZ)){
             List<Item> formingitems = items.stream()
                     .filter(item -> {

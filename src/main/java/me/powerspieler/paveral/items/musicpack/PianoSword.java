@@ -43,7 +43,7 @@ public class PianoSword implements Listener, Items {
         itemMeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "piano_sword");
         itemMeta.setCustomModelData(1);
 
-        itemMeta.itemName(Component.text("Rhytms Awakening", NamedTextColor.DARK_PURPLE));
+        itemMeta.itemName(Component.text("Rhythms Awakening", NamedTextColor.DARK_PURPLE));
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
@@ -54,9 +54,9 @@ public class PianoSword implements Listener, Items {
                         .decoration(TextDecoration.ITALIC, false)));
         itemMeta.lore(lore);
 
-        AttributeModifier attackSpeedModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "rhytms_awakening_attack_speed"), -3.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND);
+        AttributeModifier attackSpeedModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "rhythms_awakening_attack_speed"), -3.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND);
         itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, attackSpeedModifier);
-        AttributeModifier attackDamageModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "rhytms_awakening_attack_damage"), 10.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND);
+        AttributeModifier attackDamageModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "rhythms_awakening_attack_damage"), 10.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND);
         itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, attackDamageModifier);
 
         itemStack.setItemMeta(itemMeta);

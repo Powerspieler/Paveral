@@ -35,7 +35,7 @@ public class MusicCore {
         lore.add(Component.text("Combined with ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)
                 .append(Component.text("Netherite Sword, 16 Quartz and 8 Blackstone", NamedTextColor.AQUA).decoration(TextDecoration.ITALIC, false)));
         lore.add(Component.text("on the altar will form ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)
-                .append(Component.text("Rhytms Awakening", NamedTextColor.DARK_PURPLE).decoration(TextDecoration.ITALIC, false)));
+                .append(Component.text("Rhythms Awakening", NamedTextColor.DARK_PURPLE).decoration(TextDecoration.ITALIC, false)));
         lore.add(Component.text("Combined with ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)
                 .append(Component.text("Netherite Sword and any dye", NamedTextColor.AQUA).decoration(TextDecoration.ITALIC, false)));
         lore.add(Component.text("on the altar will form ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)
