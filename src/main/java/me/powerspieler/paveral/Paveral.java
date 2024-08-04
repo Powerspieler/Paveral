@@ -18,7 +18,7 @@ import me.powerspieler.paveral.items.enchanced.Knockback;
 import me.powerspieler.paveral.items.musicpack.PianoSword;
 import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
 import me.powerspieler.paveral.items.musicpack.StringBlade;
-import me.powerspieler.paveral.items.musicpack.VampiresBass;
+import me.powerspieler.paveral.items.musicpack.LumberjacksBass;
 import me.powerspieler.paveral.items.parts.worldalterer.SonicEssence;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;
 import me.powerspieler.paveral.util.AdvancementLoader;
@@ -36,7 +36,7 @@ public final class Paveral extends JavaPlugin {
 
     //TODO Forming Listner modularisieren
     // TODO Forge Listner modularisieren
-    // TODO Vampires Bass / Achievement / Crafting
+    // TODO Lumberjacks Bass / Crafting
     // TODO Music Pickaxe / Achievement / Crafting
     // TODO Music Shovel / Achievemnet / Crafting
     // TODO mit Forming Listner dann String Blades Colors einfacher machen
@@ -73,7 +73,7 @@ public final class Paveral extends JavaPlugin {
         pm.registerEvents(new PianoSword(), this);
         pm.registerEvents(new StringBlade(), this);
         // pickaxe
-        pm.registerEvents(new VampiresBass(), this);
+        pm.registerEvents(new LumberjacksBass(), this);
         //shovel
         pm.registerEvents(new ScytheOfHarmony(), this);
 

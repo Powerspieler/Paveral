@@ -10,7 +10,6 @@ import me.powerspieler.paveral.util.ItemsUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -33,7 +32,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-public class VampiresBass implements Listener, Items {
+public class LumberjacksBass implements Listener, Items {
 
     private final AttributeModifier largeTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "largeTreeModifier"), -0.985, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
     private final AttributeModifier mediumTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "mediumTreeModifier"), -0.95, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
@@ -44,14 +43,22 @@ public class VampiresBass implements Listener, Items {
     public ItemStack build() {
         ItemStack item = new ItemStack(Material.NETHERITE_AXE);
         ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.itemName(Component.text("Vampires Bass", NamedTextColor.DARK_PURPLE));
-        itemMeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "vampires_bass");
+        itemMeta.itemName(Component.text("Lumberjack's Bass", NamedTextColor.DARK_PURPLE));
+        itemMeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "lumberjacks_bass");
         itemMeta.setCustomModelData(1);
 
         itemMeta.addAttributeModifier(Attribute.PLAYER_BLOCK_BREAK_SPEED, smallTreeModifier);
 
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("LORE")); //TODO LORE
+        lore.add(Component.text("The power of this axe shatters through the whole tree", NamedTextColor.DARK_AQUA)
+                .decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("In addition, leaves decay instantaneously", NamedTextColor.DARK_AQUA)
+                .decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text(""));
+        lore.add(Component.text("Includes: Every type of log, crimson and warped stem", NamedTextColor.DARK_GREEN)
+                .decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("            and huge mushrooms", NamedTextColor.DARK_GREEN)
+                .decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text("Enchantable with ", NamedTextColor.BLUE)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.text("Unbreaking", NamedTextColor.GRAY)
@@ -76,7 +83,7 @@ public class VampiresBass implements Listener, Items {
 
     @EventHandler
     public void onTreeBreak(BlockBreakEvent event) {
-        if (ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "vampires_bass")) {
+        if (ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "lumberjacks_bass")) {
             event.setCancelled(true);
             if(event.getPlayer().getInventory().getItemInMainHand().getItemMeta() instanceof Damageable itemMeta && itemMeta.getDamage() == 2031){
                 return;
@@ -260,7 +267,7 @@ public class VampiresBass implements Listener, Items {
      */
     private void breakTreeWithActualLeaves(Block logBlock, Player player) {
         Material logBlockType = logBlock.getType();
-        Material leavesType = convertToLeavesVariant(logBlockType);
+        Set<Material> leavesType = convertToLeavesVariant(logBlockType);
 
         Set<Block> leavesEntryList = breakLogRecursive(logBlock, logBlockType, leavesType, player.getInventory().getItemInMainHand());
         leavesEntryList.forEach(Block::tick); //Distance 1 -> 3
@@ -276,7 +283,7 @@ public class VampiresBass implements Listener, Items {
     }
 
 
-    private Set<Block> breakLogRecursive(Block block, Material logType, Material leavesType, ItemStack item) {
+    private Set<Block> breakLogRecursive(Block block, Material logType, Set<Material> leavesTypes, ItemStack item) {
         Set<Block> leavesBlocks = new HashSet<>();
         if (block.getType() == logType) {
             block.breakNaturally(true);
@@ -291,11 +298,11 @@ public class VampiresBass implements Listener, Items {
                         if (x == 0 && y == 0 && z == 0) {
                             continue;
                         }
-                        if (block.getRelative(x, y, z).getType() == leavesType) {
+                        if (leavesTypes.contains(block.getRelative(x, y, z).getType())) {
                             leavesBlocks.add(block.getRelative(x, y, z));
                             block.getRelative(x, y, z).tick();
                         }
-                        leavesBlocks.addAll(breakLogRecursive(block.getRelative(x, y, z), logType, leavesType, item));
+                        leavesBlocks.addAll(breakLogRecursive(block.getRelative(x, y, z), logType, leavesTypes, item));
                     }
                 }
             }
@@ -303,31 +310,24 @@ public class VampiresBass implements Listener, Items {
         return leavesBlocks;
     }
 
-    private Material convertToLeavesVariant(Material logType) {
-        Material leavesType = null;
+    private Set<Material> convertToLeavesVariant(Material logType) {
+        Set<Material> leavesType = new HashSet<>(); // Set bc of AzealaTrees also using Oak as log
         switch (logType) {
-            case OAK_LOG, OAK_WOOD, STRIPPED_OAK_LOG, STRIPPED_OAK_WOOD -> leavesType = Material.OAK_LEAVES;
-            case SPRUCE_LOG, SPRUCE_WOOD, STRIPPED_SPRUCE_LOG, STRIPPED_SPRUCE_WOOD ->
-                    leavesType = Material.SPRUCE_LEAVES;
-            case BIRCH_LOG, BIRCH_WOOD, STRIPPED_BIRCH_LOG, STRIPPED_BIRCH_WOOD -> leavesType = Material.BIRCH_LEAVES;
-            case JUNGLE_LOG, JUNGLE_WOOD, STRIPPED_JUNGLE_LOG, STRIPPED_JUNGLE_WOOD ->
-                    leavesType = Material.JUNGLE_LEAVES;
-            case ACACIA_LOG, ACACIA_WOOD, STRIPPED_ACACIA_LOG, STRIPPED_ACACIA_WOOD ->
-                    leavesType = Material.ACACIA_LEAVES;
-            case DARK_OAK_LOG, DARK_OAK_WOOD, STRIPPED_DARK_OAK_LOG, STRIPPED_DARK_OAK_WOOD ->
-                    leavesType = Material.DARK_OAK_LEAVES;
-            // TODO Azalea ??
-            case MANGROVE_LOG, MANGROVE_WOOD, STRIPPED_MANGROVE_LOG, STRIPPED_MANGROVE_WOOD ->
-                    leavesType = Material.MANGROVE_LEAVES;
-            case CHERRY_LOG, CHERRY_WOOD, STRIPPED_CHERRY_LOG, STRIPPED_CHERRY_WOOD ->
-                    leavesType = Material.CHERRY_LEAVES;
+            case OAK_LOG, OAK_WOOD, STRIPPED_OAK_LOG, STRIPPED_OAK_WOOD -> leavesType.addAll(List.of(Material.OAK_LEAVES, Material.AZALEA_LEAVES, Material.FLOWERING_AZALEA_LEAVES));
+            case SPRUCE_LOG, SPRUCE_WOOD, STRIPPED_SPRUCE_LOG, STRIPPED_SPRUCE_WOOD -> leavesType.add(Material.SPRUCE_LEAVES);
+            case BIRCH_LOG, BIRCH_WOOD, STRIPPED_BIRCH_LOG, STRIPPED_BIRCH_WOOD -> leavesType.add(Material.BIRCH_LEAVES);
+            case JUNGLE_LOG, JUNGLE_WOOD, STRIPPED_JUNGLE_LOG, STRIPPED_JUNGLE_WOOD -> leavesType.add(Material.JUNGLE_LEAVES);
+            case ACACIA_LOG, ACACIA_WOOD, STRIPPED_ACACIA_LOG, STRIPPED_ACACIA_WOOD -> leavesType.add(Material.ACACIA_LEAVES);
+            case DARK_OAK_LOG, DARK_OAK_WOOD, STRIPPED_DARK_OAK_LOG, STRIPPED_DARK_OAK_WOOD -> leavesType.add(Material.DARK_OAK_LEAVES);
+            case MANGROVE_LOG, MANGROVE_WOOD, STRIPPED_MANGROVE_LOG, STRIPPED_MANGROVE_WOOD -> leavesType.add(Material.MANGROVE_LEAVES);
+            case CHERRY_LOG, CHERRY_WOOD, STRIPPED_CHERRY_LOG, STRIPPED_CHERRY_WOOD -> leavesType.add(Material.CHERRY_LEAVES);
         }
         return leavesType;
     }
 
     private final List<BlockFace> blockFaceListSix = List.of(BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
-    private void breakLeavesRecursive(Block block, Material material) {
-        if (block.getType() == material && block.getBlockData() instanceof Leaves leavesBlockData && !leavesBlockData.isPersistent() && leavesBlockData.getDistance() == 7) {
+    private void breakLeavesRecursive(Block block, Set<Material> material) {
+        if (material.contains(block.getType()) && block.getBlockData() instanceof Leaves leavesBlockData && !leavesBlockData.isPersistent() && leavesBlockData.getDistance() == 7) {
             block.breakNaturally(false);
             for (BlockFace face : blockFaceListSix) {
                 breakLeavesRecursive(block.getRelative(face), material);
@@ -339,7 +339,7 @@ public class VampiresBass implements Listener, Items {
     // Chance Mining Speed based on Tree
     @EventHandler
     public void onBlockBreaking(BlockBreakProgressUpdateEvent event){
-        if(event.getEntity() instanceof Player player && ItemHoldingController.checkIsHoldingPaveralItem(player, "vampires_bass") && (MaterialSetTag.LOGS.isTagged(event.getBlock().getType()) || event.getBlock().getType() == Material.MUSHROOM_STEM)){
+        if(event.getEntity() instanceof Player player && ItemHoldingController.checkIsHoldingPaveralItem(player, "lumberjacks_bass") && (MaterialSetTag.LOGS.isTagged(event.getBlock().getType()) || event.getBlock().getType() == Material.MUSHROOM_STEM)){
             Material logType = event.getBlock().getType();
             if(event.getBlock().getRelative(BlockFace.NORTH).getType() == logType || event.getBlock().getRelative(BlockFace.EAST).getType() == logType
                     || event.getBlock().getRelative(BlockFace.SOUTH).getType() == logType || event.getBlock().getRelative(BlockFace.WEST).getType() == logType){
@@ -366,7 +366,7 @@ public class VampiresBass implements Listener, Items {
     @EventHandler
     public void onEnchantingAttempt(PrepareAnvilEvent event) {
         if (event.getInventory().getFirstItem() != null && event.getResult() != null && event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)) {
-            if (Objects.equals(event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "vampires_bass")) {
+            if (Objects.equals(event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lumberjacks_bass")) {
                 ItemStack result = event.getResult();
                 ItemMeta resultmeta = result.getItemMeta();
                 if (event.getResult().containsEnchantment(Enchantment.EFFICIENCY)) {

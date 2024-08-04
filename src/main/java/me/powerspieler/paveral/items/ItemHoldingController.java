@@ -23,15 +23,15 @@ public class ItemHoldingController implements Listener {
         Player player = event.getPlayer();
         player.sendActionBar(Component.text("")); // Always empty Actionbar
         ItemStack item = player.getInventory().getItem(event.getNewSlot());
-        ItemStack offHandItem = player.getInventory().getItemInOffHand();
+//        ItemStack offHandItem = player.getInventory().getItemInOffHand();
         if(item != null && item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)){
             String itemtype = item.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);
             assert itemtype != null;
             player.getPersistentDataContainer().set(Constant.IS_HOLDING, PersistentDataType.STRING, itemtype);
-        } else if(item == null && offHandItem.hasItemMeta() && offHandItem.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)) {
-            String itemtype = offHandItem.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);
-            assert itemtype != null;
-            player.getPersistentDataContainer().set(Constant.IS_HOLDING, PersistentDataType.STRING, itemtype);
+//        } else if(item == null && offHandItem.hasItemMeta() && offHandItem.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)) { // Removes Offhand completely; issues when using
+//            String itemtype = offHandItem.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);         // leftclick. e.g. LumberjacksBass Breaking/Break Block
+//            assert itemtype != null;
+//            player.getPersistentDataContainer().set(Constant.IS_HOLDING, PersistentDataType.STRING, itemtype);
         } else {
             player.getPersistentDataContainer().remove(Constant.IS_HOLDING);
         }

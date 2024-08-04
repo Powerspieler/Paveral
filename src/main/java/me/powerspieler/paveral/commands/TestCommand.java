@@ -1,21 +1,13 @@
 package me.powerspieler.paveral.commands;
 
 
-import me.powerspieler.paveral.discovery.tutorial.AltarBook;
-import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
-import me.powerspieler.paveral.items.musicpack.VampiresBass;
-import me.powerspieler.paveral.util.Constant;
+import me.powerspieler.paveral.items.musicpack.LumberjacksBass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -31,7 +23,7 @@ public class TestCommand implements CommandExecutor {
 //                player.getInventory().addItem(item);
 
 
-                player.getInventory().addItem(new VampiresBass().build());
+                player.getInventory().addItem(new LumberjacksBass().build());
 
 
 
