@@ -1,6 +1,7 @@
 package me.powerspieler.paveral.advancements;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.crafting.ItemHelper;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.RecipeLoader;
 import net.kyori.adventure.text.Component;
@@ -45,7 +46,7 @@ public class AwardAdvancements implements Listener {
                 EntityDamageEvent.DamageCause deathcause = pig.getLastDamageCause().getCause();
                 if(deathcause == EntityDamageEvent.DamageCause.FALL){
                     Player player = pig.getKiller();
-                    if(player != null && hasPaveralNamespacedKey(player.getInventory().getItemInMainHand(), Constant.ITEMTYPE) && Objects.equals(player.getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bonk")){
+                    if(player != null && ItemHelper.hasPaveralNamespacedKey(player.getInventory().getItemInMainHand(), Constant.ITEMTYPE) && Objects.equals(player.getInventory().getItemInMainHand().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bonk")){
                         checkAndGrandAdvancement(player, "flying_pig");
                     }
                 }
@@ -69,12 +70,12 @@ public class AwardAdvancements implements Listener {
     }
 
     private void gotNewItem(ItemStack item, Entity entity){
-        if(hasPaveralNamespacedKey(item, Constant.ITEMTYPE) && entity instanceof Player player){
+        if(ItemHelper.hasPaveralNamespacedKey(item, Constant.ITEMTYPE) && entity instanceof Player player){
             String itemType = item.getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);
             checkAndGrandAdvancement(player, itemType);
         }
 
-        if(hasPaveralNamespacedKey(item, Constant.DISCOVERY) && entity instanceof Player player){
+        if(ItemHelper.hasPaveralNamespacedKey(item, Constant.DISCOVERY) && entity instanceof Player player){
             String discoveryType = item.getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING);
             switch (Objects.requireNonNull(discoveryType)){
                 case "bedrock_breaker" -> checkAndGrandAdvancement(player, "sleep_with_cat");
@@ -84,17 +85,10 @@ public class AwardAdvancements implements Listener {
             }
         }
 
-        if(hasPaveralNamespacedKey(item, Constant.IS_DIARY) && entity instanceof Player player){
+        if(ItemHelper.hasPaveralNamespacedKey(item, Constant.IS_DIARY) && entity instanceof Player player){
             checkAndGrandAdvancement(player, "find_diary");
         }
     }
-
-    public static boolean hasPaveralNamespacedKey(ItemStack item, NamespacedKey namespacedKey){
-        return item != null
-                && item.hasItemMeta()
-                && item.getItemMeta().getPersistentDataContainer().has(namespacedKey);
-    }
-
 
 
     private static void checkAndGrandAdvancement(Player player, String key){

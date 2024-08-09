@@ -44,6 +44,7 @@ public final class Paveral extends JavaPlugin {
     // TODO Interface Items -> abstract PaveralItem und maybe Interface bzgl. enchantments und maybe auch disasseble optional interface machen
     // TODO Worldalterer spam fix
     // TODO String Blade / Piano Sword FireAspect?
+    // TODO Raphilius Waffe für Arena. On Kill: player stribt nicht wenn von dieser waffe getötet.
 
 
     @Override

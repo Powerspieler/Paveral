@@ -2,22 +2,18 @@ package me.powerspieler.paveral.forming_altar;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
-import me.powerspieler.paveral.discovery.Discovery;
+import me.powerspieler.paveral.crafting.*;
+import me.powerspieler.paveral.discovery.tutorial.AltarBook;
 import me.powerspieler.paveral.discovery.tutorial.DisBook;
-import me.powerspieler.paveral.discovery.tutorial.TechBook;
 import me.powerspieler.paveral.forming_altar.events.FormItemEvent;
-import me.powerspieler.paveral.items.BedrockBreaker;
-import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.LightStaff;
-import me.powerspieler.paveral.items.enchanced.Channeling;
-import me.powerspieler.paveral.items.enchanced.Knockback;
-import me.powerspieler.paveral.items.musicpack.PianoSword;
 import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
-import me.powerspieler.paveral.items.musicpack.StringBlade;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.RespawnAnchor;
@@ -36,19 +32,140 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static me.powerspieler.paveral.forming_altar.AwakeAltar.ALREADY_FORMING;
 
 public class FormingListeners implements Listener {
 
+    // TODO Teste das hier!! Mit anderen Ingredienttypen (!) .equals!! hashCode (?!)
+    // TODO jedes item mit recipe versehen
+
+    private Set<StandardIngredient> convertToIngredientSet(Set<Item> itemSet){
+        Set<StandardIngredient> out = new HashSet<>();
+        for(Item item : itemSet){
+            ItemStack itemStack = item.getItemStack();
+            if(itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof EnchantmentStorageMeta meta){
+                out.add(new EnchantmentIngredient(meta.getStoredEnchants()));
+            } else if (ItemHelper.hasPaveralNamespacedKey(itemStack, Constant.ITEMTYPE)) {
+                out.add(new PaveralIngredient(itemStack.getType(), itemStack.getAmount(), Constant.ITEMTYPE, ItemHelper.getPaveralNamespacedKey(itemStack, Constant.ITEMTYPE)));
+            } else if (ItemHelper.hasPaveralNamespacedKey(itemStack, Constant.DISCOVERY)) {
+                out.add(new PaveralIngredient(itemStack.getType(), itemStack.getAmount(), Constant.DISCOVERY, ItemHelper.getPaveralNamespacedKey(itemStack, Constant.DISCOVERY)));
+            } else {
+                out.add(new StandardIngredient(itemStack.getType(), itemStack.getAmount()));
+            }
+        }
+        return out;
+    }
+
+    private Set<PaveralRecipe> getAllAvailableRecipes(){
+        Set<PaveralRecipe> recipes = new HashSet<>();
+
+        Set<StandardIngredient> ingredients = new HashSet<>();
+        ingredients.add(new StandardIngredient(Material.IRON_INGOT, 2));
+        ingredients.add(new StandardIngredient(Material.COPPER_INGOT, 1));
+        ingredients.add(new StandardIngredient(Material.REDSTONE_LAMP, 1));
+        ingredients.add(new StandardIngredient(Material.WITHER_ROSE, 2));
+        recipes.add(new PaveralRecipe(ingredients, new LightStaff().build()));
+
+        Set<StandardIngredient> ingredients2 = new HashSet<>();
+        ingredients2.add(new PaveralIngredient(Material.WRITTEN_BOOK, 1, Constant.DISCOVERY, "altar_book"));
+        ingredients2.add(new StandardIngredient(Material.NETHERITE_SCRAP, 1));
+        recipes.add(new PaveralRecipe(ingredients2, new AltarBook().build()));
+
+        Set<StandardIngredient> ingredients3 = new HashSet<>();
+        ingredients3.add(new PaveralIngredient(Material.WRITTEN_BOOK, 1, Constant.DISCOVERY, "dis_book"));
+        ingredients3.add(new StandardIngredient(Material.NETHERITE_SCRAP, 1));
+        recipes.add(new PaveralRecipe(ingredients3, new DisBook().build()));
+
+        Set<StandardIngredient> ingredients4 = new HashSet<>();
+        ingredients4.add(new PaveralIngredient(Material.JIGSAW, 1, Constant.ITEMTYPE, "music_core"));
+        ingredients4.add(new StandardIngredient(Material.NETHERITE_HOE, 1));
+        recipes.add(new PaveralRecipe(ingredients4, new ScytheOfHarmony().build()));
+
+        Set<StandardIngredient> ingredients5 = new HashSet<>();
+        Map<Enchantment, Integer> enchantments = new HashMap<>();
+        enchantments.put(Enchantment.KNOCKBACK, 2);
+        ingredients5.add(new EnchantmentIngredient(enchantments));
+        ingredients5.add(new StandardIngredient(Material.NETHERITE_SCRAP, 1));
+        recipes.add(new PaveralRecipe(ingredients5, new AltarBook().build()));
+
+
+        return recipes;
+    }
+
+    private static Set<StandardIngredient> getTestRecipe(){
+        Set<StandardIngredient> ingredients = new HashSet<>();
+
+        StandardIngredient one = new StandardIngredient(Material.COPPER_INGOT, 1);
+        Bukkit.broadcast(Component.text(one.toString()));
+        StandardIngredient two = new StandardIngredient(Material.IRON_INGOT, 2);
+        Bukkit.broadcast(Component.text(two.toString()));
+
+
+
+
+
+        ingredients.add(one);
+        ingredients.add(two);
+
+
+
+//        ingredients.add(new StandardIngredient(Material.REDSTONE_LAMP, 1));
+//        ingredients.add(new StandardIngredient(Material.WITHER_ROSE, 2));
+        return ingredients;
+    }
+
+
     @EventHandler
     public void onIngredientDrop(FormItemEvent event){
-        List<Item> raw = new ArrayList<>(event.getAltar().getNearbyEntitiesByType(Item.class, 1,1,1));
-        List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(AwakeAltar.FORMING_CANDIDATE)).toList();
+        Set<Item> ingredients = event.getAltar().getNearbyEntitiesByType(Item.class, 1,1,1).stream().filter(item -> item.getPersistentDataContainer().has(AwakeAltar.FORMING_CANDIDATE)).collect(Collectors.toSet());
+        //Bukkit.broadcast(Component.text("ingredients: " + ingredients.toString(), NamedTextColor.GREEN));
+        Set<StandardIngredient> formCandidate = convertToIngredientSet(ingredients);
+        Bukkit.broadcast(Component.text("formCandidate: " + formCandidate, NamedTextColor.YELLOW));
+
+        //StandardIngredient one = formCandidate.stream().findFirst().get();
+        //Bukkit.broadcast(Component.text(formCandidate.contains(one)));
+
+
+        //Set<StandardIngredient> soos = getTestRecipe();
+//        StandardIngredient testOne = new StandardIngredient(Material.IRON_INGOT, 2);
+//        StandardIngredient testTwo = new StandardIngredient(Material.IRON_INGOT, 2);
+//        Bukkit.broadcast(Component.text(testOne.equals(testTwo), NamedTextColor.DARK_PURPLE));
+
+//        StandardIngredient two = getTestRecipe().stream().findFirst().get();
+//        Bukkit.broadcast(Component.text("" + two, NamedTextColor.YELLOW));
+//        Bukkit.broadcast(Component.text(getTestRecipe().contains(two)));
+
+//        Bukkit.broadcast(Component.text(two.toString()));
+//        getTestRecipe().forEach(i -> Bukkit.broadcast(Component.text(i.toString())));
+
+
+//        Bukkit.broadcast(Component.text("one" + one, NamedTextColor.DARK_PURPLE));
+//        Bukkit.broadcast(Component.text("two" + two, NamedTextColor.DARK_PURPLE));
+//        Bukkit.broadcast(Component.text("equals?: " + one.equals(two), NamedTextColor.DARK_PURPLE));
+
+
+//        boolean form = formCandidate.containsAll(getTestRecipe());
+//        boolean test = getTestRecipe().containsAll(formCandidate);
+//        Bukkit.broadcast(Component.text("form: " + form + " test: " + test, NamedTextColor.YELLOW));
+//        Bukkit.broadcast(Component.text("test: " + getTestRecipe(), NamedTextColor.YELLOW));
+//        Bukkit.broadcast(Component.text(formCandidate.equals(getTestRecipe()), NamedTextColor.GOLD));
+
+       // Bukkit.broadcast(Component.text("Equal Recipe?: " + new PaveralRecipe(formCandidate, new LightStaff().build()).equals(getTestRecipe()) , NamedTextColor.GOLD));
+
+        Set<PaveralRecipe> availableRecipes = getAllAvailableRecipes();
+        Bukkit.broadcast(Component.text("availableRecipes: " + availableRecipes.stream().findFirst().get().ingredientsMap()));
+        Optional<PaveralRecipe> optionalRecipeMatch = availableRecipes.stream().filter(r -> r.ingredientsMap().equals(formCandidate)).findFirst();
+//        Bukkit.broadcast(Component.text("List: " + availableRecipes.stream().filter(r -> r.getIngredientsMap().equals(formCandidate)).toList(), NamedTextColor.RED));
+//        Bukkit.broadcast(Component.text("optionalRecipeMatch: " + availableRecipes, NamedTextColor.LIGHT_PURPLE));
+//        Bukkit.broadcast(Component.text("IsPresent? " + optionalRecipeMatch.isPresent(), NamedTextColor.DARK_PURPLE));
+
+        optionalRecipeMatch.ifPresent(paveralRecipe -> formItem(event.getAltar(), ingredients, paveralRecipe.result()));
+
+        /*
+
         // Lightstaff
         if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.COPPER_INGOT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.REDSTONE_LAMP) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.WITHER_ROSE)){
             List<Item> formingitems = items.stream()
@@ -64,6 +181,11 @@ public class FormingListeners implements Listener {
             }
             return;
         }
+
+
+
+
+
         // Bedrock Breaker
         if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.PISTON) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.TNT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.LEVER) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.OAK_TRAPDOOR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.ANCIENT_DEBRIS)){
             List<Item> formingitems = items.stream()
@@ -182,6 +304,8 @@ public class FormingListeners implements Listener {
                 // Next Enchantment Entry HERE
             }
         }
+
+         */
     }
 
     private boolean isCharged(Location location){
@@ -223,7 +347,8 @@ public class FormingListeners implements Listener {
         return true;
     }
 
-    private void formItem(Location location, List<Item> formingitems, ItemStack result){
+    private void formItem(Location location, Set<Item> formingitems, ItemStack result){
+        if(!isCharged(location)) return;
         final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
         for(Item formingitem : formingitems){
             formingitem.setVelocity(new Vector(0,0,0));
