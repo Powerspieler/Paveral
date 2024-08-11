@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-public class AntiCreeperGrief implements Listener, Items {
+public class AntiCreeperGriefOLD implements Listener, Items {
     @Override
     public ItemStack build() {
         ItemStack creeperitem = new ItemStack(Material.JIGSAW);
