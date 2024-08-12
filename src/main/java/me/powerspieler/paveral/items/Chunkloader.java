@@ -1,6 +1,8 @@
 package me.powerspieler.paveral.items;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -18,50 +20,59 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class Chunkloader implements Listener, Items {
-    @Override
-    public ItemStack build() {
-        ItemStack item = new ItemStack(Material.PETRIFIED_OAK_SLAB);
-        ItemMeta itemmeta = item.getItemMeta();
-        itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "chunkloader");
+public class Chunkloader extends PaveralItem implements Listener, Dismantable {
+    private static Component itemName(){
+        return Component.text("Chunkloader", NamedTextColor.GOLD)
+                .decoration(TextDecoration.ITALIC, false);
+    }
 
-        itemmeta.itemName(Component.text("Chunkloader", NamedTextColor.GOLD)
-                .decoration(TextDecoration.ITALIC, false));
+    private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Loads 3x3 Chunks", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC,false));
         lore.add(Component.text("Does not support random ticks!",NamedTextColor.RED)
                 .decoration(TextDecoration.ITALIC,false));
-        itemmeta.lore(lore);
+        return lore;
+    }
 
-        item.setItemMeta(itemmeta);
-        return item;
+
+    public Chunkloader() {
+        super(Material.PETRIFIED_OAK_SLAB, 0, Constant.ITEMTYPE, "chunkloader", itemName(), lore());
+    }
+
+    @Override
+    public PaveralRecipe recipe() {
+        Set<StandardIngredient> ingredients = new HashSet<>();
+        ingredients.add(new StandardIngredient(Material.NETHER_STAR, 3));
+        ingredients.add(new StandardIngredient(Material.OBSIDIAN, 2));
+        ingredients.add(new StandardIngredient(Material.ENCHANTING_TABLE, 1));
+        ingredients.add(new StandardIngredient(Material.LODESTONE, 1));
+        return new PaveralRecipe(ingredients, this.build());
     }
 
     @Override
     public List<ItemStack> parts() {
         List<ItemStack> parts = new ArrayList<>();
-        ItemStack netherstar = new ItemStack(Material.NETHER_STAR, 3);
-        ItemStack lodestone = new ItemStack(Material.LODESTONE);
-        ItemStack obsidian = new ItemStack(Material.OBSIDIAN, 2);
-        ItemStack enchtable = new ItemStack(Material.ENCHANTING_TABLE);
-        parts.add(netherstar);
-        parts.add(lodestone);
-        parts.add(obsidian);
-        parts.add(enchtable);
+        parts.add(new ItemStack(Material.NETHER_STAR, 3));
+        parts.add(new ItemStack(Material.LODESTONE));
+        parts.add(new ItemStack(Material.OBSIDIAN, 2));
+        parts.add(new ItemStack(Material.ENCHANTING_TABLE));
         return parts;
     }
+
+    // --- Item Logic ---
 
     private static final NamespacedKey CHUNKLOADS = new NamespacedKey(Paveral.getPlugin(), "chunkloads");
 
     @EventHandler
-    public void onPlace(BlockPlaceEvent event){
+    private void onPlace(BlockPlaceEvent event){
         if(event.getBlock().getType() == Material.PETRIFIED_OAK_SLAB){
             Slab slab = (Slab) event.getBlock().getBlockData();
             if(event.getBlockReplacedState().getType() == Material.PETRIFIED_OAK_SLAB || slab.getType() == Slab.Type.TOP){
@@ -84,16 +95,16 @@ public class Chunkloader implements Listener, Items {
                 event.getBlock().getWorld().spawnParticle(Particle.REVERSE_PORTAL, event.getBlock().getLocation().add(0.5,0.55,0.5), 100, 0,0,0, 0.5);
                 Location location = event.getBlock().getLocation().add(0.5,0.5,0.5);
                 final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 100);
-                targets.playSound(Sound.sound(Key.key("block.beacon.activate"), Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
-                targets.playSound(Sound.sound(Key.key("entity.ghast.scream"), Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
-                targets.playSound(Sound.sound(Key.key("block.stone.place"), Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
+                targets.playSound(net.kyori.adventure.sound.Sound.sound(Key.key("block.beacon.activate"), net.kyori.adventure.sound.Sound.Source.BLOCK, 1f, 0.5f), net.kyori.adventure.sound.Sound.Emitter.self());
+                targets.playSound(net.kyori.adventure.sound.Sound.sound(Key.key("entity.ghast.scream"), net.kyori.adventure.sound.Sound.Source.BLOCK, 1f, 0.5f), net.kyori.adventure.sound.Sound.Emitter.self());
+                targets.playSound(net.kyori.adventure.sound.Sound.sound(Key.key("block.stone.place"), net.kyori.adventure.sound.Sound.Source.BLOCK, 1f, 0.5f), net.kyori.adventure.sound.Sound.Emitter.self());
                 showActionbar(event.getPlayer());
             }
         }
     }
 
     @EventHandler
-    public void onBreak(BlockBreakEvent event){
+    private void onBreak(BlockBreakEvent event){
         if(event.getBlock().getType() == Material.PETRIFIED_OAK_SLAB){
             if(event.getPlayer().getGameMode() == GameMode.CREATIVE){
                 event.setDropItems(false);
@@ -116,25 +127,23 @@ public class Chunkloader implements Listener, Items {
             event.getBlock().getWorld().spawnParticle(Particle.PORTAL, event.getBlock().getLocation().add(0.5,0.55,0.5), 100, 0,0,0, 0.5);
             Location location = event.getBlock().getLocation().add(0.5,0.5,0.5);
             final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 100);
-            targets.playSound(Sound.sound(Key.key("block.beacon.deactivate"), Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
+            targets.playSound(net.kyori.adventure.sound.Sound.sound(Key.key("block.beacon.deactivate"), net.kyori.adventure.sound.Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
             showActionbar(event.getPlayer());
         }
     }
 
     @EventHandler
-    public void onChunkloaderMove(PlayerMoveEvent event){
+    public void onChunkloaderMove(PlayerMoveEvent event){ // TODO Revisit
         if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "chunkloader")){
             showActionbar(event.getPlayer());
         }
     }
 
     @EventHandler
-    public void onBlockItemDrop(BlockDropItemEvent event){
-
+    private void onBlockItemDrop(BlockDropItemEvent event){
         if(event.getBlockState().getType() == Material.PETRIFIED_OAK_SLAB){
-            Items chunkloader = new Chunkloader();
             Location location = event.getBlock().getLocation();
-            location.getWorld().dropItem(location.add(0.5,0.5,0.5),chunkloader.build());
+            location.getWorld().dropItem(location.add(0.5,0.5,0.5), this.build());
             event.setCancelled(true);
         }
     }
@@ -162,26 +171,26 @@ public class Chunkloader implements Listener, Items {
 
     // Prevent Chunkloader Breaking
     @EventHandler
-    public void onPistonMove(BlockPistonExtendEvent event){
+    private void onPistonMove(BlockPistonExtendEvent event){
         if(event.getBlocks().stream().anyMatch(block -> block.getType() == Material.PETRIFIED_OAK_SLAB)){
             event.setCancelled(true);
         }
     }
     @EventHandler
-    public void onPistonMove(BlockPistonRetractEvent event){
+    private void onPistonMove(BlockPistonRetractEvent event){
         if(event.getBlocks().stream().anyMatch(block -> block.getType() == Material.PETRIFIED_OAK_SLAB)){
             event.setCancelled(true);
         }
     }
     @EventHandler
-    public void onBlockExplosion(BlockExplodeEvent event){
+    private void onBlockExplosion(BlockExplodeEvent event){
         if(event.blockList().stream().anyMatch(block -> block.getType() == Material.PETRIFIED_OAK_SLAB)){
             List<Block> cl = event.blockList().stream().filter(block -> block.getType() == Material.PETRIFIED_OAK_SLAB).toList();
             event.blockList().removeAll(cl);
         }
     }
     @EventHandler
-    public void onEntityExplosion(EntityExplodeEvent event){
+    private void onEntityExplosion(EntityExplodeEvent event){
         if(event.blockList().stream().anyMatch(block -> block.getType() == Material.PETRIFIED_OAK_SLAB)){
             List<Block> cl = event.blockList().stream().filter(block -> block.getType() == Material.PETRIFIED_OAK_SLAB).toList();
             event.blockList().removeAll(cl);

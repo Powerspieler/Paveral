@@ -3,6 +3,7 @@ package me.powerspieler.paveral.items;
 import com.destroystokyo.paper.event.entity.PhantomPreSpawnEvent;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -12,6 +13,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
@@ -21,11 +23,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -34,21 +34,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class LightningRod implements Listener, Items {
-    public LightningRod() {
+public class LightningRod extends PaveralItem implements Listener, Dismantable {
+    private static Component itemName(){
+        return Component.text("Lightning Rod", NamedTextColor.DARK_PURPLE)
+                .decoration(TextDecoration.ITALIC, false);
     }
 
-    @Override
-    public ItemStack build() {
-        ItemStack lr = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
-        ItemMeta lrmeta = lr.getItemMeta();
-        lrmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "lightning_rod");
-        lrmeta.setCustomModelData(1);
-        lrmeta.setUnbreakable(true);
-        lrmeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-
-        lrmeta.itemName(Component.text("Lightning Rod", NamedTextColor.DARK_PURPLE)
-                .decoration(TextDecoration.ITALIC, false));
+    private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
@@ -62,10 +54,16 @@ public class LightningRod implements Listener, Items {
                 .decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text("prevent them spawning for five minutes", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
-        lrmeta.lore(lore);
+        return lore;
+    }
 
-        lr.setItemMeta(lrmeta);
-        return lr;
+    public LightningRod() {
+        super(Material.WARPED_FUNGUS_ON_A_STICK, 1, Constant.ITEMTYPE, "lightning_rod", itemName(), lore());
+    }
+
+    @Override
+    public PaveralRecipe recipe() {
+        return null;
     }
 
     @Override
@@ -75,18 +73,20 @@ public class LightningRod implements Listener, Items {
         Damageable tridentmeta = (Damageable) trident.getItemMeta();
         tridentmeta.setDamage(250 - (int) (Math.random() * 50));
         trident.setItemMeta(tridentmeta);
-        ItemStack book = new ItemStack(Material.BOOK);
+
         parts.add(trident);
-        parts.add(book);
+        parts.add(new ItemStack(Material.BOOK));
         return parts;
     }
+
+    // --- Item Logic ---
 
     private final HashMap<UUID, Long> cooldown = new HashMap<>();
     private final HashMap<UUID, Long> paralyzer = new HashMap<>();
 
     @EventHandler
-    public void onPlayerRightclick(PlayerInteractEvent event){
-        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "lightning_rod")){
+    private void onPlayerRightclick(PlayerInteractEvent event){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)){
             if (event.getAction().isRightClick()) {
                 Player player = event.getPlayer();
                 if (!cooldown.containsKey(player.getUniqueId()) || (System.currentTimeMillis() - cooldown.get(player.getUniqueId())) >= 1500) {
@@ -170,9 +170,9 @@ public class LightningRod implements Listener, Items {
     }
 
     @EventHandler
-    public void onLightningRodMove(PlayerMoveEvent event){
+    private void onLightningRodMove(PlayerMoveEvent event){ // TODO Revisit
         Player player = event.getPlayer();
-        if(ItemHoldingController.checkIsHoldingPaveralItem(player, "lightning_rod")){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(player, keyString)){
             showActionbar(player);
         }
     }
@@ -223,7 +223,7 @@ public class LightningRod implements Listener, Items {
     }
 
     @EventHandler
-    public void onPhantomSpawn(PhantomPreSpawnEvent event){
+    private void onPhantomSpawn(PhantomPreSpawnEvent event){
         if(event.getSpawningEntity() instanceof Player player){
             if(paralyzer.containsKey(player.getUniqueId())){
                 if(System.currentTimeMillis() - paralyzer.get(player.getUniqueId()) <= 300000){

@@ -1,6 +1,5 @@
 package me.powerspieler.paveral.items.enchanced;
 
-import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.LightningRod;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;

@@ -2,6 +2,9 @@ package me.powerspieler.paveral.items;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
+import me.powerspieler.paveral.crafting.PaveralIngredient;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
 import net.kyori.adventure.key.Key;
@@ -11,6 +14,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,57 +37,70 @@ import org.bukkit.util.Vector;
 import java.util.*;
 import java.util.logging.Level;
 
-public class Worldalterer implements Listener {
-    Map<UUID, Integer> runnableMap = new HashMap<>();
-
-    // Cooldown before commiting - depends on amount of blocks selected
-    private final HashMap<UUID, Long> cooldownuntil = new HashMap<>();
-
-    public static ItemStack build() {
-        ItemStack item = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
-        Damageable itemmeta = (Damageable) item.getItemMeta();
-        itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "worldalterer");
-        itemmeta.setCustomModelData(6);
-        itemmeta.setDamage(100);
-
-        itemmeta.itemName(Component.text("||", NamedTextColor.LIGHT_PURPLE)
+public class Worldalterer extends PaveralItem implements Listener, Enchantable {
+    private static Component itemName(){
+        return Component.text("||", NamedTextColor.LIGHT_PURPLE)
                 .decoration(TextDecoration.OBFUSCATED, true).decoration(TextDecoration.ITALIC, true)
                 .append(Component.text(" Worldalterer ", NamedTextColor.GOLD)
                         .decoration(TextDecoration.OBFUSCATED, false).decoration(TextDecoration.ITALIC, false))
-                        .append(Component.text("||", NamedTextColor.LIGHT_PURPLE)
-                                .decoration(TextDecoration.OBFUSCATED, true).decoration(TextDecoration.ITALIC, true)));
+                .append(Component.text("||", NamedTextColor.LIGHT_PURPLE)
+                        .decoration(TextDecoration.OBFUSCATED, true).decoration(TextDecoration.ITALIC, true));
+    }
 
+    private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)
-                        .append(Component.keybind("key.sneak", NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false))
-                        .append(Component.text(" + (", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false))
-                        .append(Component.keybind("key.attack", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false))
-                        .append(Component.text(" or ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false))
-                        .append(Component.keybind("key.use", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false))
-                        .append(Component.text(") to select Positions", NamedTextColor.DARK_AQUA)));
+                .append(Component.keybind("key.sneak", NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false))
+                .append(Component.text(" + (", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false))
+                .append(Component.keybind("key.attack", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false))
+                .append(Component.text(" or ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false))
+                .append(Component.keybind("key.use", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false))
+                .append(Component.text(") to select Positions", NamedTextColor.DARK_AQUA)));
         lore.add(Component.text("Look in the desired direction and press ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)
-                        .append(Component.keybind("key.attack", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false))
-                        .append(Component.text(" to set the direction", NamedTextColor.DARK_AQUA)));
+                .append(Component.keybind("key.attack", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false))
+                .append(Component.text(" to set the direction", NamedTextColor.DARK_AQUA)));
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)
-                        .append(Component.keybind("key.use", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false))
-                        .append(Component.text(" to commit alteration", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)));
+                .append(Component.keybind("key.use", NamedTextColor.YELLOW).decoration(TextDecoration.ITALIC, false).decoration(TextDecoration.BOLD, false))
+                .append(Component.text(" to commit alteration", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false)));
         lore.add(Component.text("Does not move entites!", NamedTextColor.RED).decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text(""));
         lore.add(Component.text("Refill using Echo Shard in Smithing Table", NamedTextColor.DARK_AQUA).decoration(TextDecoration.ITALIC, false));
+        return lore;
+    }
 
-        itemmeta.lore(lore);
-        item.setItemMeta(itemmeta);
+    public Worldalterer() {
+        super(Material.WARPED_FUNGUS_ON_A_STICK, 6, Constant.ITEMTYPE, "worldalterer", itemName(), lore());
+    }
+
+    @Override
+    protected ItemStack build() {
+        ItemStack item = super.build();
+        Damageable itemMeta = (Damageable) item.getItemMeta();
+        itemMeta.setDamage(100);
+        item.setItemMeta(itemMeta);
         return item;
     }
 
-    public List<ItemStack> parts() {
-        return null;
+    @Override
+    public PaveralRecipe recipe() {
+        Set<StandardIngredient> ingredients = new HashSet<>();
+        ingredients.add(new PaveralIngredient(Material.JIGSAW, 1, Constant.ITEMTYPE, "amethyst_laser"));
+        ingredients.add(new PaveralIngredient(Material.JIGSAW, 1, Constant.ITEMTYPE, "alteration_core"));
+        ingredients.add(new PaveralIngredient(Material.JIGSAW, 1, Constant.ITEMTYPE, "echo_container"));
+        return new PaveralRecipe(ingredients, this.build());
     }
+
+    // --- Item Logic ---
 
     // TODO Bea book writing
 
+    Map<UUID, Integer> runnableMap = new HashMap<>();
+
+    // Cooldown before commiting - depends on amount of blocks selected
+    private final HashMap<UUID, Long> cooldownuntil = new HashMap<>(); // TODO Einheitlicher Cooldown
+
     @EventHandler
-    public void onPlayerUse(PlayerInteractEvent event){
+    private void onPlayerUse(PlayerInteractEvent event){
         Player player = event.getPlayer();
         if(player.getPersistentDataContainer().has(Constant.IS_HOLDING, PersistentDataType.STRING) && player.getPersistentDataContainer().get(Constant.IS_HOLDING, PersistentDataType.STRING).equals("worldalterer")){
             event.setCancelled(true);
@@ -341,7 +358,7 @@ public class Worldalterer implements Listener {
         return false;
     }
 
-    public static Location getRightSide(Location location, double distance) {
+    private static Location getRightSide(Location location, double distance) {
         float angle = location.getYaw() / 60;
         return location.clone().subtract(new Vector(Math.cos(angle), 0, Math.sin(angle)).normalize().multiply(distance));
     }
@@ -401,7 +418,7 @@ public class Worldalterer implements Listener {
     }
 
     @EventHandler
-    public void onItemSelect(PlayerItemHeldEvent event){
+    private void onItemSelect(PlayerItemHeldEvent event){
         cancelActionbar(event.getPlayer());
         ItemStack item = event.getPlayer().getInventory().getItem(event.getNewSlot());
         if(item != null && item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && item.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals("worldalterer")){
@@ -495,8 +512,8 @@ public class Worldalterer implements Listener {
             Bukkit.getScheduler().cancelTask(runnableMap.get(player.getUniqueId()));
             runnableMap.remove(player.getUniqueId());
             player.getWorld().getEntities().stream().filter(e ->
-                    e.getPersistentDataContainer().has(Constant.WA_GLOWOWNER) &&
-                    e.getPersistentDataContainer().get(Constant.WA_GLOWOWNER, PersistentDataType.STRING).equals(String.valueOf(player.getUniqueId())))
+                            e.getPersistentDataContainer().has(Constant.WA_GLOWOWNER) &&
+                                    e.getPersistentDataContainer().get(Constant.WA_GLOWOWNER, PersistentDataType.STRING).equals(String.valueOf(player.getUniqueId())))
                     .forEach(Entity::remove);
         }
     }
@@ -510,11 +527,12 @@ public class Worldalterer implements Listener {
                 new RecipeChoice.MaterialChoice(Material.WARPED_FUNGUS_ON_A_STICK),
                 new RecipeChoice.MaterialChoice(Material.ECHO_SHARD));
     }
+
     @EventHandler
-    public void onRefill(PrepareSmithingEvent event){
+    private void onRefill(PrepareSmithingEvent event){
         if(event.getInventory().getInputTemplate() == null && event.getInventory().getInputMineral() != null && event.getInventory().getInputMineral().getType() == Material.ECHO_SHARD){
             ItemStack base = event.getInventory().getInputEquipment();
-            if(base != null && base.hasItemMeta() && base.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && base.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals("worldalterer")){
+            if(base != null && base.hasItemMeta() && base.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && base.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals(keyString)){
                 ItemStack result = new ItemStack(base);
                 ItemsUtil.repair(result, 25);
                 event.setResult(result);
@@ -522,12 +540,12 @@ public class Worldalterer implements Listener {
         }
     }
 
+    @Override
     @EventHandler
-    public void onAnvilAttempt(PrepareAnvilEvent event) {
-        if (event.getInventory().getFirstItem() != null && event.getResult() != null && event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)) {
-            if (Objects.equals(event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "worldalterer")) {
-                event.setResult(new ItemStack(Material.AIR));
-            }
-        }
+    public void onEnchantingAttempt(PrepareAnvilEvent event) {
+        Set<Enchantment> enchants = new HashSet<>();
+        enchants.add(Enchantment.MENDING);
+        enchants.add(Enchantment.UNBREAKING);
+        Enchantable.super.onEnchantingAttempt(event, keyString, enchants);
     }
 }

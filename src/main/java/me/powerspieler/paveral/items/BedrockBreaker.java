@@ -1,6 +1,8 @@
 package me.powerspieler.paveral.items;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
 import net.kyori.adventure.audience.Audience;
@@ -26,27 +28,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-public class BedrockBreaker implements Listener,Items {
-    
-    @Override
-    public ItemStack build() {
-        ItemStack bedrockbreaker = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
-        ItemMeta bedrockbreakermeta = bedrockbreaker.getItemMeta();
-        bedrockbreakermeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "bedrock_breaker");
-        bedrockbreakermeta.setCustomModelData(5);
+public class BedrockBreaker extends PaveralItem implements Listener, Dismantable, Enchantable {
+    private static Component itemName(){
+        return Component.text("Bedrock Breaker", NamedTextColor.DARK_PURPLE)
+                .decoration(TextDecoration.ITALIC, false);
+    }
 
-        bedrockbreakermeta.itemName(Component.text("Bedrock Breaker", NamedTextColor.DARK_PURPLE)
-                .decoration(TextDecoration.ITALIC, false));
+    private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.keybind("key.mouse.right", NamedTextColor.YELLOW)
-                        .decoration(TextDecoration.ITALIC, false)
-                )
+                        .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(" to break bedrock or", NamedTextColor.DARK_AQUA)
                         .decoration(TextDecoration.ITALIC, false)));
         lore.add(Component.text("repair using ancient debris", NamedTextColor.DARK_AQUA)
@@ -56,32 +51,49 @@ public class BedrockBreaker implements Listener,Items {
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.text("Unbreaking", NamedTextColor.GRAY)
                         .decoration(TextDecoration.ITALIC, false)));
-        bedrockbreakermeta.lore(lore);
+        return lore;
+    }
 
-        bedrockbreaker.setItemMeta(bedrockbreakermeta);
-        return bedrockbreaker;
+    public BedrockBreaker() {
+        super(Material.WARPED_FUNGUS_ON_A_STICK, 5, Constant.ITEMTYPE, "bedrock_breaker", itemName(), lore());
+    }
+
+    @Override
+    public PaveralRecipe recipe() {
+        Set<StandardIngredient> ingredients = new HashSet<>();
+        ingredients.add(new StandardIngredient(Material.OBSIDIAN, 1));
+        ingredients.add(new StandardIngredient(Material.PISTON, 2));
+        ingredients.add(new StandardIngredient(Material.TNT, 2));
+        ingredients.add(new StandardIngredient(Material.LEVER, 1));
+        ingredients.add(new StandardIngredient(Material.OAK_TRAPDOOR, 1));
+        ingredients.add(new StandardIngredient(Material.ANCIENT_DEBRIS, 4));
+        return new PaveralRecipe(ingredients, this.build());
     }
 
     @Override
     public List<ItemStack> parts() {
         List<ItemStack> parts = new ArrayList<>();
-        ItemStack obsidian = new ItemStack(Material.OBSIDIAN);
-        ItemStack piston = new ItemStack(Material.PISTON, 2);
-        ItemStack tnt = new ItemStack(Material.TNT, 2);
-        ItemStack lever = new ItemStack(Material.LEVER);
-        ItemStack oaktrap = new ItemStack(Material.OAK_TRAPDOOR);
-        // Skipped 4 Ancient Debris
-        parts.add(obsidian);
-        parts.add(piston);
-        parts.add(tnt);
-        parts.add(lever);
-        parts.add(oaktrap);
+        parts.add(new ItemStack(Material.OBSIDIAN));
+        parts.add(new ItemStack(Material.PISTON, 2));
+        parts.add(new ItemStack(Material.TNT, 2));
+        parts.add(new ItemStack(Material.LEVER));
+        parts.add(new ItemStack(Material.OAK_TRAPDOOR));
         return parts;
     }
 
     @EventHandler
-    public void onPlayerRightClick(PlayerInteractEvent event) {
-        if (ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "bedrock_breaker")) {
+    @Override
+    public void onEnchantingAttempt(PrepareAnvilEvent event) {
+        Set<Enchantment> enchants = new HashSet<>();
+        enchants.add(Enchantment.MENDING);
+        Enchantable.super.onEnchantingAttempt(event, keyString, enchants);
+    }
+
+    // --- Item Logic ---
+
+    @EventHandler
+    private void onPlayerRightClick(PlayerInteractEvent event) {
+        if (ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 new BukkitRunnable() {
                     @Override
@@ -108,26 +120,6 @@ public class BedrockBreaker implements Listener,Items {
                         }
                     }
                 }.runTaskLater(Paveral.getPlugin(), 1);
-            }
-        }
-    }
-    @EventHandler
-    public void onMendingAttempt(PrepareAnvilEvent event) {
-        if (event.getInventory().getFirstItem() != null && event.getResult() != null && event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)) {
-            if (Objects.equals(event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "bedrock_breaker")) {
-                ItemStack result = event.getResult();
-                ItemMeta resultmeta = result.getItemMeta();
-                if (event.getResult().containsEnchantment(Enchantment.MENDING)) {
-                    resultmeta.removeEnchant(Enchantment.MENDING);
-                }
-                result.setItemMeta(resultmeta);
-                event.setResult(result);
-
-                if (event.getInventory().getSecondItem() != null && event.getInventory().getSecondItem().getType() == Material.ENCHANTED_BOOK) {
-                    if(event.getInventory().getFirstItem().getEnchantments().equals(event.getResult().getEnchantments())){
-                        event.setResult(new ItemStack(Material.AIR));
-                    }
-                }
             }
         }
     }

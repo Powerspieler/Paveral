@@ -4,7 +4,6 @@ import com.destroystokyo.paper.MaterialSetTag;
 import io.papermc.paper.event.block.BlockBreakProgressUpdateEvent;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.items.ItemHoldingController;
-import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
 import net.kyori.adventure.text.Component;

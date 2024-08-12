@@ -156,8 +156,8 @@ public class FormingListeners implements Listener {
        // Bukkit.broadcast(Component.text("Equal Recipe?: " + new PaveralRecipe(formCandidate, new LightStaff().build()).equals(getTestRecipe()) , NamedTextColor.GOLD));
 
         Set<PaveralRecipe> availableRecipes = getAllAvailableRecipes();
-        Bukkit.broadcast(Component.text("availableRecipes: " + availableRecipes.stream().findFirst().get().ingredientsMap()));
-        Optional<PaveralRecipe> optionalRecipeMatch = availableRecipes.stream().filter(r -> r.ingredientsMap().equals(formCandidate)).findFirst();
+        Bukkit.broadcast(Component.text("availableRecipes: " + availableRecipes.stream().findFirst().get().ingredients()));
+        Optional<PaveralRecipe> optionalRecipeMatch = availableRecipes.stream().filter(r -> r.ingredients().equals(formCandidate)).findFirst();
 //        Bukkit.broadcast(Component.text("List: " + availableRecipes.stream().filter(r -> r.getIngredientsMap().equals(formCandidate)).toList(), NamedTextColor.RED));
 //        Bukkit.broadcast(Component.text("optionalRecipeMatch: " + availableRecipes, NamedTextColor.LIGHT_PURPLE));
 //        Bukkit.broadcast(Component.text("IsPresent? " + optionalRecipeMatch.isPresent(), NamedTextColor.DARK_PURPLE));

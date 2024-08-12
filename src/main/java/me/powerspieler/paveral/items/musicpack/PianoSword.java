@@ -3,7 +3,6 @@ package me.powerspieler.paveral.items.musicpack;
 import com.destroystokyo.paper.MaterialTags;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.items.ItemHoldingController;
-import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;

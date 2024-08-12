@@ -1,7 +1,6 @@
 package me.powerspieler.paveral.discovery;
 
 import me.powerspieler.paveral.discovery.diaries.*;
-import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.items.Wrench;
 import org.bukkit.event.EventHandler;

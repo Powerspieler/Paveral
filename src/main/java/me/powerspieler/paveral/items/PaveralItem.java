@@ -1,8 +1,10 @@
 package me.powerspieler.paveral.items;
 
+import me.powerspieler.paveral.crafting.PaveralRecipe;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -19,7 +21,6 @@ public abstract class PaveralItem {
     protected Component itemName;
     protected List<Component> lore;
 
-
     public PaveralItem(Material baseMaterial, int customModelData, NamespacedKey key, String keyString, Component itemName, List<Component> lore) {
         this.baseMaterial = baseMaterial;
         this.customModelData = customModelData;
@@ -28,6 +29,8 @@ public abstract class PaveralItem {
         this.itemName = itemName;
         this.lore = lore;
     }
+
+    public abstract PaveralRecipe recipe();
 
     protected ItemStack build(){
         ItemStack itemStack = new ItemStack(this.baseMaterial);
