@@ -3,7 +3,12 @@ package me.powerspieler.paveral.items.musicpack;
 import com.destroystokyo.paper.MaterialSetTag;
 import io.papermc.paper.event.block.BlockBreakProgressUpdateEvent;
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.crafting.PaveralIngredient;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.Enchantable;
 import me.powerspieler.paveral.items.ItemHoldingController;
+import me.powerspieler.paveral.items.PaveralItem;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
 import net.kyori.adventure.text.Component;
@@ -26,28 +31,19 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class LumberjacksBass implements Listener, Items {
+public class LumberjacksBass extends PaveralItem implements Listener, Enchantable {
+    private static Component itemName(){
+        return Component.text("Lumberjack's Bass", NamedTextColor.DARK_PURPLE);
+    }
 
-    private final AttributeModifier largeTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "largeTreeModifier"), -0.985, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
-    private final AttributeModifier mediumTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "mediumTreeModifier"), -0.95, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
-    private final AttributeModifier smallTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "smallTreeModifier"), -0.90, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
-
-
-    @Override
-    public ItemStack build() {
-        ItemStack item = new ItemStack(Material.NETHERITE_AXE);
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.itemName(Component.text("Lumberjack's Bass", NamedTextColor.DARK_PURPLE));
-        itemMeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "lumberjacks_bass");
-        itemMeta.setCustomModelData(1);
-
-        itemMeta.addAttributeModifier(Attribute.PLAYER_BLOCK_BREAK_SPEED, smallTreeModifier);
-
+    private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("The power of this axe shatters through the whole tree", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
@@ -61,28 +57,45 @@ public class LumberjacksBass implements Listener, Items {
         lore.add(Component.text("Enchantable with ", NamedTextColor.BLUE)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.text("Unbreaking", NamedTextColor.GRAY)
-                        .decoration(TextDecoration.ITALIC, false)
-                )
+                        .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(" and ", NamedTextColor.BLUE)
-                        .decoration(TextDecoration.ITALIC, false)
-                )
+                        .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text("Mending", NamedTextColor.GRAY)
                         .decoration(TextDecoration.ITALIC, false)));
-        itemMeta.lore(lore);
+        return lore;
+    }
 
+
+    public LumberjacksBass() {
+        super(Material.NETHERITE_AXE, 1, Constant.ITEMTYPE, "lumberjacks_bass", itemName(), lore());
+    }
+
+    private final AttributeModifier largeTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "largeTreeModifier"), -0.985, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
+    private final AttributeModifier mediumTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "mediumTreeModifier"), -0.95, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
+    private final AttributeModifier smallTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "smallTreeModifier"), -0.90, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
+
+    @Override
+    protected ItemStack build() {
+        ItemStack item = super.build();
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.addAttributeModifier(Attribute.PLAYER_BLOCK_BREAK_SPEED, smallTreeModifier);
         item.setItemMeta(itemMeta);
         return item;
     }
 
     @Override
-    public List<ItemStack> parts() {
-        return List.of();
+    public PaveralRecipe recipe() {
+        Set<StandardIngredient> ingredients = new HashSet<>();
+        ingredients.add(new PaveralIngredient(Material.JIGSAW, 1, Constant.ITEMTYPE, "music_core"));
+        ingredients.add(new StandardIngredient(Material.NETHERITE_AXE, 1));
+        return new PaveralRecipe(ingredients, this.build());
     }
 
+    // --- Item Logic ---
 
     @EventHandler
-    public void onTreeBreak(BlockBreakEvent event) {
-        if (ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "lumberjacks_bass")) {
+    private void onTreeBreak(BlockBreakEvent event) {
+        if (ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)) {
             event.setCancelled(true);
             if(event.getPlayer().getInventory().getItemInMainHand().getItemMeta() instanceof Damageable itemMeta && itemMeta.getDamage() == 2031){
                 return;
@@ -103,10 +116,10 @@ public class LumberjacksBass implements Listener, Items {
 
 
     /* ------------------------
-    * --- break stem recursivly
-    * --- decide red - / - brown
-    * --- break 3x3 top + break every 3x3 side - / - expand recursive on x and z, break every brown mushroom block
-    * ------------------------
+     * --- break stem recursivly
+     * --- decide red - / - brown
+     * --- break 3x3 top + break every 3x3 side - / - expand recursive on x and z, break every brown mushroom block
+     * ------------------------
      */
     private void breakMushroom(Block block, Player player){
         Block treeTopEntry = breakMushroomStem(block, player);
@@ -179,13 +192,13 @@ public class LumberjacksBass implements Listener, Items {
     }
 
     /*
-    * ------------------------
-    * --- onBlockBreak the best center for 3x3 will be calculated. Has no effect on 1x1 trees.
-    * --- Center will then break (recursive) to the top in 3x3.
-    * --- If theres a wartblock on top of the stem, it will break all neighbors (recursive) (distance on x and z to the center must be less or equal to 3;
-    * --- y must be greater or equal to the initalBlockBreak (CenterCorrected))
-    * --- Shroomlights are treated like wartBlocks.
-    * ------------------------
+     * ------------------------
+     * --- onBlockBreak the best center for 3x3 will be calculated. Has no effect on 1x1 trees.
+     * --- Center will then break (recursive) to the top in 3x3.
+     * --- If theres a wartblock on top of the stem, it will break all neighbors (recursive) (distance on x and z to the center must be less or equal to 3;
+     * --- y must be greater or equal to the initalBlockBreak (CenterCorrected))
+     * --- Shroomlights are treated like wartBlocks.
+     * ------------------------
      */
     private void breakNetherTree(Block block, Player player){
         Block correctedCenter = correctCenter(block);
@@ -258,11 +271,11 @@ public class LumberjacksBass implements Listener, Items {
     }
 
     /*
-    * ------------------------
-    * --- Logs check all 8 Blocks around them on same Y and all 9 Blocks on Y + 1 (Origin Block breaks; this is recursive) Returns List of Leaves found.
-    * --- Wait for every leavesBlock to update to distance 7
-    * --- Then Leaves of List destroy itself with their neighbors(Distance of 7 + notPersistant; 6 Directions) (Recursive)
-    * ------------------------
+     * ------------------------
+     * --- Logs check all 8 Blocks around them on same Y and all 9 Blocks on Y + 1 (Origin Block breaks; this is recursive) Returns List of Leaves found.
+     * --- Wait for every leavesBlock to update to distance 7
+     * --- Then Leaves of List destroy itself with their neighbors(Distance of 7 + notPersistant; 6 Directions) (Recursive)
+     * ------------------------
      */
     private void breakTreeWithActualLeaves(Block logBlock, Player player) {
         Material logBlockType = logBlock.getType();
@@ -337,8 +350,8 @@ public class LumberjacksBass implements Listener, Items {
 
     // Chance Mining Speed based on Tree
     @EventHandler
-    public void onBlockBreaking(BlockBreakProgressUpdateEvent event){
-        if(event.getEntity() instanceof Player player && ItemHoldingController.checkIsHoldingPaveralItem(player, "lumberjacks_bass") && (MaterialSetTag.LOGS.isTagged(event.getBlock().getType()) || event.getBlock().getType() == Material.MUSHROOM_STEM)){
+    private void onBlockBreaking(BlockBreakProgressUpdateEvent event){
+        if(event.getEntity() instanceof Player player && ItemHoldingController.checkIsHoldingPaveralItem(player, keyString) && (MaterialSetTag.LOGS.isTagged(event.getBlock().getType()) || event.getBlock().getType() == Material.MUSHROOM_STEM)){
             Material logType = event.getBlock().getType();
             if(event.getBlock().getRelative(BlockFace.NORTH).getType() == logType || event.getBlock().getRelative(BlockFace.EAST).getType() == logType
                     || event.getBlock().getRelative(BlockFace.SOUTH).getType() == logType || event.getBlock().getRelative(BlockFace.WEST).getType() == logType){
@@ -360,41 +373,16 @@ public class LumberjacksBass implements Listener, Items {
         }
     }
 
-
-
+    @Override
     @EventHandler
     public void onEnchantingAttempt(PrepareAnvilEvent event) {
-        if (event.getInventory().getFirstItem() != null && event.getResult() != null && event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)) {
-            if (Objects.equals(event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lumberjacks_bass")) {
-                ItemStack result = event.getResult();
-                ItemMeta resultmeta = result.getItemMeta();
-                if (event.getResult().containsEnchantment(Enchantment.EFFICIENCY)) {
-                    resultmeta.removeEnchant(Enchantment.EFFICIENCY);
-                }
-                if (event.getResult().containsEnchantment(Enchantment.SILK_TOUCH)) {
-                    resultmeta.removeEnchant(Enchantment.SILK_TOUCH);
-                }
-                if (event.getResult().containsEnchantment(Enchantment.FORTUNE)) {
-                    resultmeta.removeEnchant(Enchantment.FORTUNE);
-                }
-                if (event.getResult().containsEnchantment(Enchantment.SHARPNESS)) {
-                    resultmeta.removeEnchant(Enchantment.SHARPNESS);
-                }
-                if (event.getResult().containsEnchantment(Enchantment.SMITE)) {
-                    resultmeta.removeEnchant(Enchantment.SMITE);
-                }
-                if (event.getResult().containsEnchantment(Enchantment.BANE_OF_ARTHROPODS)) {
-                    resultmeta.removeEnchant(Enchantment.BANE_OF_ARTHROPODS);
-                }
-                result.setItemMeta(resultmeta);
-                event.setResult(result);
-
-                if (event.getInventory().getSecondItem() != null && event.getInventory().getSecondItem().getType() == Material.ENCHANTED_BOOK) {
-                    if (event.getInventory().getFirstItem().getEnchantments().equals(event.getResult().getEnchantments())) {
-                        event.setResult(new ItemStack(Material.AIR));
-                    }
-                }
-            }
-        }
+        Set<Enchantment> enchants = new HashSet<>();
+        enchants.add(Enchantment.EFFICIENCY);
+        enchants.add(Enchantment.SILK_TOUCH);
+        enchants.add(Enchantment.FORTUNE);
+        enchants.add(Enchantment.SHARPNESS);
+        enchants.add(Enchantment.SMITE);
+        enchants.add(Enchantment.BANE_OF_ARTHROPODS);
+        Enchantable.super.onEnchantingAttempt(event, keyString, enchants);
     }
 }

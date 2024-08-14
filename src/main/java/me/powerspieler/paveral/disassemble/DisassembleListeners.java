@@ -2,15 +2,17 @@ package me.powerspieler.paveral.disassemble;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
+import me.powerspieler.paveral.crafting.ItemHelper;
 import me.powerspieler.paveral.disassemble.events.DisassembleItemEvent;
-import me.powerspieler.paveral.items.*;
-import me.powerspieler.paveral.items.enchanced.Channeling;
-import me.powerspieler.paveral.items.enchanced.Knockback;
+import me.powerspieler.paveral.items.Dismantable;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import org.bukkit.*;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -24,88 +26,78 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static me.powerspieler.paveral.disassemble.AwakeTable.ALREADY_DISASSEMBLING;
 
 public class DisassembleListeners implements Listener {
 
+    private String convertToCamelCase(String s) {
+        String out = null;
+        switch(s){
+            case "anti_creeper_grief" -> out = "AntiCreeperGrief";
+            case "bedrock_breaker" -> out = "BedrockBreaker";
+            case "enhanced_channeling" -> out = "Channeling";
+            case "chunkloader" -> out = "ChunkLoader";
+            case "enhanced_knockback" -> out = "Knockback";
+            case "lightstaff" -> out = "LightStaff";
+            case "lightning_rod" -> out = "LightningRod";
+            case "wrench" -> out = "Wrench";
+        }
+        return out;
+    }
+
+
+    private List<ItemStack> getPartsOfItem(Item item) {
+        String itemName = ItemHelper.getPaveralNamespacedKey(item.getItemStack(), Constant.ITEMTYPE);
+        if (itemName == null) return null;
+
+        String fileName = convertToCamelCase(itemName);
+        if (fileName == null) return null;
+
+        String className = "me.powerspieler.paveral." + fileName;
+        Class<?> act = null;
+        try {
+            act = Class.forName(className);
+        } catch (ClassNotFoundException ignored) {
+            className = "me.powerspieler.paveral.enhanced" + fileName;
+            try {
+                act = Class.forName(className);
+            } catch (ClassNotFoundException ignored2) {
+                Paveral.getPlugin().getLogger().log(Level.SEVERE, "ClassNotFoundException while getting parts of item on disassemble table"); // Should not be reached.
+            }
+        }
+        if (act == null) return null;
+
+        List<ItemStack> parts = null;
+        try {
+            Dismantable partItem = (Dismantable) act.getConstructor().newInstance();
+            parts = partItem.parts();
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException |
+                 ClassCastException e) {
+            Paveral.getPlugin().getLogger().log(Level.SEVERE, (Supplier<String>) e);
+        }
+
+        return parts;
+    }
+
+
     @EventHandler
     public void onToolDrop(DisassembleItemEvent event){
-        List<Item> raw = new ArrayList<>(event.getTable().getNearbyEntitiesByType(Item.class, 1,1,1));
-        List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(AwakeTable.DISASSEMBLE_CANDIDATE)).toList();
-        // Handle Jigsaws
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW)){
-            Optional<Item> first_match = items.stream()
-                    .filter(item -> (item.getItemStack().getType() == Material.JIGSAW && item.getItemStack().getAmount() == 1)).findFirst();
-            if(first_match.isPresent()){
-                String itemtype = first_match.get().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);
-                if(itemtype != null){
-                    if(itemtype.equals("anti_creeper_grief")){
-                        Items item = new AntiCreeperGrief();
-                        disassembleItem(event.getTable(), first_match.get(), item.parts());
-                    }
-                }
-            }
-        }
-        // Handle Enchanted_Book (Enhanced)
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.ENCHANTED_BOOK)){
-            Optional<Item> first_match = items.stream()
-                    .filter(item -> (item.getItemStack().getType() == Material.ENCHANTED_BOOK && item.getItemStack().getAmount() == 1)).findFirst();
-            if(first_match.isPresent()){
-                String itemtype = first_match.get().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);
-                if(itemtype != null){
-                    if(itemtype.equals("enhanced_channeling")){
-                        Items item = new Channeling();
-                        disassembleItem(event.getTable(), first_match.get(), item.parts());
-                    }
-                    if(itemtype.equals("enhanced_knockback")){
-                        Items item = new Knockback();
-                        disassembleItem(event.getTable(), first_match.get(), item.parts());
-                    }
-                }
-            }
-        }
-        // Handle Warped_Fungus_On_A_Stick
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.WARPED_FUNGUS_ON_A_STICK)){
-            Optional<Item> first_match = items.stream()
-                    .filter(item -> (item.getItemStack().getType() == Material.WARPED_FUNGUS_ON_A_STICK && item.getItemStack().getAmount() == 1)).findFirst();
-            if(first_match.isPresent()){
-                String itemtype = first_match.get().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);
-                if(itemtype != null){
-                    if(itemtype.equals("bedrock_breaker")){
-                        Items item = new BedrockBreaker();
-                        disassembleItem(event.getTable(), first_match.get(), item.parts());
-                    }
-                    if(itemtype.equals("lightning_rod")){
-                        Items item = new LightningRod();
-                        disassembleItem(event.getTable(), first_match.get(), item.parts());
-                    }
-                    if(itemtype.equals("lightstaff")){
-                        Items item = new LightStaff();
-                        disassembleItem(event.getTable(), first_match.get(), item.parts());
-                    }
-                    if(itemtype.equals("wrench")){
-                        Items item = new Wrench();
-                        disassembleItem(event.getTable(), first_match.get(), item.parts());
-                    }
-                }
-            }
-        }
-        // Handle Petrified_Oak_Slab (Chunkloader)
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.PETRIFIED_OAK_SLAB)){
-            Optional<Item> first_match = items.stream()
-                    .filter(item -> (item.getItemStack().getType() == Material.PETRIFIED_OAK_SLAB && item.getItemStack().getAmount() == 1)).findFirst();
-            if(first_match.isPresent()){
-                String itemtype = first_match.get().getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);
-                if(itemtype != null){
-                    if(itemtype.equals("chunkloader")){
-                        Items item = new Chunkloader();
-                        disassembleItem(event.getTable(), first_match.get(), item.parts());
-                    }
-                }
+        Set<Item> ingredients = event.getTable().getNearbyEntitiesByType(Item.class, 1,1,1).stream().filter(item -> item.getPersistentDataContainer().has(AwakeTable.DISASSEMBLE_CANDIDATE)).collect(Collectors.toSet());
+        Optional<Item> disCandidate = ingredients.stream().findFirst();
+        if(disCandidate.isPresent() && disCandidate.get().getItemStack().getAmount() == 1){
+            List<ItemStack> parts = getPartsOfItem(disCandidate.get());
+
+            if(parts != null){
+                disassembleItem(event.getTable(), disCandidate.get(), parts);
             }
         }
     }
@@ -120,7 +112,7 @@ public class DisassembleListeners implements Listener {
         item.getPersistentDataContainer().set(ALREADY_DISASSEMBLING, PersistentDataType.INTEGER, 1);
 
         targets.playSound(Sound.sound(Key.key("entity.evoker.prepare_attack"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
-        BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Disassembling...", BarColor.PURPLE, BarStyle.SOLID);
+        BossBar progress = Bukkit.createBossBar(NamedTextColor.DARK_PURPLE + "Disassembling...", BarColor.PURPLE, BarStyle.SOLID);
         List<Entity> entities = new ArrayList<>(location.getNearbyEntities(25,25,25));
         for(Entity entity : entities){
             if(entity instanceof Player player){
@@ -182,19 +174,6 @@ public class DisassembleListeners implements Listener {
                 }
 
                 if(process >= 200){
-                    /* // Advancements moved to other sources - Keeping old code
-                    if(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) != null && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "lightstaff")){
-                        List<Entity> entities = new ArrayList<>(location.getNearbyEntities(15,15,15));
-                        for(Entity entity : entities){
-                            if(entity instanceof Player player){
-                                if(AwardAdvancements.isAdvancementUndone(player, "dis_lightstaff")){
-                                    AwardAdvancements.grantAdvancement(player, "dis_lightstaff");
-                                }
-                            }
-                        }
-                    }
-                     */
-
                     item.remove();
 
                     for(ItemStack part : parts){

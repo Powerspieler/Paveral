@@ -2,7 +2,11 @@ package me.powerspieler.paveral.items.musicpack;
 
 import com.destroystokyo.paper.MaterialTags;
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.crafting.PaveralIngredient;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
 import me.powerspieler.paveral.items.ItemHoldingController;
+import me.powerspieler.paveral.items.PaveralItem;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -27,23 +31,18 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class PianoSword implements Listener, Items {
-    @Override
-    public ItemStack build() {
-        ItemStack itemStack = new ItemStack(Material.NETHERITE_SWORD);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "piano_sword");
-        itemMeta.setCustomModelData(1);
+public class PianoSword extends PaveralItem implements Listener {
+    private static Component itemName(){
+        return Component.text("Rhythms Awakening", NamedTextColor.DARK_PURPLE);
+    }
 
-        itemMeta.itemName(Component.text("Rhythms Awakening", NamedTextColor.DARK_PURPLE));
-
+    private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
@@ -51,27 +50,42 @@ public class PianoSword implements Listener, Items {
                         .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(" to cast a wave of music notes", NamedTextColor.DARK_AQUA)
                         .decoration(TextDecoration.ITALIC, false)));
-        itemMeta.lore(lore);
+        return lore;
+    }
 
+    public PianoSword(){
+        super(Material.NETHERITE_SWORD, 1, Constant.ITEMTYPE, "piano_sword", itemName(), lore());
+    }
+
+    @Override
+    protected ItemStack build() {
+        ItemStack item = super.build();
+        ItemMeta itemMeta = item.getItemMeta();
         AttributeModifier attackSpeedModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "rhythms_awakening_attack_speed"), -3.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND);
         itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, attackSpeedModifier);
         AttributeModifier attackDamageModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "rhythms_awakening_attack_damage"), 10.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND);
         itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, attackDamageModifier);
-
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
+        item.setItemMeta(itemMeta);
+        return item;
     }
 
     @Override
-    public List<ItemStack> parts() {
-        return List.of();
+    public PaveralRecipe recipe() {
+        Set<StandardIngredient> ingredients = new HashSet<>();
+        ingredients.add(new StandardIngredient(Material.NETHERITE_SWORD, 1));
+        ingredients.add(new PaveralIngredient(Material.JIGSAW, 1, Constant.ITEMTYPE, "music_core"));
+        ingredients.add(new StandardIngredient(Material.BLACKSTONE, 8));
+        ingredients.add(new StandardIngredient(Material.QUARTZ, 16));
+        return new PaveralRecipe(ingredients, this.build());
     }
+
+    // --- Item Logic ---
 
     private final HashMap<UUID, Long> cooldown = new HashMap<>();
 
     @EventHandler
-    public void onUse(PlayerInteractEvent event){
-        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "piano_sword")){
+    private void onUse(PlayerInteractEvent event){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)){
             if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK){
                 Player player = event.getPlayer();
 
@@ -79,7 +93,7 @@ public class PianoSword implements Listener, Items {
                     cooldown.put(player.getUniqueId(), System.currentTimeMillis());
 
                     Location location = event.getPlayer().getLocation().add(0,0.5,0);
-                    Vector vector = location.getDirection().setY(0);
+                    org.bukkit.util.Vector vector = location.getDirection().setY(0);
 
                     playSound(player);
                     vector.rotateAroundY(-0.9d);

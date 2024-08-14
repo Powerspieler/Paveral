@@ -18,8 +18,7 @@ public class CatMorningGiftLootTable implements Listener {
                     if(Math.random() < 0.2){
                         event.setCancelled(true);
                         Location location = event.getItemDrop().getLocation();
-                        Discovery book = new BedrockBreaker();
-                        location.getWorld().dropItem(location, book.build());
+                        location.getWorld().dropItem(location, new BedrockBreaker().build());
                     }
                 }
             }

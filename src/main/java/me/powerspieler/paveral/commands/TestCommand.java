@@ -23,7 +23,7 @@ public class TestCommand implements CommandExecutor {
 //                player.getInventory().addItem(item);
 
 
-                player.getInventory().addItem(new LumberjacksBass().build());
+                player.getInventory().addItem(new LumberjacksBass().recipe().result());
 
 
 

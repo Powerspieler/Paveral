@@ -2,7 +2,12 @@ package me.powerspieler.paveral.items.musicpack;
 
 import com.destroystokyo.paper.MaterialSetTag;
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.crafting.PaveralIngredient;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.Enchantable;
 import me.powerspieler.paveral.items.ItemHoldingController;
+import me.powerspieler.paveral.items.PaveralItem;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.MarkerDataStorage;
 import net.kyori.adventure.text.Component;
@@ -23,23 +28,20 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
-public class ScytheOfHarmony implements Listener, Items {
-    @Override
-    public ItemStack build() {
-        ItemStack item = new ItemStack(Material.NETHERITE_HOE);
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.itemName(Component.text("Scythe of Harmony", NamedTextColor.DARK_PURPLE));
-        itemMeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "scythe_of_harmony");
-        itemMeta.setCustomModelData(1);
+public class ScytheOfHarmony extends PaveralItem implements Listener, Enchantable {
+    private static Component itemName(){
+        return Component.text("Scythe of Harmony", NamedTextColor.DARK_PURPLE);
+    }
 
+    private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Replants the crop on harvest if the seed is in your inventory", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
@@ -49,34 +51,36 @@ public class ScytheOfHarmony implements Listener, Items {
         lore.add(Component.text("Enchantable with ", NamedTextColor.BLUE)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.text("Unbreaking",NamedTextColor.GRAY)
-                        .decoration(TextDecoration.ITALIC, false)
-                )
+                        .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(", ", NamedTextColor.BLUE)
-                        .decoration(TextDecoration.ITALIC, false)
-                )
+                        .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text("Mending", NamedTextColor.GRAY)
-                        .decoration(TextDecoration.ITALIC, false)
-                )
+                        .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(" and ", NamedTextColor.BLUE)
-                        .decoration(TextDecoration.ITALIC, false)
-                )
+                        .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text("Fortune", NamedTextColor.GRAY)
                         .decoration(TextDecoration.ITALIC, false)));
-        itemMeta.lore(lore);
+        return lore;
+    }
 
-        item.setItemMeta(itemMeta);
-        return item;
+    public ScytheOfHarmony() {
+        super(Material.NETHERITE_HOE, 1, Constant.ITEMTYPE, "scythe_of_harmony", itemName(), lore());
     }
 
     @Override
-    public List<ItemStack> parts() {
-        return List.of();
+    public PaveralRecipe recipe() {
+        Set<StandardIngredient> ingredients = new HashSet<>();
+        ingredients.add(new StandardIngredient(Material.NETHERITE_HOE, 1));
+        ingredients.add(new PaveralIngredient(Material.JIGSAW, 1, Constant.ITEMTYPE, "music_core"));
+        return new PaveralRecipe(ingredients, this.build());
     }
+
+    // --- Item Logic ---
 
     private static final NamespacedKey protectedFarmland = new NamespacedKey(Paveral.getPlugin(), "protected_farmland");
 
     @EventHandler
-    public void onItemUse(PlayerInteractEvent event){
+    private void onItemUse(PlayerInteractEvent event){
         if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "scythe_of_harmony") && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null){
             Block block = event.getClickedBlock();
             new BukkitRunnable() {
@@ -96,7 +100,7 @@ public class ScytheOfHarmony implements Listener, Items {
     }
 
     @EventHandler
-    public void onFarmlandJump(PlayerInteractEvent event){
+    private void onFarmlandJump(PlayerInteractEvent event){
         Block block = event.getClickedBlock();
         if(block != null && block.getType() == Material.FARMLAND && event.getAction() == Action.PHYSICAL){
             if(MarkerDataStorage.hasMarker(block) && MarkerDataStorage.getMarkerDataContainer(block).has(protectedFarmland)){
@@ -106,7 +110,7 @@ public class ScytheOfHarmony implements Listener, Items {
     }
 
     @EventHandler
-    public void onCropHarvest(BlockBreakEvent event){
+    private void onCropHarvest(BlockBreakEvent event){
         Player player = event.getPlayer();
         if(ItemHoldingController.checkIsHoldingPaveralItem(player, "scythe_of_harmony") && MaterialSetTag.MAINTAINS_FARMLAND.isTagged(event.getBlock().getType())){
             Material cropType = event.getBlock().getType();
@@ -142,30 +146,12 @@ public class ScytheOfHarmony implements Listener, Items {
         return seedMaterial;
     }
 
-
-
-
+    @Override
     @EventHandler
     public void onEnchantingAttempt(PrepareAnvilEvent event) {
-        if (event.getInventory().getFirstItem() != null && event.getResult() != null && event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)) {
-            if (Objects.equals(event.getInventory().getFirstItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "scythe_of_harmony")) {
-                ItemStack result = event.getResult();
-                ItemMeta resultmeta = result.getItemMeta();
-                if (event.getResult().containsEnchantment(Enchantment.EFFICIENCY)) {
-                    resultmeta.removeEnchant(Enchantment.EFFICIENCY);
-                }
-                if (event.getResult().containsEnchantment(Enchantment.SILK_TOUCH)) {
-                    resultmeta.removeEnchant(Enchantment.SILK_TOUCH);
-                }
-                result.setItemMeta(resultmeta);
-                event.setResult(result);
-
-                if (event.getInventory().getSecondItem() != null && event.getInventory().getSecondItem().getType() == Material.ENCHANTED_BOOK) {
-                    if(event.getInventory().getFirstItem().getEnchantments().equals(event.getResult().getEnchantments())){
-                        event.setResult(new ItemStack(Material.AIR));
-                    }
-                }
-            }
-        }
+        Set<Enchantment> enchants = new HashSet<>();
+        enchants.add(Enchantment.EFFICIENCY);
+        enchants.add(Enchantment.SILK_TOUCH);
+        Enchantable.super.onEnchantingAttempt(event, keyString, enchants);
     }
 }

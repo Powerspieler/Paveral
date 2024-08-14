@@ -21,8 +21,7 @@ public class ChestLootTable implements Listener {
         if(chesttype.equals("minecraft:chests/woodland_mansion")){
             if(Math.random() < 0.25){
                 List<ItemStack> loot = new ArrayList<>(event.getLoot());
-                Discovery book = new Bonk();
-                loot.add(book.build());
+                loot.add(new Bonk().build());
                 event.setLoot(loot);
             }
         }
@@ -30,8 +29,7 @@ public class ChestLootTable implements Listener {
         if(chesttype.equals("minecraft:chests/underwater_ruin_small")){
             if(Math.random() <= 0.25){
                 List<ItemStack> loot = new ArrayList<>(event.getLoot());
-                Discovery book = new LightningRod();
-                loot.add(book.build());
+                loot.add(new LightningRod().build());
                 event.setLoot(loot);
             }
         }
@@ -39,8 +37,7 @@ public class ChestLootTable implements Listener {
         if(chesttype.equals("minecraft:chests/stronghold_library")){
             if(Math.random() <= 0.25){
                 List<ItemStack> loot = new ArrayList<>(event.getLoot());
-                Discovery book = new Enhancing();
-                loot.add(book.build());
+                loot.add(new Enhancing().build());
                 event.setLoot(loot);
             }
         }
@@ -48,9 +45,7 @@ public class ChestLootTable implements Listener {
         if(chesttype.equals("minecraft:chests/stronghold_crossing") || chesttype.equals("minecraft:chests/stronghold_corridor")){
             if(Math.random() <= 0.25){
                 List<ItemStack> loot = new ArrayList<>(event.getLoot());
-                Items lightstaff = new LightStaff();
-
-                ItemStack item = lightstaff.build();
+                ItemStack item = new LightStaff().recipe().result();
                 Damageable damagemeta = (Damageable) item.getItemMeta();
                 damagemeta.setDamage((int) (Math.random() * 100));
                 item.setItemMeta(damagemeta);
@@ -63,8 +58,7 @@ public class ChestLootTable implements Listener {
         if(chesttype.equals("minecraft:chests/jungle_temple")){
             if(Math.random() <= 0.25){
                 List<ItemStack> loot = new ArrayList<>(event.getLoot());
-                Discovery book = new AntiCreeperGrief();
-                loot.add(book.build());
+                loot.add(new AntiCreeperGrief().build());
                 event.setLoot(loot);
             }
         }
@@ -72,17 +66,15 @@ public class ChestLootTable implements Listener {
         if(chesttype.equals("minecraft:chests/village/village_toolsmith")){
             if (Math.random() <= 0.25) {
                 List<ItemStack> loot = new ArrayList<>(event.getLoot());
-                Items item = new Wrench();
-                loot.add(item.build());
+                loot.add(new Wrench().recipe().result());
                 event.setLoot(loot);
             }
         }
-        // Worldalterer - Book
+        // Worldalterer - Book // TODO change to portal (structure blocks o.O)
         if(chesttype.equals("minecraft:chests/ancient_city_ice_box")){
             if (Math.random() <= 0.5) {
                 List<ItemStack> loot = new ArrayList<>(event.getLoot());
-                Discovery book = new Worldalterer();
-                loot.add(book.build());
+                loot.add(new Worldalterer().build());
                 event.setLoot(loot);
             }
         }

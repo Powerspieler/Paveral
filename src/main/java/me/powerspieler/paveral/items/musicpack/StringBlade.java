@@ -1,7 +1,11 @@
 package me.powerspieler.paveral.items.musicpack;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.crafting.PaveralIngredient;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
 import me.powerspieler.paveral.items.ItemHoldingController;
+import me.powerspieler.paveral.items.PaveralItem;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -17,26 +21,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class StringBlade implements Listener, Items {
+public class StringBlade extends PaveralItem implements Listener {
+    private static Component itemName(){
+        return Component.text("String Blade", NamedTextColor.DARK_PURPLE);
+    }
 
-    @Override
-    public ItemStack build() {
-        ItemStack itemStack = new ItemStack(Material.NETHERITE_SWORD);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "string_blade");
-        itemMeta.setCustomModelData(2);
-
-        itemMeta.itemName(Component.text("String Blade", NamedTextColor.DARK_PURPLE));
-
+    private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
@@ -44,22 +40,29 @@ public class StringBlade implements Listener, Items {
                         .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(" to shot a single to note", NamedTextColor.DARK_AQUA)
                         .decoration(TextDecoration.ITALIC, false)));
-        itemMeta.lore(lore);
+        return lore;
+    }
 
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
+    public StringBlade() {
+        super(Material.NETHERITE_SWORD, 2, Constant.ITEMTYPE, "string_blade", itemName(), lore());
     }
 
     @Override
-    public List<ItemStack> parts() {
-        return List.of();
+    public PaveralRecipe recipe() { // TODO Add colors
+        Set<StandardIngredient> ingredients = new HashSet<>();
+        ingredients.add(new StandardIngredient(Material.NETHERITE_SWORD, 1));
+        ingredients.add(new PaveralIngredient(Material.JIGSAW, 1, Constant.ITEMTYPE, "music_core"));
+        ingredients.add(new StandardIngredient(Material.ORANGE_DYE, 1));
+        return new PaveralRecipe(ingredients, this.build());
     }
+
+    // --- Item Logic ---
 
     private final HashMap<UUID, Long> cooldown = new HashMap<>();
 
     @EventHandler
-    public void onItemUse(PlayerInteractEvent event){
-        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "string_blade")) {
+    private void onItemUse(PlayerInteractEvent event){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 Player player = event.getPlayer();
 
@@ -92,7 +95,7 @@ public class StringBlade implements Listener, Items {
 
     private void shotProjectile(Player player){
         Location playerLocation = player.getEyeLocation();
-        Vector vector = playerLocation.getDirection();
+        org.bukkit.util.Vector vector = playerLocation.getDirection();
 
         vector.normalize();
         vector.multiply(2.0);
@@ -140,6 +143,4 @@ public class StringBlade implements Listener, Items {
     private boolean isOneComponentZero(Vector vector){
         return vector.getX() == 0 || vector.getY() == 0 || vector.getZ() == 0;
     }
-
-
 }
