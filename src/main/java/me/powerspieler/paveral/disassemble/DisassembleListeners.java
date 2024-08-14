@@ -11,6 +11,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.boss.BarColor;
@@ -45,7 +46,7 @@ public class DisassembleListeners implements Listener {
             case "anti_creeper_grief" -> out = "AntiCreeperGrief";
             case "bedrock_breaker" -> out = "BedrockBreaker";
             case "enhanced_channeling" -> out = "Channeling";
-            case "chunkloader" -> out = "ChunkLoader";
+            case "chunkloader" -> out = "Chunkloader";
             case "enhanced_knockback" -> out = "Knockback";
             case "lightstaff" -> out = "LightStaff";
             case "lightning_rod" -> out = "LightningRod";
@@ -62,16 +63,17 @@ public class DisassembleListeners implements Listener {
         String fileName = convertToCamelCase(itemName);
         if (fileName == null) return null;
 
-        String className = "me.powerspieler.paveral." + fileName;
+        String className = "me.powerspieler.paveral.items." + fileName;
         Class<?> act = null;
         try {
             act = Class.forName(className);
         } catch (ClassNotFoundException ignored) {
-            className = "me.powerspieler.paveral.enhanced" + fileName;
+            Paveral.getPlugin().getLogger().log(Level.SEVERE, "Not found: " + className);
+            className = "me.powerspieler.paveral.items.enhanced." + fileName;
             try {
                 act = Class.forName(className);
             } catch (ClassNotFoundException ignored2) {
-                Paveral.getPlugin().getLogger().log(Level.SEVERE, "ClassNotFoundException while getting parts of item on disassemble table"); // Should not be reached.
+                Paveral.getPlugin().getLogger().log(Level.SEVERE, "ClassNotFoundException while getting parts of item on disassemble table: " + className); // Should not be reached.
             }
         }
         if (act == null) return null;
@@ -112,7 +114,7 @@ public class DisassembleListeners implements Listener {
         item.getPersistentDataContainer().set(ALREADY_DISASSEMBLING, PersistentDataType.INTEGER, 1);
 
         targets.playSound(Sound.sound(Key.key("entity.evoker.prepare_attack"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
-        BossBar progress = Bukkit.createBossBar(NamedTextColor.DARK_PURPLE + "Disassembling...", BarColor.PURPLE, BarStyle.SOLID);
+        BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Disassembling...", BarColor.PURPLE, BarStyle.SOLID);
         List<Entity> entities = new ArrayList<>(location.getNearbyEntities(25,25,25));
         for(Entity entity : entities){
             if(entity instanceof Player player){

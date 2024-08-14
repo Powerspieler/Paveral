@@ -60,6 +60,11 @@ public class LightningRod extends PaveralItem implements Listener, Dismantable {
     }
 
     @Override
+    public ItemStack build() {
+        return super.build();
+    }
+
+    @Override
     public PaveralRecipe recipe() {
         return null;
     }

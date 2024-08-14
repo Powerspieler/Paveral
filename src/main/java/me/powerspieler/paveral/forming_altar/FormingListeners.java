@@ -9,8 +9,8 @@ import me.powerspieler.paveral.discovery.tutorial.TechBook;
 import me.powerspieler.paveral.forming_altar.events.FormItemEvent;
 import me.powerspieler.paveral.items.BedrockBreaker;
 import me.powerspieler.paveral.items.LightStaff;
-import me.powerspieler.paveral.items.enchanced.Channeling;
-import me.powerspieler.paveral.items.enchanced.Knockback;
+import me.powerspieler.paveral.items.enhanced.Channeling;
+import me.powerspieler.paveral.items.enhanced.Knockback;
 import me.powerspieler.paveral.items.musicpack.LumberjacksBass;
 import me.powerspieler.paveral.items.musicpack.PianoSword;
 import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
@@ -18,11 +18,7 @@ import me.powerspieler.paveral.items.musicpack.StringBlade;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.boss.BarColor;
@@ -132,7 +128,7 @@ public class FormingListeners implements Listener {
             formingitem.getPersistentDataContainer().set(ALREADY_FORMING, PersistentDataType.INTEGER, 1);
         }
         targets.playSound(Sound.sound(Key.key("entity.wither.spawn"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
-        BossBar progress = Bukkit.createBossBar(NamedTextColor.DARK_PURPLE + "Forming...", BarColor.PURPLE, BarStyle.SOLID);
+        BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Forming..." , BarColor.PURPLE, BarStyle.SOLID);
         List<Entity> entities = new ArrayList<>(location.getNearbyEntities(25,25,25));
         for(Entity entity : entities){
             if(entity instanceof Player player){

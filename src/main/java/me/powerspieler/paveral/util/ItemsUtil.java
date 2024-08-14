@@ -23,7 +23,11 @@ public class ItemsUtil {
 
     public static void repair(ItemStack item, int damage){
         Damageable itemvalue = (Damageable) item.getItemMeta();
-        itemvalue.setDamage(itemvalue.getDamage() - damage);
+        int newDamageValue = itemvalue.getDamage() - damage;
+        if(newDamageValue < 0){
+            newDamageValue = 0;
+        }
+        itemvalue.setDamage(newDamageValue);
         item.setItemMeta(itemvalue);
     }
 }

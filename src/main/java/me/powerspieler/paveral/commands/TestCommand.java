@@ -1,6 +1,7 @@
 package me.powerspieler.paveral.commands;
 
 
+import me.powerspieler.paveral.discovery.diaries.BedrockBreaker;
 import me.powerspieler.paveral.items.musicpack.LumberjacksBass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -23,7 +24,8 @@ public class TestCommand implements CommandExecutor {
 //                player.getInventory().addItem(item);
 
 
-                player.getInventory().addItem(new LumberjacksBass().recipe().result());
+
+               // player.getInventory().addItem(new LumberjacksBass().recipe().result());
 
 
 

@@ -11,6 +11,7 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -94,7 +95,7 @@ public class BedrockBreaker extends PaveralItem implements Listener, Dismantable
 
     @EventHandler
     private void onPlayerRightClick(PlayerInteractEvent event) {
-        if (ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)) {
+        if (event.getItem() != null && ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 new BukkitRunnable() {
                     @Override

@@ -15,10 +15,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -105,7 +102,7 @@ public class ForgeListener implements Listener {
             item.getPersistentDataContainer().set(ALREADY_FORGING, PersistentDataType.INTEGER, 1);
         }
         targets.playSound(Sound.sound(Key.key("block.anvil.use"), Sound.Source.AMBIENT, 1f, 0.5f), Sound.Emitter.self());
-        BossBar progress = Bukkit.createBossBar(NamedTextColor.DARK_PURPLE + "Forging...", BarColor.PURPLE, BarStyle.SOLID);
+        BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Forging...", BarColor.PURPLE, BarStyle.SOLID);
         List<Entity> entities = new ArrayList<>(location.getNearbyEntities(25,25,25));
         for(Entity entity : entities){
             if(entity instanceof Player player){
