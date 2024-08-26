@@ -15,10 +15,7 @@ import me.powerspieler.paveral.forming_altar.FormingListeners;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enhanced.Channeling;
 import me.powerspieler.paveral.items.enhanced.Knockback;
-import me.powerspieler.paveral.items.musicpack.LumberjacksBass;
-import me.powerspieler.paveral.items.musicpack.PianoSword;
-import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
-import me.powerspieler.paveral.items.musicpack.StringBlade;
+import me.powerspieler.paveral.items.musicpack.*;
 import me.powerspieler.paveral.items.parts.worldalterer.SonicEssence;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;
 import me.powerspieler.paveral.util.AdvancementLoader;
@@ -34,14 +31,10 @@ import java.util.Objects;
 public final class Paveral extends JavaPlugin {
     private static Paveral plugin;
 
-    //TODO Forming Listner modularisieren
-    // TODO Forge Listner modularisieren
-    // TODO Lumberjacks Bass / Crafting
     // TODO Music Pickaxe / Achievement / Crafting
     // TODO Music Shovel / Achievemnet / Crafting
     // TODO mit Forming Listner dann String Blades Colors einfacher machen
     // TODO Advancement ohne zip; nicht immer kopieren nur bei Changes
-    // TODO Interface Items -> abstract PaveralItem und maybe Interface bzgl. enchantments und maybe auch disasseble optional interface machen
     // TODO Worldalterer spam fix
     // TODO String Blade / Piano Sword FireAspect?
     // TODO Raphilius Waffe für Arena. On Kill: player stribt nicht wenn von dieser waffe getötet.
@@ -73,7 +66,7 @@ public final class Paveral extends JavaPlugin {
 
         pm.registerEvents(new PianoSword(), this);
         pm.registerEvents(new StringBlade(), this);
-        // pickaxe
+        pm.registerEvents(new ResonatingPickaxe(), this);
         pm.registerEvents(new LumberjacksBass(), this);
         //shovel
         pm.registerEvents(new ScytheOfHarmony(), this);

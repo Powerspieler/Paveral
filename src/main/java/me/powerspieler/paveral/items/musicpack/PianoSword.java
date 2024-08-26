@@ -20,10 +20,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -140,7 +137,10 @@ public class PianoSword extends PaveralItem implements Listener {
 
             List<Entity> raw = new ArrayList<>(location.getNearbyEntities(0.3, 0.3, 0.3));
             for (Entity entity : raw) {
-                if (entity instanceof LivingEntity target && target.customName() == null && !target.equals(player)) { //TODO Exclude Tamed
+                if (entity instanceof LivingEntity target && target.customName() == null && !target.equals(player)) {
+                    if(target instanceof Tameable tameable){
+                        if(tameable.isTamed()) continue;
+                    }
                     if(target.getType() == EntityType.PLAYER){
                         target.damage(5.0, player);
                     } else {
@@ -148,9 +148,6 @@ public class PianoSword extends PaveralItem implements Listener {
                     }
                 }
             }
-
-
-
             location.add(vector);
         }
     }

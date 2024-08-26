@@ -42,9 +42,6 @@ import static me.powerspieler.paveral.forming_altar.AwakeAltar.ALREADY_FORMING;
 
 public class FormingListeners implements Listener {
 
-    // TODO Teste das hier!! Mit anderen Ingredienttypen (!) .equals!! hashCode (?!)
-    // TODO jedes item mit recipe versehen
-
     private Set<PaveralRecipe> getAllAvailableRecipes(){
         Set<PaveralRecipe> recipes = new HashSet<>();
         recipes.add(new DisBook().recipe());
