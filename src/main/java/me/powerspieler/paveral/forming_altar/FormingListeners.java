@@ -51,7 +51,7 @@ public class FormingListeners implements Listener {
         recipes.add(new Channeling().recipe());
 
         recipes.add(new PianoSword().recipe());
-        recipes.add(new StringBlade().recipe());
+        recipes.addAll(StringBlade.getAllStringBladeRecipes());
         recipes.add(new ResonatingPickaxe().recipe());
         recipes.add(new LumberjacksBass().recipe());
         recipes.add(new BardicInspiration().recipe());

@@ -35,9 +35,6 @@ public class StandardIngredient {
 
     @Override
     public String toString() {
-        return "StandardIngredient{" +
-                "material=" + material +
-                ", amount=" + amount +
-                '}';
+        return amount + "x " + material;
     }
 }

@@ -1,5 +1,6 @@
 package me.powerspieler.paveral.items.musicpack;
 
+import com.destroystokyo.paper.MaterialTags;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.PaveralIngredient;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
@@ -13,7 +14,6 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -30,8 +30,43 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 public class StringBlade extends PaveralItem implements Listener {
-    private static Component itemName(){
-        return Component.text("String Blade", NamedTextColor.DARK_PURPLE);
+    public static Set<PaveralRecipe> getAllStringBladeRecipes(){
+        Set<PaveralRecipe> recipes = new HashSet<>(16);
+        for (Material dye : MaterialTags.DYES.getValues()) {
+            recipes.add(new StringBlade(dye, getCustomModelData(dye)).recipe());
+        }
+        return recipes;
+    }
+
+    private static int getCustomModelData(Material material){
+        int out = 0;
+        switch (material){
+            case BLACK_DYE -> out = 2;
+            case BLUE_DYE -> out = 3;
+            case BROWN_DYE -> out = 4;
+            case CYAN_DYE -> out = 5;
+            case GRAY_DYE -> out = 6;
+            case GREEN_DYE -> out = 7;
+            case LIGHT_BLUE_DYE -> out = 8;
+            case LIGHT_GRAY_DYE -> out = 9;
+            case LIME_DYE -> out = 10;
+            case MAGENTA_DYE -> out = 11;
+            case ORANGE_DYE -> out = 12;
+            case PINK_DYE -> out = 13;
+            case PURPLE_DYE -> out = 14;
+            case RED_DYE -> out = 15;
+            case WHITE_DYE -> out = 16;
+            case YELLOW_DYE -> out = 17;
+        }
+        return out;
+    }
+
+    private static Component itemName(Material color){
+        String colorString = color.translationKey().split("\\.")[2].split("_")[0];
+
+        return Component.text("String Blade (", NamedTextColor.DARK_PURPLE)
+                .append(Component.translatable("color.minecraft." + colorString, NamedTextColor.DARK_PURPLE))
+                .append(Component.text(")", NamedTextColor.DARK_PURPLE));
     }
 
     private static List<Component> lore(){
@@ -45,16 +80,19 @@ public class StringBlade extends PaveralItem implements Listener {
         return lore;
     }
 
-    public StringBlade() {
-        super(Material.NETHERITE_SWORD, 2, Constant.ITEMTYPE, "string_blade", itemName(), lore());
+    private final Material color;
+
+    public StringBlade(Material color, int customModelData) {
+        super(Material.NETHERITE_SWORD, customModelData, Constant.ITEMTYPE, "string_blade", itemName(color), lore());
+        this.color = color;
     }
 
     @Override
-    public PaveralRecipe recipe() { // TODO Add colors
+    public PaveralRecipe recipe() {
         Set<StandardIngredient> ingredients = new HashSet<>();
         ingredients.add(new StandardIngredient(Material.NETHERITE_SWORD, 1));
         ingredients.add(new PaveralIngredient(Material.JIGSAW, 1, Constant.ITEMTYPE, "music_core"));
-        ingredients.add(new StandardIngredient(Material.ORANGE_DYE, 1));
+        ingredients.add(new StandardIngredient(color, 1));
         return new PaveralRecipe(ingredients, this.build());
     }
 

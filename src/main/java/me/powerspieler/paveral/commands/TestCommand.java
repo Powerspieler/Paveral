@@ -1,12 +1,11 @@
 package me.powerspieler.paveral.commands;
 
 
-import me.powerspieler.paveral.discovery.diaries.BedrockBreaker;
 import me.powerspieler.paveral.items.musicpack.BardicInspiration;
-import me.powerspieler.paveral.items.musicpack.LumberjacksBass;
-import me.powerspieler.paveral.items.musicpack.ResonatingPickaxe;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,6 +26,9 @@ public class TestCommand implements CommandExecutor {
 
                   player.getInventory().addItem(new BardicInspiration().build());
 
+
+                  String colorString = Material.PURPLE_DYE.translationKey().split(" ", 2)[0];
+                  Bukkit.broadcast(Component.text(colorString));
 
                   //player.getInventory().addItem(new LumberjacksBass().recipe().result());
 

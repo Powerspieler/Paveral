@@ -33,9 +33,6 @@ public class PaveralIngredient extends StandardIngredient {
 
     @Override
     public String toString() {
-        return "PaveralIngredient{" +
-                "namespacedKey=" + namespacedKey +
-                ", itemType='" + itemType + '\'' +
-                '}';
+        return itemType + " of " + namespacedKey;
     }
 }

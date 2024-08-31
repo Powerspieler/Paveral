@@ -3,7 +3,6 @@ package me.powerspieler.paveral.items.musicpack;
 import me.powerspieler.paveral.crafting.PaveralIngredient;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
-import me.powerspieler.paveral.items.Enchantable;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

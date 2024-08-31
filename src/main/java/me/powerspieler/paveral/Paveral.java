@@ -22,6 +22,7 @@ import me.powerspieler.paveral.util.AdvancementLoader;
 import me.powerspieler.paveral.util.MarkerDataStorage;
 import me.powerspieler.paveral.util.RecipeLoader;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,11 +32,12 @@ import java.util.Objects;
 public final class Paveral extends JavaPlugin {
     private static Paveral plugin;
 
-    // TODO mit Forming Listner dann String Blades Colors einfacher machen
     // TODO Advancement ohne zip; nicht immer kopieren nur bei Changes
     // TODO Worldalterer spam fix
     // TODO Raphilius Waffe für Arena. On Kill: player stribt nicht wenn von dieser waffe getötet.
     // TODO Disable Totem in Offhand while using music weapon (all future weapons)
+    // TODO items command in paveral umbennenen und alle items in einem Chest inventar anbieten
+    // TODO Cooldown, maybe vanilla like (maybe not possbile, needs testing)
 
 
     @Override
@@ -63,7 +65,7 @@ public final class Paveral extends JavaPlugin {
         pm.registerEvents(new Wrench(), this);
 
         pm.registerEvents(new PianoSword(), this);
-        pm.registerEvents(new StringBlade(), this);
+        pm.registerEvents(new StringBlade(Material.BLACK_DYE, 2), this);
         pm.registerEvents(new ResonatingPickaxe(), this);
         pm.registerEvents(new LumberjacksBass(), this);
         pm.registerEvents(new BardicInspiration(), this);

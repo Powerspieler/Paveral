@@ -32,8 +32,6 @@ public class EnchantmentIngredient extends StandardIngredient {
 
     @Override
     public String toString() {
-        return "EnchantmentIngredient{" +
-                "storedEnchantments=" + storedEnchantments +
-                '}';
+        return "Book with " + storedEnchantments;
     }
 }

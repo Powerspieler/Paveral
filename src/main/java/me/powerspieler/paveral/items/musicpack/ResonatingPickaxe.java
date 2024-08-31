@@ -1,30 +1,17 @@
 package me.powerspieler.paveral.items.musicpack;
 
-import com.destroystokyo.paper.MaterialSetTag;
-import me.powerspieler.paveral.crafting.ItemHelper;
 import me.powerspieler.paveral.crafting.PaveralIngredient;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
-import me.powerspieler.paveral.items.Enchantable;
-import me.powerspieler.paveral.items.ItemHoldingController;
-import me.powerspieler.paveral.items.PaveralItem;
 import me.powerspieler.paveral.util.Constant;
-import me.powerspieler.paveral.util.ItemsUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashSet;

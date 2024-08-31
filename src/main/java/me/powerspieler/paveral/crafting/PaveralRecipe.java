@@ -1,6 +1,8 @@
 package me.powerspieler.paveral.crafting;
 
+import me.powerspieler.paveral.util.Constant;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Objects;
 import java.util.Set;
@@ -21,9 +23,9 @@ public record PaveralRecipe(Set<StandardIngredient> ingredients, ItemStack resul
 
     @Override
     public String toString() {
-        return "PaveralRecipe{" +
+        return "\nPaveralRecipe{" +
                 "ingredients=" + ingredients +
-                ", result=" + result.getItemMeta().itemName().examinableName() +
+                ", result=" + result.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING) +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package me.powerspieler.paveral.forming_altar;
 
+import com.destroystokyo.paper.MaterialTags;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.forming_altar.events.FormItemEvent;
 import net.kyori.adventure.audience.Audience;
@@ -26,7 +27,7 @@ public class AwakeAltar implements Listener {
     public static final NamespacedKey ALREADY_FORMING = new NamespacedKey(Paveral.getPlugin(), "already_forming");
 
     public AwakeAltar(){
-        itemlist = new HashSet<>(25);
+        itemlist = new HashSet<>(40);
         // Enhancing (2)
         itemlist.add(Material.ENCHANTED_BOOK);
         itemlist.add(Material.NETHERITE_SCRAP);
@@ -53,9 +54,9 @@ public class AwakeAltar implements Listener {
         itemlist.add(Material.NETHERITE_SWORD);
         itemlist.add(Material.QUARTZ);
         itemlist.add(Material.BLACKSTONE);
-        // String Blade (1) - Total: 21
-        itemlist.add(Material.ORANGE_DYE);
-        // Music Tools (4) - Total: 25
+        // String Blade (16) - Total: 36
+        itemlist.addAll(MaterialTags.DYES.getValues());
+        // Music Tools (4) - Total: 40
         itemlist.add(Material.NETHERITE_PICKAXE);
         itemlist.add(Material.NETHERITE_AXE);
         itemlist.add(Material.NETHERITE_SHOVEL);
