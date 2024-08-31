@@ -281,7 +281,7 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
         Material logBlockType = logBlock.getType();
         Set<Material> leavesType = convertToLeavesVariant(logBlockType);
 
-        Set<Block> leavesEntryList = breakLogRecursive(logBlock, logBlockType, leavesType, player.getInventory().getItemInMainHand());
+        Set<Block> leavesEntryList = breakLogRecursive(logBlock, logBlockType, leavesType, player.getInventory().getItemInMainHand(), logBlock.getX(), logBlock.getZ());
         leavesEntryList.forEach(Block::tick); //Distance 1 -> 3
 
         new BukkitRunnable() {
@@ -295,12 +295,13 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
     }
 
 
-    private Set<Block> breakLogRecursive(Block block, Material logType, Set<Material> leavesTypes, ItemStack item) {
+    private Set<Block> breakLogRecursive(Block block, Material logType, Set<Material> leavesTypes, ItemStack item, int entryX, int entryZ) {
         Set<Block> leavesBlocks = new HashSet<>();
         if (block.getType() == logType) {
             block.breakNaturally(true);
             ItemsUtil.applyDamage(item, 1, 2031);
-            if(item.getItemMeta() instanceof Damageable itemMeta && itemMeta.getDamage() == 2031){
+            if((item.getItemMeta() instanceof Damageable itemMeta && itemMeta.getDamage() == 2031)
+                    || !(Math.abs(block.getX() - entryX) <= 4 && Math.abs(block.getZ() - entryZ) <= 4)){
                 return leavesBlocks;
             }
 
@@ -314,7 +315,7 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
                             leavesBlocks.add(block.getRelative(x, y, z));
                             block.getRelative(x, y, z).tick();
                         }
-                        leavesBlocks.addAll(breakLogRecursive(block.getRelative(x, y, z), logType, leavesTypes, item));
+                        leavesBlocks.addAll(breakLogRecursive(block.getRelative(x, y, z), logType, leavesTypes, item, entryX, entryZ));
                     }
                 }
             }
