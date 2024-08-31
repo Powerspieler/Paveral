@@ -17,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -70,7 +71,7 @@ public class StringBlade extends PaveralItem implements Listener {
                 if(!cooldown.containsKey(player.getUniqueId()) || (System.currentTimeMillis() - cooldown.get(player.getUniqueId()) >= 1000)) {
                     cooldown.put(player.getUniqueId(), System.currentTimeMillis());
 
-                    shotProjectile(player);
+                    shotProjectile(player, player.getInventory().getItemInMainHand().containsEnchantment(Enchantment.FIRE_ASPECT));
 
                     // Cooldown
                     new BukkitRunnable() {
@@ -94,7 +95,7 @@ public class StringBlade extends PaveralItem implements Listener {
         }
     }
 
-    private void shotProjectile(Player player){
+    private void shotProjectile(Player player, boolean fire){
         Location playerLocation = player.getEyeLocation();
         org.bukkit.util.Vector vector = playerLocation.getDirection();
 
@@ -123,9 +124,12 @@ public class StringBlade extends PaveralItem implements Listener {
                 if(!raw.isEmpty()){
                     Entity entity = raw.stream().findFirst().get();
                     if (entity instanceof LivingEntity target && target.customName() == null && !target.equals(player)) {
-                        // A => B <=> !A || B
-                        if(!(target instanceof Tameable tameable) || tameable.isTamed()){
-                            if(target.getType() == EntityType.PLAYER){
+                        if(!(target instanceof Tameable tameable && tameable.isTamed())) {
+                            if (fire) {
+                                target.setFireTicks(100);
+                            }
+
+                            if (target.getType() == EntityType.PLAYER) {
                                 target.damage(3.0, player);
                             } else {
                                 target.damage(6.0, player);

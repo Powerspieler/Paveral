@@ -34,8 +34,8 @@ public final class Paveral extends JavaPlugin {
     // TODO mit Forming Listner dann String Blades Colors einfacher machen
     // TODO Advancement ohne zip; nicht immer kopieren nur bei Changes
     // TODO Worldalterer spam fix
-    // TODO String Blade FireAspect
     // TODO Raphilius Waffe für Arena. On Kill: player stribt nicht wenn von dieser waffe getötet.
+    // TODO Disable Totem in Offhand while using music weapon (all future weapons)
 
 
     @Override
