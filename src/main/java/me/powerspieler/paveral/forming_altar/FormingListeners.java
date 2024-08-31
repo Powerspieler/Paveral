@@ -11,10 +11,7 @@ import me.powerspieler.paveral.items.BedrockBreaker;
 import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.items.enhanced.Channeling;
 import me.powerspieler.paveral.items.enhanced.Knockback;
-import me.powerspieler.paveral.items.musicpack.LumberjacksBass;
-import me.powerspieler.paveral.items.musicpack.PianoSword;
-import me.powerspieler.paveral.items.musicpack.ScytheOfHarmony;
-import me.powerspieler.paveral.items.musicpack.StringBlade;
+import me.powerspieler.paveral.items.musicpack.*;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -55,9 +52,9 @@ public class FormingListeners implements Listener {
 
         recipes.add(new PianoSword().recipe());
         recipes.add(new StringBlade().recipe());
-        // Pickaxe
+        recipes.add(new ResonatingPickaxe().recipe());
         recipes.add(new LumberjacksBass().recipe());
-        // shovel
+        recipes.add(new BardicInspiration().recipe());
         recipes.add(new ScytheOfHarmony().recipe());
 
         return recipes;

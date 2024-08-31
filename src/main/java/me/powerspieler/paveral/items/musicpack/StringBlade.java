@@ -13,6 +13,7 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -122,7 +123,8 @@ public class StringBlade extends PaveralItem implements Listener {
                 if(!raw.isEmpty()){
                     Entity entity = raw.stream().findFirst().get();
                     if (entity instanceof LivingEntity target && target.customName() == null && !target.equals(player)) {
-                        if(target instanceof Tameable tameable && !tameable.isTamed()){
+                        // A => B <=> !A || B
+                        if(!(target instanceof Tameable tameable) || tameable.isTamed()){
                             if(target.getType() == EntityType.PLAYER){
                                 target.damage(3.0, player);
                             } else {

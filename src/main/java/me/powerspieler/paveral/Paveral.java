@@ -31,12 +31,10 @@ import java.util.Objects;
 public final class Paveral extends JavaPlugin {
     private static Paveral plugin;
 
-    // TODO Music Pickaxe / Achievement / Crafting
-    // TODO Music Shovel / Achievemnet / Crafting
     // TODO mit Forming Listner dann String Blades Colors einfacher machen
     // TODO Advancement ohne zip; nicht immer kopieren nur bei Changes
     // TODO Worldalterer spam fix
-    // TODO String Blade / Piano Sword FireAspect?
+    // TODO String Blade FireAspect
     // TODO Raphilius Waffe für Arena. On Kill: player stribt nicht wenn von dieser waffe getötet.
 
 
@@ -68,7 +66,7 @@ public final class Paveral extends JavaPlugin {
         pm.registerEvents(new StringBlade(), this);
         pm.registerEvents(new ResonatingPickaxe(), this);
         pm.registerEvents(new LumberjacksBass(), this);
-        //shovel
+        pm.registerEvents(new BardicInspiration(), this);
         pm.registerEvents(new ScytheOfHarmony(), this);
 
         // Enhanced Enchantments

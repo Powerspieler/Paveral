@@ -2,6 +2,7 @@ package me.powerspieler.paveral.commands;
 
 
 import me.powerspieler.paveral.discovery.diaries.BedrockBreaker;
+import me.powerspieler.paveral.items.musicpack.BardicInspiration;
 import me.powerspieler.paveral.items.musicpack.LumberjacksBass;
 import me.powerspieler.paveral.items.musicpack.ResonatingPickaxe;
 import net.kyori.adventure.text.Component;
@@ -24,8 +25,7 @@ public class TestCommand implements CommandExecutor {
 //                item.setItemMeta(itemMeta);
 //                player.getInventory().addItem(item);
 
-                  player.getInventory().addItem(new ResonatingPickaxe().build());
-
+                  player.getInventory().addItem(new BardicInspiration().build());
 
 
                   //player.getInventory().addItem(new LumberjacksBass().recipe().result());
