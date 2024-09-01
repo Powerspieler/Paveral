@@ -15,6 +15,7 @@ import me.powerspieler.paveral.forming_altar.FormingListeners;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enhanced.Channeling;
 import me.powerspieler.paveral.items.enhanced.Knockback;
+import me.powerspieler.paveral.items.helper.ItemHoldingController;
 import me.powerspieler.paveral.items.musicpack.*;
 import me.powerspieler.paveral.items.parts.worldalterer.SonicEssence;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;

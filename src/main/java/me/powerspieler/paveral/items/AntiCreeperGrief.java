@@ -2,6 +2,9 @@ package me.powerspieler.paveral.items;
 
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.helper.ActionbarStatus;
+import me.powerspieler.paveral.items.helper.Dismantable;
+import me.powerspieler.paveral.items.helper.ItemHoldingControllerEvent;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,7 +18,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -152,18 +154,22 @@ public class AntiCreeperGrief extends PaveralItem implements Listener, Dismantab
     }
 
     @EventHandler
-    private void onCreeperItemHold(PlayerMoveEvent event){ //TODO Revisit with IS_HOLDING for Actionbar
-        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)){
-            Player player = event.getPlayer();
-            if (checkForItemframe(player)) {
-                player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                        .append(Component.text("Save",NamedTextColor.GREEN))
-                        .append(Component.text(" ]",NamedTextColor.GOLD)));
-            } else
-                player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                        .append(Component.text("Unsave",NamedTextColor.RED))
-                        .append(Component.text(" ]",NamedTextColor.GOLD)));
-        }
+    private void onItemChange(ItemHoldingControllerEvent event){
+        Player player = event.getPlayer();
+        new ActionbarStatus() {
+            @Override
+            public void message() {
+                if (checkForItemframe(player)) {
+                    player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                            .append(Component.text("Save",NamedTextColor.GREEN))
+                            .append(Component.text(" ]",NamedTextColor.GOLD)));
+                } else
+                    player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                            .append(Component.text("Unsave",NamedTextColor.RED))
+                            .append(Component.text(" ]",NamedTextColor.GOLD)));
+
+            }
+        }.displayMessage(event, keyString);
     }
 
     // Check for Player with CreeperItem in 8x8x8 Box

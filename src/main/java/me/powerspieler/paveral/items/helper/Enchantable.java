@@ -1,4 +1,4 @@
-package me.powerspieler.paveral.items;
+package me.powerspieler.paveral.items.helper;
 
 import me.powerspieler.paveral.util.Constant;
 import org.bukkit.Material;

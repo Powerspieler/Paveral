@@ -1,8 +1,8 @@
 package me.powerspieler.paveral.items.musicpack;
 
-import me.powerspieler.paveral.items.Enchantable;
-import me.powerspieler.paveral.items.ItemHoldingController;
 import me.powerspieler.paveral.items.PaveralItem;
+import me.powerspieler.paveral.items.helper.Enchantable;
+import me.powerspieler.paveral.items.helper.ItemHoldingController;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
 import net.kyori.adventure.text.Component;

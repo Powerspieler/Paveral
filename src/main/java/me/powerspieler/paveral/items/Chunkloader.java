@@ -3,6 +3,9 @@ package me.powerspieler.paveral.items;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.helper.ActionbarStatus;
+import me.powerspieler.paveral.items.helper.Dismantable;
+import me.powerspieler.paveral.items.helper.ItemHoldingControllerEvent;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -18,7 +21,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -98,7 +100,6 @@ public class Chunkloader extends PaveralItem implements Listener, Dismantable {
                 targets.playSound(net.kyori.adventure.sound.Sound.sound(Key.key("block.beacon.activate"), net.kyori.adventure.sound.Sound.Source.BLOCK, 1f, 0.5f), net.kyori.adventure.sound.Sound.Emitter.self());
                 targets.playSound(net.kyori.adventure.sound.Sound.sound(Key.key("entity.ghast.scream"), net.kyori.adventure.sound.Sound.Source.BLOCK, 1f, 0.5f), net.kyori.adventure.sound.Sound.Emitter.self());
                 targets.playSound(net.kyori.adventure.sound.Sound.sound(Key.key("block.stone.place"), net.kyori.adventure.sound.Sound.Source.BLOCK, 1f, 0.5f), net.kyori.adventure.sound.Sound.Emitter.self());
-                showActionbar(event.getPlayer());
             }
         }
     }
@@ -128,15 +129,34 @@ public class Chunkloader extends PaveralItem implements Listener, Dismantable {
             Location location = event.getBlock().getLocation().add(0.5,0.5,0.5);
             final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 100);
             targets.playSound(net.kyori.adventure.sound.Sound.sound(Key.key("block.beacon.deactivate"), net.kyori.adventure.sound.Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
-            showActionbar(event.getPlayer());
         }
     }
 
     @EventHandler
-    public void onChunkloaderMove(PlayerMoveEvent event){ // TODO Revisit
-        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "chunkloader")){
-            showActionbar(event.getPlayer());
-        }
+    public void onItemChange(ItemHoldingControllerEvent event){
+        Player player = event.getPlayer();
+        new ActionbarStatus() {
+            @Override
+            public void message() {
+                int chunks = player.getWorld().getForceLoadedChunks().size();
+                if(player.getChunk().isForceLoaded()){
+                    player.sendActionBar(Component.text("[ ",NamedTextColor.GOLD)
+                            .append(Component.text("Chunk loaded", NamedTextColor.GREEN))
+                            .append(Component.text(" ]",NamedTextColor.GOLD))
+                            .append(Component.text(" - ",NamedTextColor.GRAY))
+                            .append(Component.text("Total: ",NamedTextColor.BLUE))
+                            .append(Component.text("" + chunks, NamedTextColor.YELLOW)));
+
+                }else{
+                    player.sendActionBar(Component.text("[ ",NamedTextColor.GOLD)
+                            .append(Component.text("Chunk not loaded", NamedTextColor.RED))
+                            .append(Component.text(" ]",NamedTextColor.GOLD))
+                            .append(Component.text(" - ",NamedTextColor.GRAY))
+                            .append(Component.text("Total: ",NamedTextColor.BLUE))
+                            .append(Component.text("" + chunks)));
+                }
+            }
+        }.displayMessage(event, keyString);
     }
 
     @EventHandler
@@ -146,27 +166,6 @@ public class Chunkloader extends PaveralItem implements Listener, Dismantable {
             location.getWorld().dropItem(location.add(0.5,0.5,0.5), this.build());
             event.setCancelled(true);
         }
-    }
-
-    private static void showActionbar(Player player){
-        int chunks = player.getWorld().getForceLoadedChunks().size();
-        if(player.getChunk().isForceLoaded()){
-            player.sendActionBar(Component.text("[ ",NamedTextColor.GOLD)
-                    .append(Component.text("Chunk loaded", NamedTextColor.GREEN))
-                    .append(Component.text(" ]",NamedTextColor.GOLD))
-                    .append(Component.text(" - ",NamedTextColor.GRAY))
-                    .append(Component.text("Total: ",NamedTextColor.BLUE))
-                    .append(Component.text("" + chunks, NamedTextColor.YELLOW)));
-
-        }else{
-            player.sendActionBar(Component.text("[ ",NamedTextColor.GOLD)
-                    .append(Component.text("Chunk not loaded", NamedTextColor.RED))
-                    .append(Component.text(" ]",NamedTextColor.GOLD))
-                    .append(Component.text(" - ",NamedTextColor.GRAY))
-                    .append(Component.text("Total: ",NamedTextColor.BLUE))
-                    .append(Component.text("" + chunks)));
-        }
-
     }
 
     // Prevent Chunkloader Breaking

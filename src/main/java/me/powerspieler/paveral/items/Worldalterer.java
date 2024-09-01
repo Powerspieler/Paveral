@@ -5,6 +5,7 @@ import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.crafting.PaveralIngredient;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.helper.Enchantable;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
 import net.kyori.adventure.key.Key;

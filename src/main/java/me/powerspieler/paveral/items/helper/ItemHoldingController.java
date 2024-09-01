@@ -1,4 +1,4 @@
-package me.powerspieler.paveral.items;
+package me.powerspieler.paveral.items.helper;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.util.Constant;
@@ -33,8 +33,10 @@ public class ItemHoldingController implements Listener {
 //            String itemtype = offHandItem.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING);         // leftclick. e.g. LumberjacksBass Breaking/Break Block
 //            assert itemtype != null;
 //            player.getPersistentDataContainer().set(Constant.IS_HOLDING, PersistentDataType.STRING, itemtype);
+            Bukkit.getPluginManager().callEvent(new ItemHoldingControllerEvent(player, itemtype));
         } else {
             player.getPersistentDataContainer().remove(Constant.IS_HOLDING);
+            Bukkit.getPluginManager().callEvent(new ItemHoldingControllerEvent(player, ""));
         }
     }
 

@@ -3,6 +3,8 @@ package me.powerspieler.paveral.items;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.helper.Dismantable;
+import me.powerspieler.paveral.items.helper.ItemHoldingController;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
 import me.powerspieler.paveral.util.MarkerDataStorage;

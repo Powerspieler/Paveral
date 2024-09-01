@@ -2,6 +2,8 @@ package me.powerspieler.paveral.items;
 
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.helper.Dismantable;
+import me.powerspieler.paveral.items.helper.ItemHoldingController;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

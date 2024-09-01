@@ -1,12 +1,10 @@
 package me.powerspieler.paveral.commands;
 
 
-import me.powerspieler.paveral.items.musicpack.BardicInspiration;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
