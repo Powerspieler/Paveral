@@ -38,6 +38,7 @@ public final class Paveral extends JavaPlugin {
     // TODO Disable Totem in Offhand while using music weapon (all future weapons)
     // TODO items command in paveral umbennenen und alle items in einem Chest inventar anbieten
     // TODO Cooldown, maybe vanilla like (maybe not possbile, needs testing)
+    // TODO Angle Ring; Pylone
 
 
     @Override

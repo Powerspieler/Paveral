@@ -2,6 +2,7 @@ package me.powerspieler.paveral.commands;
 
 
 import me.powerspieler.paveral.items.musicpack.BardicInspiration;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -24,11 +26,11 @@ public class TestCommand implements CommandExecutor {
 //                item.setItemMeta(itemMeta);
 //                player.getInventory().addItem(item);
 
-                  player.getInventory().addItem(new BardicInspiration().build());
-
-
-                  String colorString = Material.PURPLE_DYE.translationKey().split(" ", 2)[0];
-                  Bukkit.broadcast(Component.text(colorString));
+//                  player.getInventory().addItem(new BardicInspiration().build());
+//
+//
+//                  String colorString = Material.PURPLE_DYE.translationKey().split(" ", 2)[0];
+//                  Bukkit.broadcast(Component.text(colorString));
 
                   //player.getInventory().addItem(new LumberjacksBass().recipe().result());
 
@@ -37,12 +39,12 @@ public class TestCommand implements CommandExecutor {
 
 
 
-//                if(player.getPersistentDataContainer().has(Constant.IS_HOLDING)){
-//                    String string = player.getPersistentDataContainer().get(Constant.IS_HOLDING, PersistentDataType.STRING);
-//
-//                    Bukkit.broadcast(Component.text("Holding: " + string));
-//                } else
-//                    Bukkit.broadcast(Component.text("Holding nothing!"));
+                if(player.getPersistentDataContainer().has(Constant.IS_HOLDING)){
+                    String string = player.getPersistentDataContainer().get(Constant.IS_HOLDING, PersistentDataType.STRING);
+
+                    Bukkit.broadcast(Component.text("Holding: " + string));
+                } else
+                    Bukkit.broadcast(Component.text("Holding nothing!"));
 
 
 

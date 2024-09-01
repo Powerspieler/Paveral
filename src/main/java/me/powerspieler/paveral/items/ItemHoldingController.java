@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -17,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class ItemHoldingController implements Listener { //TODO InventoryDragEvent , Chest Item Transfer (?), etc.. considering on every isHoldingPaveralItem call recheck
+public class ItemHoldingController implements Listener {
     @EventHandler
     public void onItemSwitch(PlayerItemHeldEvent event){
         Player player = event.getPlayer();
@@ -90,6 +91,13 @@ public class ItemHoldingController implements Listener { //TODO InventoryDragEve
                     }
                 }.runTaskLater(Paveral.getPlugin(), 1);
             }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event){
+        if(event.getPlayer() instanceof Player player){
+            Bukkit.getPluginManager().callEvent(new PlayerItemHeldEvent(player, player.getInventory().getHeldItemSlot(), player.getInventory().getHeldItemSlot()));
         }
     }
 
