@@ -38,7 +38,7 @@ import org.bukkit.util.Vector;
 import java.util.*;
 import java.util.logging.Level;
 
-public class Worldalterer extends PaveralItem implements Listener, Enchantable {
+public class Worldalterer extends CooldownItem implements Listener, Enchantable {
     private static Component itemName(){
         return Component.text("||", NamedTextColor.LIGHT_PURPLE)
                 .decoration(TextDecoration.OBFUSCATED, true).decoration(TextDecoration.ITALIC, true)
@@ -70,7 +70,7 @@ public class Worldalterer extends PaveralItem implements Listener, Enchantable {
     }
 
     public Worldalterer() {
-        super(Material.WARPED_FUNGUS_ON_A_STICK, 6, Constant.ITEMTYPE, "worldalterer", itemName(), lore());
+        super(Material.WARPED_FUNGUS_ON_A_STICK, 6, Constant.ITEMTYPE, "worldalterer", itemName(), lore(), 100L);
     }
 
     @Override
@@ -97,9 +97,6 @@ public class Worldalterer extends PaveralItem implements Listener, Enchantable {
 
     Map<UUID, Integer> runnableMap = new HashMap<>();
 
-    // Cooldown before commiting - depends on amount of blocks selected
-    private final HashMap<UUID, Long> cooldownuntil = new HashMap<>(); // TODO Einheitlicher Cooldown holy moly
-
     @EventHandler
     private void onPlayerUse(PlayerInteractEvent event){
         Player player = event.getPlayer();
@@ -116,7 +113,7 @@ public class Worldalterer extends PaveralItem implements Listener, Enchantable {
             }
 
             // Disable until move is finished
-            if(cooldownuntil.containsKey(player.getUniqueId()) && System.currentTimeMillis() - cooldownuntil.get(player.getUniqueId()) <= 0){
+            if(!notOnCooldown(player)){
                 return;
             }
 
@@ -302,24 +299,24 @@ public class Worldalterer extends PaveralItem implements Listener, Enchantable {
         }
 
         // Set a future time for re-enabling / prevent spamming for larger selects: e.g. max: 32768 = 8,192s Cooldown ( / 20 (ticks to s) [/ 100] / 2 * 1000 (-> ms))
-        cooldownuntil.put(player.getUniqueId(), Math.max(System.currentTimeMillis() + (blockCount / 4), System.currentTimeMillis() + 150)); // Prevent Spamming,  Still Causes Bug and loss of blocks
+        applyCooldown(player, (blockCount / 4));
 
         new BukkitRunnable() {
             long duration;
             @Override
             public void run() {
-                if(System.currentTimeMillis() - cooldownuntil.get(player.getUniqueId()) >= 0){
+                if(notOnCooldown(player)){
                     if(isChunkLoaded(player, pos1, pos2)){
                         moveBlocks(player, pos1, pos2, paste, facing);
                     }
                     cancel();
                 }
-                duration = cooldownuntil.get(player.getUniqueId()) - System.currentTimeMillis();
+                duration = (getMillisPast(player) * -1);
 
                 // help -> https://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio
                 // NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
-                float pitch = ((float) ((duration - 0) * (20 - 0)) / (Math.max(blockCount / 4, 150) - 0)) / 10; // Math.max like above
-                player.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 0.5f, pitch * -1 + 2), Sound.Emitter.self());
+                float pitch = ((float) ((duration - 0) * (20 - 0)) / ((blockCount / 4) - 0)) / 10; // Math.max like above
+                player.playSound(Sound.sound(Key.key("block.beacon.power_select"), Sound.Source.AMBIENT, 0.5f, pitch * -1), Sound.Emitter.self());
                 player.spawnParticle(Particle.PORTAL, getRightSide(player.getEyeLocation(), 0.45).subtract(0, .6, 0), 1);
             }
         }.runTaskTimer(Paveral.getPlugin(), 0, 1);
