@@ -71,7 +71,7 @@ public class FormingListeners implements Listener {
         optionalRecipeMatch.ifPresent(paveralRecipe -> formItem(event.getAltar(), ingredients, paveralRecipe.result()));
     }
 
-    private boolean isCharged(Location location){ // TODO resolve duplicates
+    private boolean isCharged(Location location){
         final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
         Location NW = location.getBlock().getRelative(-2,1,-2).getLocation().add(0.5,0.5,0.5);
         Location NE = location.getBlock().getRelative(2,1,-2).getLocation().add(0.5,0.5,0.5);

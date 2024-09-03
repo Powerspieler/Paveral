@@ -34,11 +34,12 @@ public final class Paveral extends JavaPlugin {
     private static Paveral plugin;
 
     // TODO Advancement ohne zip; nicht immer kopieren nur bei Changes
-    // TODO Worldalterer spam fix
-    // TODO Raphilius Waffe für Arena. On Kill: player stribt nicht wenn von dieser waffe getötet.
     // TODO Disable Totem in Offhand while using music weapon (all future weapons)
     // TODO items command in paveral umbennenen und alle items in einem Chest inventar anbieten
-    // TODO Cooldown, maybe vanilla like (maybe not possbile, needs testing)
+
+    // TODO Wrench: Bring back behavior
+    // TODO Raphilius Waffe für Arena. On Kill: player stribt nicht wenn von dieser waffe getötet.
+    // TODO Lightning rod: Bring back hold behavior
     // TODO Angle Ring; Pylone
 
 

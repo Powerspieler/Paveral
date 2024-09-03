@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Wrench extends PaveralItem implements Listener, Dismantable { //TODO To todo is this! Functionality from datapack
+public class Wrench extends PaveralItem implements Listener, Dismantable {
     private static Component itemName(){
         return Component.text("Wrench");
     }

@@ -89,7 +89,7 @@ public class ForgeListener implements Listener {
         return true;
     }
 
-    private void forgeItem(Location location, Set<Item> forgeitems, ItemStack result){ // TODO resolve duplicates
+    private void forgeItem(Location location, Set<Item> forgeitems, ItemStack result){
         if(!isFueled(location)) return;
         final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
         for(Item item : forgeitems){
