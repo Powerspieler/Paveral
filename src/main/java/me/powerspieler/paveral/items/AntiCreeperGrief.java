@@ -55,6 +55,27 @@ public class AntiCreeperGrief extends PaveralItem implements Listener, Dismantab
         return new PaveralRecipe(ingredients, this.build());
     }
 
+    @EventHandler
+    protected void actionbarDisplay(ItemHoldingControllerEvent event) {
+        if(event.getItemType().equals(keyString)){
+            Player player = event.getPlayer();
+            new ActionbarStatus(player, keyString, 5L) {
+                @Override
+                public void message() {
+                    if (checkForItemframe(player)) {
+                        player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                                .append(Component.text("Save",NamedTextColor.GREEN))
+                                .append(Component.text(" ]",NamedTextColor.GOLD)));
+                    } else
+                        player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                                .append(Component.text("Unsave",NamedTextColor.RED))
+                                .append(Component.text(" ]",NamedTextColor.GOLD)));
+
+                }
+            }.displayMessage();
+        }
+    }
+
     @Override
     public List<ItemStack> parts() {
         List<ItemStack> parts = new ArrayList<>();
@@ -151,25 +172,6 @@ public class AntiCreeperGrief extends PaveralItem implements Listener, Dismantab
         if(checkForPlayer(remover) || checkForItemframe(remover)){
             event.setCancelled(true);
         }
-    }
-
-    @EventHandler
-    private void onItemChange(ItemHoldingControllerEvent event){
-        Player player = event.getPlayer();
-        new ActionbarStatus() {
-            @Override
-            public void message() {
-                if (checkForItemframe(player)) {
-                    player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                            .append(Component.text("Save",NamedTextColor.GREEN))
-                            .append(Component.text(" ]",NamedTextColor.GOLD)));
-                } else
-                    player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                            .append(Component.text("Unsave",NamedTextColor.RED))
-                            .append(Component.text(" ]",NamedTextColor.GOLD)));
-
-            }
-        }.displayMessage(event, keyString);
     }
 
     // Check for Player with CreeperItem in 8x8x8 Box

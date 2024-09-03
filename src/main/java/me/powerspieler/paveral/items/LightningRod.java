@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.entity.PhantomPreSpawnEvent;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.items.helper.ActionbarStatus;
 import me.powerspieler.paveral.items.helper.Dismantable;
 import me.powerspieler.paveral.items.helper.ItemHoldingController;
 import me.powerspieler.paveral.util.Constant;
@@ -23,7 +24,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class LightningRod extends PaveralItem implements Listener, Dismantable {
+public class LightningRod extends CooldownItem implements Listener, Dismantable {
     private static Component itemName(){
         return Component.text("Lightning Rod", NamedTextColor.DARK_PURPLE)
                 .decoration(TextDecoration.ITALIC, false);
@@ -58,7 +58,7 @@ public class LightningRod extends PaveralItem implements Listener, Dismantable {
     }
 
     public LightningRod() {
-        super(Material.WARPED_FUNGUS_ON_A_STICK, 1, Constant.ITEMTYPE, "lightning_rod", itemName(), lore());
+        super(Material.WARPED_FUNGUS_ON_A_STICK, 1, Constant.ITEMTYPE, "lightning_rod", itemName(), lore(), 1500);
     }
 
     @Override
@@ -86,7 +86,6 @@ public class LightningRod extends PaveralItem implements Listener, Dismantable {
 
     // --- Item Logic ---
 
-    private final HashMap<UUID, Long> cooldown = new HashMap<>();
     private final HashMap<UUID, Long> paralyzer = new HashMap<>();
 
     @EventHandler
@@ -94,8 +93,9 @@ public class LightningRod extends PaveralItem implements Listener, Dismantable {
         if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)){
             if (event.getAction().isRightClick()) {
                 Player player = event.getPlayer();
-                if (!cooldown.containsKey(player.getUniqueId()) || (System.currentTimeMillis() - cooldown.get(player.getUniqueId())) >= 1500) {
-                    cooldown.put(player.getUniqueId(), System.currentTimeMillis());
+
+                if(notOnCooldown(player)){
+                    applyCooldown(player, paralyzer.containsKey(player.getUniqueId()) && (300000 - (System.currentTimeMillis() - paralyzer.get(player.getUniqueId()))) >= 0); // Interupting if player has millis left in paralyzer
                     final Audience targets = player.getWorld().filterAudience(member -> member instanceof Player playermember && playermember.getLocation().distanceSquared(player.getLocation()) < 2500);
                     targets.playSound(Sound.sound(Key.key("entity.lightning_bolt.thunder"), Sound.Source.MASTER, 1f, 1.8f), Sound.Emitter.self());
                     targets.playSound(Sound.sound(Key.key("item.trident.thunder"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
@@ -154,77 +154,53 @@ public class LightningRod extends PaveralItem implements Listener, Dismantable {
                             }
                             if (isCancelled()) {
                                 if (kills >= 3) {
-                                    paralyzer.put(player.getUniqueId(), System.currentTimeMillis());
-                                    if (AwardAdvancements.isAdvancementUndone(player, "lightning_rod_phantom")) {
-                                        AwardAdvancements.grantAdvancement(player, "lightning_rod_phantom");
-                                    }
-                                    player.playSound(Sound.sound(Key.key("block.conduit.activate"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
-                                    player.playSound(Sound.sound(Key.key("block.conduit.ambient"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
-                                    player.getWorld().spawnParticle(Particle.NAUTILUS, player.getLocation(), 1, 0, 0, 0, 1);
+                                    grantPhantomProtection(player);
                                 }
                             }
                         }
                     }.runTaskTimer(Paveral.getPlugin(), 0, 1);
-                } else {
-                    player.playSound(Sound.sound(Key.key("block.note_block.basedrum"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
-                    showActionbar(player);
-
                 }
             }
         }
     }
 
-    @EventHandler
-    private void onLightningRodMove(PlayerMoveEvent event){ // TODO Revisit
-        Player player = event.getPlayer();
-        if(ItemHoldingController.checkIsHoldingPaveralItem(player, keyString)){
-            showActionbar(player);
+    private void grantPhantomProtection(Player player) {
+        paralyzer.put(player.getUniqueId(), System.currentTimeMillis());
+        if (AwardAdvancements.isAdvancementUndone(player, "lightning_rod_phantom")) {
+            AwardAdvancements.grantAdvancement(player, "lightning_rod_phantom");
         }
-    }
+        new ActionbarStatus(player, keyString, 1L, 7) {
+            @Override
+            public void message() {
+                long millisLeft = (300000 - (System.currentTimeMillis() - paralyzer.get(player.getUniqueId())));
+                if(millisLeft > 60000){
+                    int temp = (int) (millisLeft / 1000);
+                    int seconds = temp % 60;
+                    int minutes = (temp - seconds) / 60;
 
-    private void showActionbar(Player player){
-        if(cooldown.containsKey(player.getUniqueId())){
-            double cooldownsec = ((1500.0 - (System.currentTimeMillis() - cooldown.get(player.getUniqueId()))) / 1000.0);
-            if(cooldownsec > 0){
-                player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                        .append(Component.text("" + cooldownsec, NamedTextColor.RED))
-                        .append(Component.text(" ]",NamedTextColor.GOLD)));
-
-            } else {
-                if(paralyzer.containsKey(player.getUniqueId()) && System.currentTimeMillis() - paralyzer.get(player.getUniqueId()) <= 300000){
-                    long raw = (300000 - (System.currentTimeMillis() - paralyzer.get(player.getUniqueId())));
-                    if(raw > 60000){
-                        int temp = (int) (raw / 1000);
-                        int seconds = temp % 60;
-                        int minutes = (temp - seconds) / 60;
-
-                        player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                                .append(Component.text("Phantom Protection", NamedTextColor.GREEN))
-                                .append(Component.text(" ]",NamedTextColor.GOLD))
-                                .append(Component.text(" - ", NamedTextColor.GRAY))
-                                .append(Component.text("" + minutes + "min " + seconds + "s",NamedTextColor.LIGHT_PURPLE)));
-
-                    } else {
-                        double seconds = raw / 1000.0;
-                        player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                                .append(Component.text("Phantom Protection", NamedTextColor.GREEN))
-                                .append(Component.text(" ]",NamedTextColor.GOLD))
-                                .append(Component.text(" - ", NamedTextColor.GRAY))
-                                .append(Component.text("" + seconds + "s",NamedTextColor.LIGHT_PURPLE)));
-
-
-                    }
-                } else {
                     player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                            .append(Component.text("Ready", NamedTextColor.YELLOW))
-                            .append(Component.text(" ]",NamedTextColor.GOLD)));
+                            .append(Component.text("Phantom Protection", NamedTextColor.GREEN))
+                            .append(Component.text(" ]",NamedTextColor.GOLD))
+                            .append(Component.text(" - ", NamedTextColor.GRAY))
+                            .append(Component.text(minutes + "min " + seconds + "s",NamedTextColor.LIGHT_PURPLE)));
+                } else {
+                    double seconds = millisLeft / 1000.0;
+                    player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                            .append(Component.text("Phantom Protection", NamedTextColor.GREEN))
+                            .append(Component.text(" ]",NamedTextColor.GOLD))
+                            .append(Component.text(" - ", NamedTextColor.GRAY))
+                            .append(Component.text( seconds + "s",NamedTextColor.LIGHT_PURPLE)));
+                }
+                if(millisLeft <= 0){
+                    cancel(false);
+                    player.sendActionBar(Component.empty());
                 }
             }
-        } else {
-            player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                    .append(Component.text("Ready", NamedTextColor.YELLOW))
-                    .append(Component.text(" ]",NamedTextColor.GOLD)));
-        }
+        }.displayMessageRecoverable();
+
+        player.playSound(Sound.sound(Key.key("block.conduit.activate"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
+        player.playSound(Sound.sound(Key.key("block.conduit.ambient"), Sound.Source.AMBIENT, 1f, 0f), Sound.Emitter.self());
+        player.getWorld().spawnParticle(Particle.NAUTILUS, player.getLocation(), 1, 0, 0, 0, 1);
     }
 
     @EventHandler

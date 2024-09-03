@@ -5,7 +5,7 @@ import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.PaveralIngredient;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
-import me.powerspieler.paveral.items.PaveralItem;
+import me.powerspieler.paveral.items.CooldownItem;
 import me.powerspieler.paveral.items.helper.ItemHoldingController;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
@@ -31,10 +31,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.text.DecimalFormat;
 import java.util.*;
 
-public class PianoSword extends PaveralItem implements Listener {
+public class PianoSword extends CooldownItem implements Listener {
     private static Component itemName(){
         return Component.text("Rhythms Awakening", NamedTextColor.DARK_PURPLE);
     }
@@ -51,7 +50,7 @@ public class PianoSword extends PaveralItem implements Listener {
     }
 
     public PianoSword(){
-        super(Material.NETHERITE_SWORD, 1, Constant.ITEMTYPE, "piano_sword", itemName(), lore());
+        super(Material.NETHERITE_SWORD, 1, Constant.ITEMTYPE, "piano_sword", itemName(), lore(), 2000);
     }
 
     @Override
@@ -78,17 +77,13 @@ public class PianoSword extends PaveralItem implements Listener {
 
     // --- Item Logic ---
 
-    private final HashMap<UUID, Long> cooldown = new HashMap<>();
-
     @EventHandler
     private void onUse(PlayerInteractEvent event){
         if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)){
             if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK){
                 Player player = event.getPlayer();
-
-                if(!cooldown.containsKey(player.getUniqueId()) || (System.currentTimeMillis() - cooldown.get(player.getUniqueId()) >= 2000)){
-                    cooldown.put(player.getUniqueId(), System.currentTimeMillis());
-
+                if(notOnCooldown(player)){
+                    applyCooldown(player, false);
                     Location location = event.getPlayer().getLocation().add(0,0.5,0);
                     org.bukkit.util.Vector vector = location.getDirection().setY(0);
 
@@ -98,25 +93,6 @@ public class PianoSword extends PaveralItem implements Listener {
                         particleBeam(location, vector, player);
                         vector.rotateAroundY(0.2d);
                     }
-
-
-                    // Cooldown
-                    new BukkitRunnable() {
-                        final DecimalFormat df = new DecimalFormat("0.000");
-                        @Override
-                        public void run() {
-                            if(ItemHoldingController.checkIsHoldingPaveralItem(player, "piano_sword")){
-                                double cooldownsec = ((2000.0 - (System.currentTimeMillis() - cooldown.get(player.getUniqueId()))) / 1000.0);
-                                player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                                        .append(Component.text(df.format(cooldownsec), NamedTextColor.RED))
-                                        .append(Component.text(" ]",NamedTextColor.GOLD)));
-                                if(cooldownsec <= 0){
-                                    cancel();
-                                    player.sendActionBar(Component.empty());
-                                }
-                            }
-                        }
-                    }.runTaskTimer(Paveral.getPlugin(), 0, 1);
                 }
             }
         }

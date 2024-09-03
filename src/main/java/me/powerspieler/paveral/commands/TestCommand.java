@@ -1,7 +1,7 @@
 package me.powerspieler.paveral.commands;
 
 
-import me.powerspieler.paveral.util.Constant;
+import me.powerspieler.paveral.items.helper.ActionbarStatus;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -9,8 +9,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 
 public class TestCommand implements CommandExecutor {
@@ -32,17 +33,39 @@ public class TestCommand implements CommandExecutor {
 
                   //player.getInventory().addItem(new LumberjacksBass().recipe().result());
 
+                Bukkit.getScheduler().getPendingTasks().forEach(task -> Bukkit.broadcast(Component.text(task.toString())));
+
+                Bukkit.broadcast(Component.text("Tasks KeySet: \n"));
+                ActionbarStatus.tasks.keySet().forEach(uuid -> Bukkit.broadcast(Component.text(uuid + "\n")));
+                Bukkit.broadcast(Component.text(""));
+                Bukkit.broadcast(Component.text("Map Entries: "));
+                ActionbarStatus.tasks.keySet().stream().map(ActionbarStatus.tasks::get)
+                        .forEach(s -> Bukkit.broadcast(Component.text("Key: " + s.getKey() + ", Task: " + s.getTask() + " ,isCancelled" + s.getTask().isCancelled() + "\n")));
+
+
+                Bukkit.broadcast(Component.text(""));
+                Bukkit.broadcast(Component.text("Vault KeySet: "));
+                ActionbarStatus.statusMessageVault.keySet().forEach(uuid -> Bukkit.broadcast(Component.text(uuid + "\n")));
+                Bukkit.broadcast(Component.text(""));
+                Bukkit.broadcast(Component.text("Personal KeySet: "));
+                UUID uuid = player.getUniqueId();
+                ActionbarStatus.statusMessageVault.get(uuid).keySet().forEach(item -> Bukkit.broadcast(Component.text(item + "\n")));
+                Bukkit.broadcast(Component.text(""));
+                Bukkit.broadcast(Component.text("Personal EntrySet: "));
+                ActionbarStatus.statusMessageVault.get(uuid).entrySet().forEach(item -> Bukkit.broadcast(Component.text(item + "\n")));
 
 
 
 
 
-                if(player.getPersistentDataContainer().has(Constant.IS_HOLDING)){
-                    String string = player.getPersistentDataContainer().get(Constant.IS_HOLDING, PersistentDataType.STRING);
 
-                    Bukkit.broadcast(Component.text("Holding: " + string));
-                } else
-                    Bukkit.broadcast(Component.text("Holding nothing!"));
+
+//                if(player.getPersistentDataContainer().has(Constant.IS_HOLDING)){
+//                    String string = player.getPersistentDataContainer().get(Constant.IS_HOLDING, PersistentDataType.STRING);
+//
+//                    Bukkit.broadcast(Component.text("Holding: " + string));
+//                } else
+//                    Bukkit.broadcast(Component.text("Holding nothing!"));
 
 
 

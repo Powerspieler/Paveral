@@ -22,7 +22,14 @@ public class ItemHoldingController implements Listener {
     @EventHandler
     public void onItemSwitch(PlayerItemHeldEvent event){
         Player player = event.getPlayer();
-        player.sendActionBar(Component.text("")); // Always empty Actionbar
+
+        new ActionbarStatus(player, "", 1L){ // Always empty Actionbar
+            @Override
+            public void message() {
+                player.sendActionBar(Component.empty());
+            }
+        }.displayMessageOnce();
+
         ItemStack item = player.getInventory().getItem(event.getNewSlot());
 //        ItemStack offHandItem = player.getInventory().getItemInOffHand();
         if(item != null && item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)){
@@ -39,6 +46,12 @@ public class ItemHoldingController implements Listener {
             Bukkit.getPluginManager().callEvent(new ItemHoldingControllerEvent(player, ""));
         }
     }
+
+    @EventHandler
+    public void onItemHoldingControllerEvent(ItemHoldingControllerEvent event){
+        ActionbarStatus.recoverDisplayMessage(event.getPlayer().getUniqueId(), event.getItemType());
+    }
+
 
     @EventHandler
     public void onItemSwitchOffhand(PlayerSwapHandItemsEvent event){

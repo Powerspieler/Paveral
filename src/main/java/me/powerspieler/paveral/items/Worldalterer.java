@@ -98,7 +98,7 @@ public class Worldalterer extends PaveralItem implements Listener, Enchantable {
     Map<UUID, Integer> runnableMap = new HashMap<>();
 
     // Cooldown before commiting - depends on amount of blocks selected
-    private final HashMap<UUID, Long> cooldownuntil = new HashMap<>(); // TODO Einheitlicher Cooldown
+    private final HashMap<UUID, Long> cooldownuntil = new HashMap<>(); // TODO Einheitlicher Cooldown holy moly
 
     @EventHandler
     private void onPlayerUse(PlayerInteractEvent event){

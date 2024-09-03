@@ -5,7 +5,7 @@ import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.PaveralIngredient;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
-import me.powerspieler.paveral.items.PaveralItem;
+import me.powerspieler.paveral.items.CooldownItem;
 import me.powerspieler.paveral.items.helper.ItemHoldingController;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
@@ -26,10 +26,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.text.DecimalFormat;
 import java.util.*;
 
-public class StringBlade extends PaveralItem implements Listener {
+public class StringBlade extends CooldownItem implements Listener {
     public static Set<PaveralRecipe> getAllStringBladeRecipes(){
         Set<PaveralRecipe> recipes = new HashSet<>(16);
         for (Material dye : MaterialTags.DYES.getValues()) {
@@ -83,7 +82,7 @@ public class StringBlade extends PaveralItem implements Listener {
     private final Material color;
 
     public StringBlade(Material color, int customModelData) {
-        super(Material.NETHERITE_SWORD, customModelData, Constant.ITEMTYPE, "string_blade", itemName(color), lore());
+        super(Material.NETHERITE_SWORD, customModelData, Constant.ITEMTYPE, "string_blade", itemName(color), lore(), 1000);
         this.color = color;
     }
 
@@ -98,36 +97,14 @@ public class StringBlade extends PaveralItem implements Listener {
 
     // --- Item Logic ---
 
-    private final HashMap<UUID, Long> cooldown = new HashMap<>();
-
     @EventHandler
     private void onItemUse(PlayerInteractEvent event){
         if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 Player player = event.getPlayer();
-
-                if(!cooldown.containsKey(player.getUniqueId()) || (System.currentTimeMillis() - cooldown.get(player.getUniqueId()) >= 1000)) {
-                    cooldown.put(player.getUniqueId(), System.currentTimeMillis());
-
+                if(notOnCooldown(player)) {
+                    applyCooldown(player, false);
                     shotProjectile(player, player.getInventory().getItemInMainHand().containsEnchantment(Enchantment.FIRE_ASPECT));
-
-                    // Cooldown
-                    new BukkitRunnable() {
-                        final DecimalFormat df = new DecimalFormat("0.000");
-                        @Override
-                        public void run() {
-                            if(ItemHoldingController.checkIsHoldingPaveralItem(player, "string_blade")){
-                                double cooldownsec = ((1000.0 - (System.currentTimeMillis() - cooldown.get(player.getUniqueId()))) / 1000.0);
-                                player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                                        .append(Component.text(df.format(cooldownsec), NamedTextColor.RED))
-                                        .append(Component.text(" ]",NamedTextColor.GOLD)));
-                                if(cooldownsec <= 0){
-                                    cancel();
-                                    player.sendActionBar(Component.empty());
-                                }
-                            }
-                        }
-                    }.runTaskTimer(Paveral.getPlugin(), 0, 1);
                 }
             }
         }

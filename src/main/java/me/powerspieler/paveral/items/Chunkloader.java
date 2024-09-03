@@ -49,6 +49,35 @@ public class Chunkloader extends PaveralItem implements Listener, Dismantable {
         super(Material.PETRIFIED_OAK_SLAB, 0, Constant.ITEMTYPE, "chunkloader", itemName(), lore());
     }
 
+    @EventHandler
+    protected void actionbarDisplay(ItemHoldingControllerEvent event) {
+        if(event.getItemType().equals(keyString)){
+            Player player = event.getPlayer();
+            new ActionbarStatus(player, keyString, 5L) {
+                @Override
+                public void message() {
+                    int chunks = player.getWorld().getForceLoadedChunks().size();
+                    if(player.getChunk().isForceLoaded()){
+                        player.sendActionBar(Component.text("[ ",NamedTextColor.GOLD)
+                                .append(Component.text("Chunk loaded", NamedTextColor.GREEN))
+                                .append(Component.text(" ]",NamedTextColor.GOLD))
+                                .append(Component.text(" - ",NamedTextColor.GRAY))
+                                .append(Component.text("Total: ",NamedTextColor.BLUE))
+                                .append(Component.text("" + chunks, NamedTextColor.YELLOW)));
+
+                    }else{
+                        player.sendActionBar(Component.text("[ ",NamedTextColor.GOLD)
+                                .append(Component.text("Chunk not loaded", NamedTextColor.RED))
+                                .append(Component.text(" ]",NamedTextColor.GOLD))
+                                .append(Component.text(" - ",NamedTextColor.GRAY))
+                                .append(Component.text("Total: ",NamedTextColor.BLUE))
+                                .append(Component.text("" + chunks)));
+                    }
+                }
+            }.displayMessage();
+        }
+    }
+
     @Override
     public PaveralRecipe recipe() {
         Set<StandardIngredient> ingredients = new HashSet<>();
@@ -130,33 +159,6 @@ public class Chunkloader extends PaveralItem implements Listener, Dismantable {
             final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 100);
             targets.playSound(net.kyori.adventure.sound.Sound.sound(Key.key("block.beacon.deactivate"), net.kyori.adventure.sound.Sound.Source.BLOCK, 1f, 0.5f), Sound.Emitter.self());
         }
-    }
-
-    @EventHandler
-    public void onItemChange(ItemHoldingControllerEvent event){
-        Player player = event.getPlayer();
-        new ActionbarStatus() {
-            @Override
-            public void message() {
-                int chunks = player.getWorld().getForceLoadedChunks().size();
-                if(player.getChunk().isForceLoaded()){
-                    player.sendActionBar(Component.text("[ ",NamedTextColor.GOLD)
-                            .append(Component.text("Chunk loaded", NamedTextColor.GREEN))
-                            .append(Component.text(" ]",NamedTextColor.GOLD))
-                            .append(Component.text(" - ",NamedTextColor.GRAY))
-                            .append(Component.text("Total: ",NamedTextColor.BLUE))
-                            .append(Component.text("" + chunks, NamedTextColor.YELLOW)));
-
-                }else{
-                    player.sendActionBar(Component.text("[ ",NamedTextColor.GOLD)
-                            .append(Component.text("Chunk not loaded", NamedTextColor.RED))
-                            .append(Component.text(" ]",NamedTextColor.GOLD))
-                            .append(Component.text(" - ",NamedTextColor.GRAY))
-                            .append(Component.text("Total: ",NamedTextColor.BLUE))
-                            .append(Component.text("" + chunks)));
-                }
-            }
-        }.displayMessage(event, keyString);
     }
 
     @EventHandler
