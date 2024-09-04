@@ -1,10 +1,10 @@
 package me.powerspieler.paveral.misc;
 
+import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.util.RecipeLoader;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +20,7 @@ public class HandlePlayerJoin implements Listener {
         Player player = event.getPlayer();
         // Check and provide Resourcepack
         if(!player.hasResourcePack()){
-            player.setResourcePack("https://github.com/Powerspieler/Paveral-Resourcepack/releases/download/v1.4-1.21/Paveral-Resourcepack_v1.4-1.21.zip", "b84e654d823633a3469115889a05f843f2a61ee3", false, Component.text("Custom items have been added to this server and therefore require custom textures!", NamedTextColor.GOLD));
+            player.setResourcePack("https://github.com/Powerspieler/Paveral-Resourcepack/releases/download/v1.5-1.21.1/Paveral-Resourcepack_v.1.5-1.21.1.zip", "52BDEB9C360436D9B6E4CE9524E605E5FA941E92", false, Component.text("Custom items have been added to this server and therefore require custom textures!", NamedTextColor.GOLD));
         }
         // Altarbook Reminder Message
         if(player.hasDiscoveredRecipe(RecipeLoader.altarbookrecipekey) && AwardAdvancements.isAdvancementUndone(player, "craft_tutorial_book")){
@@ -41,7 +41,7 @@ public class HandlePlayerJoin implements Listener {
         }*/
         if(event.getStatus() == PlayerResourcePackStatusEvent.Status.FAILED_DOWNLOAD){
             event.getPlayer().sendMessage(Component.text("Resourcepack Download Failed! Contact the plugin author", NamedTextColor.RED));
-            Bukkit.getLogger().log(Level.WARNING, "Request to download resourcepack failed!");
+            Paveral.getPlugin().getLogger().log(Level.WARNING, "Request to download resourcepack failed!");
         }
     }
 }
