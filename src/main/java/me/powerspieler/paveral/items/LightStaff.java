@@ -1,8 +1,13 @@
 package me.powerspieler.paveral.items;
 
 import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.helper.Dismantable;
+import me.powerspieler.paveral.items.helper.ItemHoldingController;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
+import me.powerspieler.paveral.util.MarkerDataStorage;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -26,82 +31,90 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+public class LightStaff extends PaveralItem implements Listener, Dismantable {
+    private static Component itemName(){
+        return Component.text("Lightstaff", NamedTextColor.DARK_PURPLE)
+                .decoration(TextDecoration.ITALIC, false);
+    }
 
-
-public class LightStaff implements Listener,Items {
-    
-    // Lightstaff ItemStack
-    public ItemStack build(){
-        ItemStack lightstaff = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
-        ItemMeta lightstaffmeta = lightstaff.getItemMeta();
-        lightstaffmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "lightstaff");
-        lightstaffmeta.getPersistentDataContainer().set(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER, 15);
-        lightstaffmeta.setCustomModelData(4);
-
-        lightstaffmeta.displayName(Component.text("Lightstaff", NamedTextColor.DARK_PURPLE)
-                .decoration(TextDecoration.ITALIC, false));
+    private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Press ", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(
                         Component.keybind("key.use", NamedTextColor.YELLOW)
-                                .decoration(TextDecoration.ITALIC, false)
-                )
+                                .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(" to place and remove lightblocks", NamedTextColor.DARK_AQUA)));
         lore.add(Component.text("Press (", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(
                         Component.keybind("key.sneak", NamedTextColor.GREEN)
-                                .decoration(TextDecoration.ITALIC, false)
-                )
+                                .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(" + ) ", NamedTextColor.DARK_AQUA)
                         .decoration(TextDecoration.ITALIC, false))
                 .append(Component.keybind("key.attack", NamedTextColor.YELLOW)
-                        .decoration(TextDecoration.ITALIC, false)
-                        )
+                        .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(" to change lightlevel", NamedTextColor.DARK_AQUA)
                         .decoration(TextDecoration.ITALIC,false)));
         lore.add(Component.text(""));
         lore.add(Component.text("Enchantable with ", NamedTextColor.BLUE)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.text("Unbreaking",NamedTextColor.GRAY)
-                        .decoration(TextDecoration.ITALIC, false)
-                )
+                        .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(" and ", NamedTextColor.BLUE)
-                        .decoration(TextDecoration.ITALIC, false)
-                )
+                        .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text("Mending", NamedTextColor.GRAY)
                         .decoration(TextDecoration.ITALIC, false)));
-        lightstaffmeta.lore(lore);
+        return lore;
+    }
 
-        lightstaff.setItemMeta(lightstaffmeta);
-        return lightstaff;
+    public LightStaff() {
+        super(Material.WARPED_FUNGUS_ON_A_STICK, 4, Constant.ITEMTYPE, "lightstaff", itemName(), lore());
+    }
+
+    @Override
+    protected ItemStack build() {
+        ItemStack item = super.build();
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.getPersistentDataContainer().set(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER, 15);
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+
+    @Override
+    public PaveralRecipe recipe() {
+        Set<StandardIngredient> ingredients = new HashSet<>();
+        ingredients.add(new StandardIngredient(Material.IRON_INGOT, 2));
+        ingredients.add(new StandardIngredient(Material.COPPER_INGOT, 1));
+        ingredients.add(new StandardIngredient(Material.REDSTONE_LAMP, 1));
+        ingredients.add(new StandardIngredient(Material.WITHER_ROSE, 2));
+        return new PaveralRecipe(ingredients, this.build());
     }
 
     @Override
     public List<ItemStack> parts() {
         List<ItemStack> parts = new ArrayList<>();
-        ItemStack ironingot = new ItemStack(Material.IRON_INGOT, 2);
-        ItemStack copperingot = new ItemStack(Material.COPPER_INGOT);
-        ItemStack redstonelamp = new ItemStack(Material.REDSTONE_LAMP);
-        ItemStack witherrose = new ItemStack(Material.WITHER_ROSE, 2);
-        parts.add(ironingot);
-        parts.add(copperingot);
-        parts.add(redstonelamp);
-        parts.add(witherrose);
+        parts.add(new ItemStack(Material.IRON_INGOT, 2));
+        parts.add(new ItemStack(Material.COPPER_INGOT));
+        parts.add(new ItemStack(Material.REDSTONE_LAMP));
+        parts.add(new ItemStack(Material.WITHER_ROSE, 2));
         return parts;
     }
+
+    // --- Item Logic ---
 
     private static final NamespacedKey LIGHTBLOCKMARKER = new NamespacedKey(Paveral.getPlugin(), "lightblock");
     private static final NamespacedKey LIGHTBLOCKLEVEL = new NamespacedKey(Paveral.getPlugin(), "lightlevel");
     private static boolean particlecooldown;
 
-   // Placement and Removal
+    // Placement and Removal
     @EventHandler
-    public void onPlayerRightclick(PlayerInteractEvent event){
-        if(event.hasItem() && ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "lightstaff")){
+    private void onPlayerRightclick(PlayerInteractEvent event){
+        if(event.hasItem() && ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)){
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (event.getClickedBlock() != null && event.getItem().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER) != null) {
                     Location location = event.getClickedBlock().getLocation();
@@ -122,9 +135,9 @@ public class LightStaff implements Listener,Items {
 
     // Display Particle and Message
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event){
+    private void onPlayerMove(PlayerMoveEvent event){
         Player player = event.getPlayer();
-        if(ItemHoldingController.checkIsHoldingPaveralItem(player, "lightstaff")){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(player, keyString)){
             if(!particlecooldown) {
                 particlecooldown = true;
                 Bukkit.getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), () -> particlecooldown = false, 80);
@@ -143,22 +156,25 @@ public class LightStaff implements Listener,Items {
                 }
             }
 
-            int lightlevel = 0;
-            ItemStack itemStack = player.getInventory().getItemInMainHand();
-            if (itemStack.hasItemMeta() && itemStack.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)){
-                lightlevel = itemStack.getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
-            } else {
+            int lightlevel = -1;
+            ItemStack mainHand = player.getInventory().getItemInMainHand();
+            ItemStack offHand = player.getInventory().getItemInOffHand();
+            if (mainHand.hasItemMeta() && mainHand.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)){
+                lightlevel = mainHand.getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
+            } else if(offHand.hasItemMeta() && offHand.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)) {
                 lightlevel = player.getInventory().getItemInOffHand().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
             }
-            showActionbar(player, lightlevel);
+            if(lightlevel != -1){
+                showActionbar(player, lightlevel);
+            }
         }
     }
 
 
     // Change Lightlevel
     @EventHandler
-    public void onPlayerLeftClick(PlayerInteractEvent event){
-        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "lightstaff") && event.getAction().isLeftClick() && event.hasItem()){
+    private void onPlayerLeftClick(PlayerInteractEvent event){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString) && event.getAction().isLeftClick() && event.hasItem()){
             ItemStack lightstaff = event.getItem();
             ItemMeta lightstaffmeta = lightstaff.getItemMeta();
             int lightlevel = event.getItem().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
@@ -211,13 +227,14 @@ public class LightStaff implements Listener,Items {
                 Levelled light = (Levelled) block.getBlockData();
                 light.setLevel(lightlevel);
                 block.setBlockData(light);
-                targets.playSound(Sound.sound(Key.key("item.flintandsteel.use"), Sound.Source.BLOCK, 1f, 1f), Sound.Emitter.self());
-                ItemsUtil.applyDamage(lightstaff, 1);
+                targets.playSound(net.kyori.adventure.sound.Sound.sound(Key.key("item.flintandsteel.use"), net.kyori.adventure.sound.Sound.Source.BLOCK, 1f, 1f), Sound.Emitter.self());
+                ItemsUtil.applyDamage(lightstaff, 1, 100);
 
                 location.add(0.5, 0.5, 0.5);
                 location.getWorld().spawnParticle(Particle.BLOCK_MARKER, location, 1, block.getBlockData());
 
-                location.getWorld().spawn(location, Marker.class, marker -> marker.getPersistentDataContainer().set(LIGHTBLOCKMARKER, PersistentDataType.INTEGER, 1));
+                MarkerDataStorage.createMarker(block);
+                MarkerDataStorage.getMarkerDataContainer(block).set(LIGHTBLOCKMARKER, PersistentDataType.INTEGER, 1);
             }, 1);
         }
     }

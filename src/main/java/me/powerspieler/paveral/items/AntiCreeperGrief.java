@@ -1,5 +1,10 @@
 package me.powerspieler.paveral.items;
 
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.helper.ActionbarStatus;
+import me.powerspieler.paveral.items.helper.Dismantable;
+import me.powerspieler.paveral.items.helper.ItemHoldingControllerEvent;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -13,28 +18,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
-public class AntiCreeperGrief implements Listener, Items {
-    @Override
-    public ItemStack build() {
-        ItemStack creeperitem = new ItemStack(Material.JIGSAW);
-        ItemMeta creeperitemmeta = creeperitem.getItemMeta();
-        creeperitemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "anticreepergrief");
-        creeperitemmeta.setCustomModelData(1);
+public class AntiCreeperGrief extends PaveralItem implements Listener, Dismantable {
+    private static Component itemName(){
+        return Component.text("Creeper Defuser", NamedTextColor.GOLD)
+                .decoration(TextDecoration.ITALIC, false);
+    }
 
-        creeperitemmeta.displayName(Component.text("Creeper Defuser", NamedTextColor.GOLD)
-                .decoration(TextDecoration.ITALIC, false));
+    private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text("Keep in inventory to prevent creepers from exploding nearby", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
@@ -42,25 +39,56 @@ public class AntiCreeperGrief implements Listener, Items {
                 .decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text("When hold in hand it displays if you're in a safe area", NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false));
-        creeperitemmeta.lore(lore);
+        return lore;
+    }
 
-        creeperitem.setItemMeta(creeperitemmeta);
-        return creeperitem;
+    public AntiCreeperGrief() {
+        super(Material.JIGSAW, 1, Constant.ITEMTYPE, "anti_creeper_grief", itemName(), lore());
+    }
+
+    @Override
+    public PaveralRecipe recipe() {
+        Set<StandardIngredient> ingredients = new HashSet<>();
+        ingredients.add(new StandardIngredient(Material.CREEPER_HEAD, 1));
+        ingredients.add(new StandardIngredient(Material.FIREWORK_STAR, 1));
+        ingredients.add(new StandardIngredient(Material.SCULK_SENSOR, 1));
+        return new PaveralRecipe(ingredients, this.build());
+    }
+
+    @EventHandler
+    protected void actionbarDisplay(ItemHoldingControllerEvent event) {
+        if(event.getItemType().equals(keyString)){
+            Player player = event.getPlayer();
+            new ActionbarStatus(player, keyString, 5L) {
+                @Override
+                public void message() {
+                    if (checkForItemframe(player)) {
+                        player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                                .append(Component.text("Save",NamedTextColor.GREEN))
+                                .append(Component.text(" ]",NamedTextColor.GOLD)));
+                    } else
+                        player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
+                                .append(Component.text("Unsave",NamedTextColor.RED))
+                                .append(Component.text(" ]",NamedTextColor.GOLD)));
+
+                }
+            }.displayMessage();
+        }
     }
 
     @Override
     public List<ItemStack> parts() {
         List<ItemStack> parts = new ArrayList<>();
-        ItemStack creeperhead = new ItemStack(Material.CREEPER_HEAD);
-        ItemStack fireworkstar = new ItemStack(Material.FIREWORK_STAR);
-        ItemStack sculksensor = new ItemStack(Material.SCULK_SENSOR);
-        parts.add(creeperhead);
-        parts.add(fireworkstar);
-        parts.add(sculksensor);
+        parts.add(new ItemStack(Material.CREEPER_HEAD));
+        parts.add(new ItemStack(Material.FIREWORK_STAR));
+        parts.add(new ItemStack(Material.SCULK_SENSOR));
         return parts;
     }
 
-    // Convert Random Int to ColorType
+    // --- Item Logic ---
+
+    private Entity creeper;
+
     private Color getColor(int i) {
         Color c = null;
         if(i==1){
@@ -117,11 +145,9 @@ public class AntiCreeperGrief implements Listener, Items {
 
         return c;
     }
-    private Entity creeper;
-
 
     @EventHandler // handle CreeperExplosions
-    public void onCreeperExplosion(EntityExplodeEvent event) {
+    private void onCreeperExplosion(EntityExplodeEvent event) {
         if (!(event.getEntityType() == EntityType.CREEPER)) return;
         creeper = event.getEntity();
         if(checkForPlayer(creeper) || checkForItemframe(creeper)){
@@ -130,9 +156,8 @@ public class AntiCreeperGrief implements Listener, Items {
         }
     }
 
-
     @EventHandler //handle EntityDamage Inflicted By Creeper
-    public void onCreeperDamageEntity(EntityDamageByEntityEvent event){
+    private void onCreeperDamageEntity(EntityDamageByEntityEvent event){
         if(!(event.getDamager().getType() == EntityType.CREEPER)) return;
         Entity damager = event.getDamager();
         if(checkForPlayer(damager) || checkForItemframe(damager)){
@@ -141,7 +166,7 @@ public class AntiCreeperGrief implements Listener, Items {
     }
 
     @EventHandler //handle HangingDamage Inflicted by Creeper
-    public void onCreeperDamageHanging(HangingBreakByEntityEvent event){
+    private void onCreeperDamageHanging(HangingBreakByEntityEvent event){
         if (!(event.getRemover().getType() == EntityType.CREEPER)) return;
         Entity remover = event.getRemover();
         if(checkForPlayer(remover) || checkForItemframe(remover)){
@@ -149,24 +174,8 @@ public class AntiCreeperGrief implements Listener, Items {
         }
     }
 
-    @EventHandler
-    public void onCreeperItemHold(PlayerMoveEvent event){
-        // TODO FÜR JEDES ITEM DAS HIER FIXEN
-        if(ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), "anticreepergrief")){
-            Player player = event.getPlayer();
-            if (checkForItemframe(player)) {
-                player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                        .append(Component.text("Save",NamedTextColor.GREEN))
-                        .append(Component.text(" ]",NamedTextColor.GOLD)));
-            } else
-                player.sendActionBar(Component.text("[ ", NamedTextColor.GOLD)
-                        .append(Component.text("Unsave",NamedTextColor.RED))
-                        .append(Component.text(" ]",NamedTextColor.GOLD)));
-        }
-    }
-
     // Check for Player with CreeperItem in 8x8x8 Box
-    public boolean checkForPlayer(Entity creeper){
+    private boolean checkForPlayer(Entity creeper){
         List<Entity> playernearby = creeper.getNearbyEntities(8D,8D,8D);
         for(Entity entity : playernearby){
             if(entity instanceof Player player) {
@@ -179,12 +188,12 @@ public class AntiCreeperGrief implements Listener, Items {
     }
 
     // Check of Itemframe in 50x50x50 Box
-    public boolean checkForItemframe(Entity creeper){
+    private boolean checkForItemframe(Entity creeper){
         List<Entity> itemframenearby = creeper.getNearbyEntities(50D,50D,50D);
         for(Entity entity : itemframenearby){
             if(entity instanceof ItemFrame itemframe){
                 if(itemframe.getItem().hasItemMeta()){
-                    if(Objects.equals(itemframe.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")){
+                    if(Objects.equals(itemframe.getItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), keyString)){
                         return true;
                     }
                 }
@@ -194,11 +203,11 @@ public class AntiCreeperGrief implements Listener, Items {
     }
 
     // Check if CreeperItem is in Inventory
-    private static boolean hasCreeperItem(final Player player) {
+    private boolean hasCreeperItem(final Player player) {
         final PlayerInventory inv = player.getInventory();
         final ItemStack[] contents = inv.getContents();
         for (final ItemStack stack : contents) {
-            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(stack.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), "anticreepergrief")) {
+            if (stack != null && stack.getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE) && Objects.equals(stack.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), keyString)) {
                 return true;
             }
         }
@@ -206,7 +215,7 @@ public class AntiCreeperGrief implements Listener, Items {
     }
 
     //Define FireworkVisual
-    public void defineFirework(){
+    private void defineFirework(){
         Firework fw = (Firework) creeper.getWorld().spawnEntity(creeper.getLocation(), EntityType.FIREWORK_ROCKET);
         FireworkMeta fwm = fw.getFireworkMeta();
         Random r = new Random();
@@ -219,5 +228,4 @@ public class AntiCreeperGrief implements Listener, Items {
         fw.setFireworkMeta(fwm);
         fw.detonate();
     }
-
 }

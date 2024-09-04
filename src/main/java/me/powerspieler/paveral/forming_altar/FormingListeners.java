@@ -2,16 +2,16 @@ package me.powerspieler.paveral.forming_altar;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
-import me.powerspieler.paveral.discovery.Discovery;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
 import me.powerspieler.paveral.discovery.tutorial.DisBook;
 import me.powerspieler.paveral.discovery.tutorial.TechBook;
 import me.powerspieler.paveral.forming_altar.events.FormItemEvent;
 import me.powerspieler.paveral.items.BedrockBreaker;
-import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.LightStaff;
-import me.powerspieler.paveral.items.enchanced.Channeling;
-import me.powerspieler.paveral.items.enchanced.Knockback;
-import me.powerspieler.paveral.util.Constant;
+import me.powerspieler.paveral.items.enhanced.Channeling;
+import me.powerspieler.paveral.items.enhanced.Knockback;
+import me.powerspieler.paveral.items.musicpack.*;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -21,122 +21,54 @@ import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import static me.powerspieler.paveral.crafting.ItemHelper.convertToIngredientSet;
 import static me.powerspieler.paveral.forming_altar.AwakeAltar.ALREADY_FORMING;
 
 public class FormingListeners implements Listener {
 
+    private Set<PaveralRecipe> getAllAvailableRecipes(){
+        Set<PaveralRecipe> recipes = new HashSet<>();
+        recipes.add(new DisBook().recipe());
+        recipes.add(new TechBook().recipe());
+
+        recipes.add(new BedrockBreaker().recipe());
+        recipes.add(new LightStaff().recipe());
+
+        recipes.add(new Knockback().recipe());
+        recipes.add(new Channeling().recipe());
+
+        recipes.add(new PianoSword().recipe());
+        recipes.addAll(StringBlade.getAllStringBladeRecipes());
+        recipes.add(new ResonatingPickaxe().recipe());
+        recipes.add(new LumberjacksBass().recipe());
+        recipes.add(new BardicInspiration().recipe());
+        recipes.add(new ScytheOfHarmony().recipe());
+
+        return recipes;
+    }
+
     @EventHandler
     public void onIngredientDrop(FormItemEvent event){
-        List<Item> raw = new ArrayList<>(event.getAltar().getNearbyEntitiesByType(Item.class, 1,1,1));
-        List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(AwakeAltar.FORMING_CANDIDATE)).toList();
-        // Lightstaff
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.COPPER_INGOT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.REDSTONE_LAMP) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.WITHER_ROSE)){
-            List<Item> formingitems = items.stream()
-                    .filter(item -> {
-                        Material type = item.getItemStack().getType();
-                        return (type == Material.IRON_INGOT && item.getItemStack().getAmount() == 2) || (type == Material.COPPER_INGOT && item.getItemStack().getAmount() == 1) || (type == Material.REDSTONE_LAMP  && item.getItemStack().getAmount() == 1) || (type == Material.WITHER_ROSE  && item.getItemStack().getAmount() == 2);
-                    }).toList();
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.COPPER_INGOT) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.REDSTONE_LAMP) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.WITHER_ROSE)){
-                if(isCharged(event.getAltar())){
-                    Items lightstaff = new LightStaff();
-                    formItem(event.getAltar(), formingitems, lightstaff.build());
-                }
-            }
-            return;
-        }
-        // Bedrock Breaker
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.PISTON) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.TNT) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.LEVER) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.OAK_TRAPDOOR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.ANCIENT_DEBRIS)){
-            List<Item> formingitems = items.stream()
-                    .filter(item -> {
-                        Material type = item.getItemStack().getType();
-                        return (type == Material.OBSIDIAN && item.getItemStack().getAmount() == 1) || (type == Material.PISTON && item.getItemStack().getAmount() == 2) || (type == Material.TNT  && item.getItemStack().getAmount() == 2) || (type == Material.LEVER  && item.getItemStack().getAmount() == 1) || (type == Material.OAK_TRAPDOOR  && item.getItemStack().getAmount() == 1) || (type == Material.ANCIENT_DEBRIS  && item.getItemStack().getAmount() == 4);
-                    }).toList();
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.PISTON) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.TNT) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.LEVER) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.OAK_TRAPDOOR) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.ANCIENT_DEBRIS)){
-                if(isCharged(event.getAltar())){
-                    Items bb = new BedrockBreaker();
-                    formItem(event.getAltar(), formingitems, bb.build());
-                }
-            }
-            return;
-        }
-        // Disassemble Tutorial Book
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.WRITTEN_BOOK) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
-            List<Item> formingitems = items.stream()
-                    .filter(item -> {
-                        Material type = item.getItemStack().getType();
-                        return (type == Material.WRITTEN_BOOK && item.getItemStack().getAmount() == 1 && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.DISCOVERY, PersistentDataType.STRING) && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "altar_book")) || (type == Material.NETHERITE_SCRAP && item.getItemStack().getAmount() == 1);
-                    }).toList();
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.WRITTEN_BOOK) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
-                if(isCharged(event.getAltar())){
-                    Discovery dis_book = new DisBook();
-                    formItem(event.getAltar(), formingitems, dis_book.build());
-                }
-            }
-            // No Return; Allow next Tutorial Book to be checked
-        }
-        // Forge Tutorial Book
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.WRITTEN_BOOK) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
-            List<Item> formingitems = items.stream()
-                    .filter(item -> {
-                        Material type = item.getItemStack().getType();
-                        return (type == Material.WRITTEN_BOOK && item.getItemStack().getAmount() == 1 && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.DISCOVERY, PersistentDataType.STRING) && Objects.equals(item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING), "dis_book")) || (type == Material.NETHERITE_SCRAP && item.getItemStack().getAmount() == 1);
-                    }).toList();
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.WRITTEN_BOOK) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
-                if(isCharged(event.getAltar())){
-                    Discovery tech_book = new TechBook();
-                    formItem(event.getAltar(), formingitems, tech_book.build());
-                }
-            }
-            return;
-        }
-        // Next Entry here!
+        Set<Item> ingredients = event.getAltar().getNearbyEntitiesByType(Item.class, 1,1,1).stream().filter(item -> item.getPersistentDataContainer().has(AwakeAltar.FORMING_CANDIDATE)).collect(Collectors.toSet());
+        Set<StandardIngredient> formCandidate = convertToIngredientSet(ingredients);
 
-        // Enchaned Enchantment
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.ENCHANTED_BOOK) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHERITE_SCRAP)){
-            List<Item> formingitems = new ArrayList<>(items.stream()
-                    .filter(item -> {
-                        Material type = item.getItemStack().getType();
-                        return (type == Material.ENCHANTED_BOOK) || (type == Material.NETHERITE_SCRAP && item.getItemStack().getAmount() == 1);
-                    }).toList());
-            Optional<Item> ench_raw = formingitems.stream().filter(item -> item.getItemStack().getType() == Material.ENCHANTED_BOOK).findFirst();
-            if(ench_raw.isPresent()){
-                EnchantmentStorageMeta ench = (EnchantmentStorageMeta) ench_raw.get().getItemStack().getItemMeta();
-                // Knockback 5
-                if(ench.hasStoredEnchant(Enchantment.KNOCKBACK) && ench.getStoredEnchantLevel(Enchantment.KNOCKBACK) == 2){
-                    formingitems.add(ench_raw.get());
-                    if(isCharged(event.getAltar())){
-                        Items enh_kb = new Knockback();
-                        formItem(event.getAltar(), formingitems, enh_kb.build());
-                    }
-                }
-                // Channeling 10
-                if(ench.hasStoredEnchant(Enchantment.CHANNELING) && ench.getStoredEnchantLevel(Enchantment.CHANNELING) == 1){
-                    formingitems.add(ench_raw.get());
-                    if(isCharged(event.getAltar())){
-                        Items enh_ch = new Channeling();
-                        formItem(event.getAltar(), formingitems, enh_ch.build());
-                    }
-                }
-                // Next Enchantment Entry HERE
-            }
-        }
+        Set<PaveralRecipe> availableRecipes = getAllAvailableRecipes();
+        Optional<PaveralRecipe> optionalRecipeMatch = availableRecipes.stream().filter(r -> r.ingredients().equals(formCandidate)).findFirst();
+
+        optionalRecipeMatch.ifPresent(paveralRecipe -> formItem(event.getAltar(), ingredients, paveralRecipe.result()));
     }
 
     private boolean isCharged(Location location){
@@ -178,7 +110,8 @@ public class FormingListeners implements Listener {
         return true;
     }
 
-    private void formItem(Location location, List<Item> formingitems, ItemStack result){
+    private void formItem(Location location, Set<Item> formingitems, ItemStack result){
+        if(!isCharged(location)) return;
         final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
         for(Item formingitem : formingitems){
             formingitem.setVelocity(new Vector(0,0,0));
@@ -189,7 +122,7 @@ public class FormingListeners implements Listener {
             formingitem.getPersistentDataContainer().set(ALREADY_FORMING, PersistentDataType.INTEGER, 1);
         }
         targets.playSound(Sound.sound(Key.key("entity.wither.spawn"), Sound.Source.AMBIENT, 1f, 1f), Sound.Emitter.self());
-        BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Forming...", BarColor.PURPLE, BarStyle.SOLID);
+        BossBar progress = Bukkit.createBossBar(ChatColor.DARK_PURPLE + "Forming..." , BarColor.PURPLE, BarStyle.SOLID);
         List<Entity> entities = new ArrayList<>(location.getNearbyEntities(25,25,25));
         for(Entity entity : entities){
             if(entity instanceof Player player){

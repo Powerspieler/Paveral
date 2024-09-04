@@ -1,7 +1,6 @@
 package me.powerspieler.paveral.discovery;
 
 import me.powerspieler.paveral.advancements.AwardAdvancements;
-import me.powerspieler.paveral.items.Items;
 import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
@@ -29,8 +28,7 @@ public class FishingLootTable implements Listener {
             if(event.getCaught() instanceof Item item){
                 if(!hasLightstaff(event.getPlayer())){
                     if(Math.random() <= 0.01){
-                        Items lightstaff = new LightStaff();
-                        ItemStack lsStack = lightstaff.build();
+                        ItemStack lsStack = new LightStaff().recipe().result();
 
                         Damageable damagemeta = (Damageable) lsStack.getItemMeta();
                         damagemeta.setDamage((int) (100 - (Math.random() / 8) * 100));

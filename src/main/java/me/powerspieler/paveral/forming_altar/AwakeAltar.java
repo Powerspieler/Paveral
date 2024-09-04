@@ -1,5 +1,6 @@
 package me.powerspieler.paveral.forming_altar;
 
+import com.destroystokyo.paper.MaterialTags;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.forming_altar.events.FormItemEvent;
 import net.kyori.adventure.audience.Audience;
@@ -26,28 +27,40 @@ public class AwakeAltar implements Listener {
     public static final NamespacedKey ALREADY_FORMING = new NamespacedKey(Paveral.getPlugin(), "already_forming");
 
     public AwakeAltar(){
-        itemlist = new HashSet<>(20);
+        itemlist = new HashSet<>(40);
         // Enhancing (2)
         itemlist.add(Material.ENCHANTED_BOOK);
         itemlist.add(Material.NETHERITE_SCRAP);
-        // Lightstaff (4)
+        // Lightstaff (4) - Total: 6
         itemlist.add(Material.IRON_INGOT);
         itemlist.add(Material.COPPER_INGOT);
         itemlist.add(Material.REDSTONE_LAMP);
         itemlist.add(Material.WITHER_ROSE);
-        // Bedrock Breaker (6)
+        // Bedrock Breaker (6) - Total: 12
         itemlist.add(Material.OBSIDIAN);
         itemlist.add(Material.PISTON);
         itemlist.add(Material.TNT);
         itemlist.add(Material.LEVER);
         itemlist.add(Material.OAK_TRAPDOOR);
         itemlist.add(Material.ANCIENT_DEBRIS);
-        // Disassemble Tutorial Book (1)
+        // Disassemble Tutorial Book (1) - Total: 13
         itemlist.add(Material.WRITTEN_BOOK);
-        // Chunkloader
+        // Chunkloader (3) - Total: 16
         itemlist.add(Material.ENCHANTING_TABLE);
         itemlist.add(Material.LODESTONE);
         itemlist.add(Material.NETHER_STAR);
+        // Piano Sword (4) - Total: 20
+        itemlist.add(Material.JIGSAW);
+        itemlist.add(Material.NETHERITE_SWORD);
+        itemlist.add(Material.QUARTZ);
+        itemlist.add(Material.BLACKSTONE);
+        // String Blade (16) - Total: 36
+        itemlist.addAll(MaterialTags.DYES.getValues());
+        // Music Tools (4) - Total: 40
+        itemlist.add(Material.NETHERITE_PICKAXE);
+        itemlist.add(Material.NETHERITE_AXE);
+        itemlist.add(Material.NETHERITE_SHOVEL);
+        itemlist.add(Material.NETHERITE_HOE);
     }
 
 

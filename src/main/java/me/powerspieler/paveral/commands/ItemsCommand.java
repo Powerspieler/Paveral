@@ -16,32 +16,26 @@ public class ItemsCommand implements CommandExecutor {
             if(player.isOp()){
                 if(args.length == 1){
                     if(args[0].equalsIgnoreCase("cl")){
-                        Items item = new Chunkloader();
-                        player.getInventory().addItem(item.build());
+                        player.getInventory().addItem(new Chunkloader().recipe().result());
                     }
                     if(args[0].equalsIgnoreCase("acg")){
-                        Items item = new AntiCreeperGrief();
-                        player.getInventory().addItem(item.build());
+                        player.getInventory().addItem(new AntiCreeperGrief().recipe().result());
                     }
                     if(args[0].equalsIgnoreCase("lr")){
-                        Items item = new LightningRod();
-                        player.getInventory().addItem(item.build());
+                        player.getInventory().addItem(new LightningRod().recipe().result());
                     }
                     if(args[0].equalsIgnoreCase("bb")){
-                        Items item = new BedrockBreaker();
-                        player.getInventory().addItem(item.build());
+                        player.getInventory().addItem(new BedrockBreaker().recipe().result());
                     }
                     if(args[0].equalsIgnoreCase("ls")){
-                        Items item = new LightStaff();
-                        player.getInventory().addItem(item.build());
+                        player.getInventory().addItem(new LightStaff().recipe().result());
                     }
                     if(args[0].equalsIgnoreCase("w")){
-                        Items item = new Wrench();
-                        player.getInventory().addItem(item.build());
+                        player.getInventory().addItem(new Wrench().recipe().result());
                     }
                     if(args[0].equalsIgnoreCase("wa")){
                         //Items item = new Worldalterer();
-                        player.getInventory().addItem(Worldalterer.build());
+                        player.getInventory().addItem(new Worldalterer().recipe().result());
                     }
                 }
             } else player.sendMessage(Component.text("ERROR: No Op", NamedTextColor.RED));

@@ -2,8 +2,14 @@ package me.powerspieler.paveral.forge;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
+import me.powerspieler.paveral.crafting.ItemHelper;
+import me.powerspieler.paveral.crafting.PaveralRecipe;
+import me.powerspieler.paveral.crafting.StandardIngredient;
 import me.powerspieler.paveral.forge.events.ForgeItemEvent;
-import me.powerspieler.paveral.items.*;
+import me.powerspieler.paveral.items.AntiCreeperGrief;
+import me.powerspieler.paveral.items.Chunkloader;
+import me.powerspieler.paveral.items.Worldalterer;
+import me.powerspieler.paveral.items.Wrench;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -23,78 +29,34 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import static me.powerspieler.paveral.crafting.ItemHelper.convertToIngredientSet;
 import static me.powerspieler.paveral.forge.AwakeForge.ALREADY_FORGING;
 import static me.powerspieler.paveral.forming_altar.AwakeAltar.ALREADY_FORMING;
 
 public class ForgeListener implements Listener {
 
+    private Set<PaveralRecipe> getAllAvailableRecipes(){
+        Set<PaveralRecipe> recipes = new HashSet<>();
+        recipes.add(new AntiCreeperGrief().recipe());
+        recipes.add(new Chunkloader().recipe());
+        recipes.add(new Wrench().recipe());
+        recipes.add(new Worldalterer().recipe());
+
+        return recipes;
+    }
+
     @EventHandler
     public void onIngredientDrop(ForgeItemEvent event){
-        List<Item> raw = new ArrayList<>(event.getForge().getNearbyEntitiesByType(Item.class, 1,1,1));
-        List<Item> items = raw.stream().filter(item -> item.getPersistentDataContainer().has(AwakeForge.FORGING_CANDIDATE)).toList();
-        //AntiCreeperGrief
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.CREEPER_HEAD) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.FIREWORK_STAR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.SCULK_SENSOR)){
-            List<Item> formingitems = items.stream()
-                    .filter(item -> {
-                        Material type = item.getItemStack().getType();
-                        return (type == Material.CREEPER_HEAD && item.getItemStack().getAmount() == 1) || (type == Material.FIREWORK_STAR && item.getItemStack().getAmount() == 1) || (type == Material.SCULK_SENSOR  && item.getItemStack().getAmount() == 1);
-                    }).toList();
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.CREEPER_HEAD) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.FIREWORK_STAR) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.SCULK_SENSOR)){
-                if(isFueled(event.getForge())){
-                    Items acg = new AntiCreeperGrief();
-                    forgeItem(event.getForge(), formingitems, acg.build());
-                }
-            }
-            return;
-        }
-        //Chunkloader
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHER_STAR) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.ENCHANTING_TABLE) && items.stream().anyMatch(item -> item.getItemStack().getType() == Material.LODESTONE)){
-            List<Item> formingitems = items.stream()
-                    .filter(item -> {
-                        Material type = item.getItemStack().getType();
-                        return (type == Material.NETHER_STAR && item.getItemStack().getAmount() == 3) || (type == Material.OBSIDIAN && item.getItemStack().getAmount() == 2) || (type == Material.ENCHANTING_TABLE  && item.getItemStack().getAmount() == 1) || (type == Material.LODESTONE  && item.getItemStack().getAmount() == 1);
-                    }).toList();
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.NETHER_STAR) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.OBSIDIAN) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.ENCHANTING_TABLE) && formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.LODESTONE)){
-                if(isFueled(event.getForge())){
-                    Items acg = new Chunkloader();
-                    forgeItem(event.getForge(), formingitems, acg.build());
-                }
-            }
-            return;
-        }
-        //Wrench
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT)){
-            List<Item> formingitems = items.stream()
-                    .filter(item -> {
-                        Material type = item.getItemStack().getType();
-                        return (type == Material.IRON_INGOT && item.getItemStack().getAmount() == 4);
-                    }).toList();
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getType() == Material.IRON_INGOT)){
-                if(isFueled(event.getForge())){
-                    Items acg = new Wrench();
-                    forgeItem(event.getForge(), formingitems, acg.build());
-                }
-            }
-            return;
-        }
-        //Handel JIGSAWs
-        if(items.stream().anyMatch(item -> item.getItemStack().getType() == Material.JIGSAW)){
-            List<Item> formingitems = items.stream()
-                    .filter(item -> item.getItemStack().getType() == Material.JIGSAW && item.getItemStack().getAmount() == 1 && item.getItemStack().getItemMeta().getPersistentDataContainer().has(Constant.ITEMTYPE)).toList();
-            // WORLDALTERER
-            if(formingitems.stream().anyMatch(item -> item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals("amethyst_laser")) &&
-                    formingitems.stream().anyMatch(item -> item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals("alteration_core")) &&
-                    formingitems.stream().anyMatch(item -> item.getItemStack().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals("echo_container"))){
-                if(isFueled(event.getForge())){
-                    forgeItem(event.getForge(), formingitems, Worldalterer.build());
-                }
-            }
-            // INSERT RETURN HERE!
-        }
+        Set<Item> ingredients = event.getForge().getNearbyEntitiesByType(Item.class, 1,1,1).stream().filter(item -> item.getPersistentDataContainer().has(AwakeForge.FORGING_CANDIDATE)).collect(Collectors.toSet());
+        Set<StandardIngredient> forgeCandidate = convertToIngredientSet(ingredients);
+
+        Set<PaveralRecipe> availableRecipes = getAllAvailableRecipes();
+        Optional<PaveralRecipe> optionalRecipeMatch = availableRecipes.stream().filter(r -> r.ingredients().equals(forgeCandidate)).findFirst();
+
+        optionalRecipeMatch.ifPresent(paveralRecipe -> forgeItem(event.getForge(), ingredients, paveralRecipe.result()));
     }
 
     private static boolean isFueled(Location location){
@@ -127,7 +89,8 @@ public class ForgeListener implements Listener {
         return true;
     }
 
-    private void forgeItem(Location location, List<Item> forgeitems, ItemStack result){
+    private void forgeItem(Location location, Set<Item> forgeitems, ItemStack result){
+        if(!isFueled(location)) return;
         final Audience targets = location.getWorld().filterAudience(member -> member instanceof Player player && player.getLocation().distanceSquared(location) < 625);
         for(Item item : forgeitems){
             item.setVelocity(new Vector(0,0,0));
@@ -332,12 +295,15 @@ public class ForgeListener implements Listener {
                     targets.playSound(Sound.sound(Key.key("entity.wither.death"), Sound.Source.AMBIENT, 1f, 1.25f), Sound.Emitter.self());
 
                     // Advancement
-                    if(result.getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING).equals("worldalterer")){
-                        UUID uuid = forgeitems.get(0).getThrower();
-                        if(uuid != null){
-                            Player player = (Player) Bukkit.getOfflinePlayer(uuid);
-                            if(AwardAdvancements.isAdvancementUndone(player, "worldalterer")){
-                                AwardAdvancements.grantAdvancement(player, "worldalterer");
+                    if(ItemHelper.paveralNamespacedKeyEquals(result, Constant.ITEMTYPE, "worldalterer")){
+                        Optional<Item> optionalItem = forgeitems.stream().findFirst();
+                        if(optionalItem.isPresent()){
+                            UUID uuid = optionalItem.get().getThrower();
+                            if(uuid != null){
+                                Player player = (Player) Bukkit.getOfflinePlayer(uuid);
+                                if(AwardAdvancements.isAdvancementUndone(player, "worldalterer")){
+                                    AwardAdvancements.grantAdvancement(player, "worldalterer");
+                                }
                             }
                         }
                     }
