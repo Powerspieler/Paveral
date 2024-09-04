@@ -3,6 +3,7 @@ package me.powerspieler.paveral.items.musicpack;
 import me.powerspieler.paveral.crafting.PaveralIngredient;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.helper.TotemDisabler;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -32,6 +33,7 @@ public class ResonatingPickaxe extends AdvancedMiningTool implements Listener {
                         .decoration(TextDecoration.ITALIC, false)
                         .append(Component.text("Unbreaking", NamedTextColor.GRAY)
                                 .decoration(TextDecoration.ITALIC, false)));
+        lore.addAll(TotemDisabler.loreAddition());
         return lore;
     }
 

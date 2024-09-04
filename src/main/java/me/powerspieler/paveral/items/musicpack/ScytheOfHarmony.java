@@ -8,6 +8,7 @@ import me.powerspieler.paveral.crafting.StandardIngredient;
 import me.powerspieler.paveral.items.PaveralItem;
 import me.powerspieler.paveral.items.helper.Enchantable;
 import me.powerspieler.paveral.items.helper.ItemHoldingController;
+import me.powerspieler.paveral.items.helper.TotemDisabler;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.MarkerDataStorage;
 import net.kyori.adventure.text.Component;
@@ -60,6 +61,7 @@ public class ScytheOfHarmony extends PaveralItem implements Listener, Enchantabl
                         .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text("Fortune", NamedTextColor.GRAY)
                         .decoration(TextDecoration.ITALIC, false)));
+        lore.addAll(TotemDisabler.loreAddition());
         return lore;
     }
 

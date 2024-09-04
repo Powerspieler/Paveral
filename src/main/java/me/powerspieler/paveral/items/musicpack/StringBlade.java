@@ -7,6 +7,7 @@ import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
 import me.powerspieler.paveral.items.CooldownItem;
 import me.powerspieler.paveral.items.helper.ItemHoldingController;
+import me.powerspieler.paveral.items.helper.TotemDisabler;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -76,6 +77,7 @@ public class StringBlade extends CooldownItem implements Listener {
                         .decoration(TextDecoration.ITALIC, false))
                 .append(Component.text(" to shot a single to note", NamedTextColor.DARK_AQUA)
                         .decoration(TextDecoration.ITALIC, false)));
+        lore.addAll(TotemDisabler.loreAddition());
         return lore;
     }
 

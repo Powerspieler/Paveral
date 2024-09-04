@@ -16,6 +16,7 @@ import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enhanced.Channeling;
 import me.powerspieler.paveral.items.enhanced.Knockback;
 import me.powerspieler.paveral.items.helper.ItemHoldingController;
+import me.powerspieler.paveral.items.helper.TotemDisabler;
 import me.powerspieler.paveral.items.musicpack.*;
 import me.powerspieler.paveral.items.parts.worldalterer.SonicEssence;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;
@@ -34,7 +35,6 @@ public final class Paveral extends JavaPlugin {
     private static Paveral plugin;
 
     // TODO Advancement ohne zip; nicht immer kopieren nur bei Changes
-    // TODO Disable Totem in Offhand while using music weapon (all future weapons)
     // TODO items command in paveral umbennenen und alle items in einem Chest inventar anbieten
 
     // TODO Wrench: Bring back behavior
@@ -101,6 +101,7 @@ public final class Paveral extends JavaPlugin {
         // Misc
         pm.registerEvents(new HandlePlayerJoin(), this);
         pm.registerEvents(new MarkerDataStorage(), this);
+        pm.registerEvents(new TotemDisabler(), this);
     }
     public static Paveral getPlugin(){
         return plugin;
