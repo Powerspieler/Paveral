@@ -3,8 +3,10 @@ package me.powerspieler.paveral.items;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.items.helper.ActionbarStatus;
 import me.powerspieler.paveral.items.helper.Dismantable;
 import me.powerspieler.paveral.items.helper.ItemHoldingController;
+import me.powerspieler.paveral.items.helper.ItemHoldingControllerEvent;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.ItemsUtil;
 import me.powerspieler.paveral.util.MarkerDataStorage;
@@ -24,7 +26,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -95,6 +96,20 @@ public class LightStaff extends PaveralItem implements Listener, Dismantable {
         return new PaveralRecipe(ingredients, this.build());
     }
 
+    @EventHandler
+    protected void actionbarDisplay(ItemHoldingControllerEvent event) {
+        if(event.getItemType().equals(keyString)){
+            Player player = event.getPlayer();
+            new ActionbarStatus(player, keyString, 3L) {
+                @Override
+                public void message() {
+                    displayParticleAndMessage(player);
+                }
+            }.displayMessage();
+        }
+    }
+
+
     @Override
     public List<ItemStack> parts() {
         List<ItemStack> parts = new ArrayList<>();
@@ -134,39 +149,35 @@ public class LightStaff extends PaveralItem implements Listener, Dismantable {
     }
 
     // Display Particle and Message
-    @EventHandler
-    private void onPlayerMove(PlayerMoveEvent event){
-        Player player = event.getPlayer();
-        if(ItemHoldingController.checkIsHoldingPaveralItem(player, keyString)){
-            if(!particlecooldown) {
-                particlecooldown = true;
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), () -> particlecooldown = false, 80);
-                List<Entity> entityList = player.getNearbyEntities(16D,16D,16D);
-                for(Entity entity : entityList){
-                    if(entity instanceof Marker marker){
-                        if(marker.getPersistentDataContainer().has(LIGHTBLOCKMARKER, PersistentDataType.INTEGER)){
-                            if(marker.getLocation().getBlock().getType() == Material.LIGHT) {
-                                Location particlelocation = marker.getLocation();
-                                marker.getWorld().spawnParticle(Particle.BLOCK_MARKER, particlelocation, 1, marker.getLocation().getBlock().getBlockData());
+    private void displayParticleAndMessage(Player player){
+        if (!particlecooldown) {
+            particlecooldown = true;
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Paveral.getPlugin(), () -> particlecooldown = false, 80);
+            List<Entity> entityList = player.getNearbyEntities(16D, 16D, 16D);
+            for (Entity entity : entityList) {
+                if (entity instanceof Marker marker) {
+                    if (marker.getPersistentDataContainer().has(LIGHTBLOCKMARKER, PersistentDataType.INTEGER)) {
+                        if (marker.getLocation().getBlock().getType() == Material.LIGHT) {
+                            Location particlelocation = marker.getLocation();
+                            marker.getWorld().spawnParticle(Particle.BLOCK_MARKER, particlelocation, 1, marker.getLocation().getBlock().getBlockData());
 
-                            } else
-                                marker.remove();
-                        }
+                        } else
+                            marker.remove();
                     }
                 }
             }
+        }
 
-            int lightlevel = -1;
-            ItemStack mainHand = player.getInventory().getItemInMainHand();
-            ItemStack offHand = player.getInventory().getItemInOffHand();
-            if (mainHand.hasItemMeta() && mainHand.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)){
-                lightlevel = mainHand.getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
-            } else if(offHand.hasItemMeta() && offHand.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)) {
-                lightlevel = player.getInventory().getItemInOffHand().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
-            }
-            if(lightlevel != -1){
-                showActionbar(player, lightlevel);
-            }
+        int lightlevel = -1;
+        ItemStack mainHand = player.getInventory().getItemInMainHand();
+        ItemStack offHand = player.getInventory().getItemInOffHand();
+        if (mainHand.hasItemMeta() && mainHand.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)) {
+            lightlevel = mainHand.getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
+        } else if (offHand.hasItemMeta() && offHand.getItemMeta().getPersistentDataContainer().has(LIGHTBLOCKLEVEL)) {
+            lightlevel = player.getInventory().getItemInOffHand().getItemMeta().getPersistentDataContainer().get(LIGHTBLOCKLEVEL, PersistentDataType.INTEGER);
+        }
+        if (lightlevel != -1) {
+            showActionbar(player, lightlevel);
         }
     }
 
