@@ -46,7 +46,7 @@ public class Chunkloader extends PaveralItem implements Listener, Dismantable {
 
 
     public Chunkloader() {
-        super(Material.PETRIFIED_OAK_SLAB, 0, Constant.ITEMTYPE, "chunkloader", itemName(), lore());
+        super(Material.PETRIFIED_OAK_SLAB, "", Constant.ITEMTYPE, "chunkloader", itemName(), lore());
     }
 
     @EventHandler

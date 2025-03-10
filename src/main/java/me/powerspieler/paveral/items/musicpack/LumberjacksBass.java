@@ -69,7 +69,7 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
 
 
     public LumberjacksBass() {
-        super(Material.NETHERITE_AXE, 1, Constant.ITEMTYPE, "lumberjacks_bass", itemName(), lore());
+        super(Material.NETHERITE_AXE, "vampires_bass", Constant.ITEMTYPE, "lumberjacks_bass", itemName(), lore());
     }
 
     private final AttributeModifier largeTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "largeTreeModifier"), -0.985, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
@@ -80,7 +80,7 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
     protected ItemStack build() {
         ItemStack item = super.build();
         ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.addAttributeModifier(Attribute.PLAYER_BLOCK_BREAK_SPEED, smallTreeModifier);
+        itemMeta.addAttributeModifier(Attribute.BLOCK_BREAK_SPEED, smallTreeModifier);
         item.setItemMeta(itemMeta);
         return item;
     }
@@ -359,18 +359,18 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
             if(event.getBlock().getRelative(BlockFace.NORTH).getType() == logType || event.getBlock().getRelative(BlockFace.EAST).getType() == logType
                     || event.getBlock().getRelative(BlockFace.SOUTH).getType() == logType || event.getBlock().getRelative(BlockFace.WEST).getType() == logType){
                 ItemMeta toolMeta = player.getInventory().getItemInMainHand().getItemMeta();
-                toolMeta.removeAttributeModifier(Attribute.PLAYER_BLOCK_BREAK_SPEED);
+                toolMeta.removeAttributeModifier(Attribute.BLOCK_BREAK_SPEED);
 
                 if(MaterialSetTag.CRIMSON_STEMS.isTagged(logType) || MaterialSetTag.WARPED_STEMS.isTagged(logType)){
-                    toolMeta.addAttributeModifier(Attribute.PLAYER_BLOCK_BREAK_SPEED, mediumTreeModifier);
+                    toolMeta.addAttributeModifier(Attribute.BLOCK_BREAK_SPEED, mediumTreeModifier);
                 } else {
-                    toolMeta.addAttributeModifier(Attribute.PLAYER_BLOCK_BREAK_SPEED, largeTreeModifier);
+                    toolMeta.addAttributeModifier(Attribute.BLOCK_BREAK_SPEED, largeTreeModifier);
                 }
                 player.getInventory().getItemInMainHand().setItemMeta(toolMeta);
             } else {
                 ItemMeta toolMeta = player.getInventory().getItemInMainHand().getItemMeta();
-                toolMeta.removeAttributeModifier(Attribute.PLAYER_BLOCK_BREAK_SPEED);
-                toolMeta.addAttributeModifier(Attribute.PLAYER_BLOCK_BREAK_SPEED, smallTreeModifier);
+                toolMeta.removeAttributeModifier(Attribute.BLOCK_BREAK_SPEED);
+                toolMeta.addAttributeModifier(Attribute.BLOCK_BREAK_SPEED, smallTreeModifier);
                 player.getInventory().getItemInMainHand().setItemMeta(toolMeta);
             }
         }

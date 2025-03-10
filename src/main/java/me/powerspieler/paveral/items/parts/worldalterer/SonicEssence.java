@@ -24,7 +24,7 @@ public class SonicEssence extends PaveralItem implements Listener {
     }
 
     public SonicEssence() {
-        super(Material.JIGSAW, 2, Constant.ITEMTYPE, "sonic_essence", itemName(), null);
+        super(Material.JIGSAW, "sonic_essence", Constant.ITEMTYPE, "sonic_essence", itemName(), null);
     }
 
     @Override

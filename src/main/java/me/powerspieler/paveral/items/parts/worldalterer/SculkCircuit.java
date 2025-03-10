@@ -19,7 +19,7 @@ public class SculkCircuit extends PaveralItem {
     }
 
     public SculkCircuit() {
-        super(Material.JIGSAW, 4, Constant.ITEMTYPE, "sculk_circuit", itemName(), null);
+        super(Material.JIGSAW, "sculk_circuit", Constant.ITEMTYPE, "sculk_circuit", itemName(), null);
     }
 
     @Override

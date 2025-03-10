@@ -38,25 +38,25 @@ public class StringBlade extends CooldownItem implements Listener {
         return recipes;
     }
 
-    private static int getCustomModelData(Material material){
-        int out = 0;
+    private static String getCustomModelData(Material material){
+        String out = "stringblade/";
         switch (material){
-            case BLACK_DYE -> out = 2;
-            case BLUE_DYE -> out = 3;
-            case BROWN_DYE -> out = 4;
-            case CYAN_DYE -> out = 5;
-            case GRAY_DYE -> out = 6;
-            case GREEN_DYE -> out = 7;
-            case LIGHT_BLUE_DYE -> out = 8;
-            case LIGHT_GRAY_DYE -> out = 9;
-            case LIME_DYE -> out = 10;
-            case MAGENTA_DYE -> out = 11;
-            case ORANGE_DYE -> out = 12;
-            case PINK_DYE -> out = 13;
-            case PURPLE_DYE -> out = 14;
-            case RED_DYE -> out = 15;
-            case WHITE_DYE -> out = 16;
-            case YELLOW_DYE -> out = 17;
+            case BLACK_DYE -> out = out + "black";
+            case BLUE_DYE -> out = out + "blue";
+            case BROWN_DYE -> out = out + "brown";
+            case CYAN_DYE -> out = out + "cyan";
+            case GRAY_DYE -> out = out + "gray";
+            case GREEN_DYE -> out = out + "green";
+            case LIGHT_BLUE_DYE -> out = out + "light_blue";
+            case LIGHT_GRAY_DYE -> out = out + "light_gray";
+            case LIME_DYE ->out = out + "lime";
+            case MAGENTA_DYE -> out = out + "magenta";
+            case ORANGE_DYE ->out = out + "orange";
+            case PINK_DYE -> out = out + "pink";
+            case PURPLE_DYE -> out = out + "purple";
+            case RED_DYE -> out = out + "red";
+            case WHITE_DYE -> out = out + "white";
+            case YELLOW_DYE -> out = out + "yellow";
         }
         return out;
     }
@@ -83,8 +83,8 @@ public class StringBlade extends CooldownItem implements Listener {
 
     private final Material color;
 
-    public StringBlade(Material color, int customModelData) {
-        super(Material.NETHERITE_SWORD, customModelData, Constant.ITEMTYPE, "string_blade", itemName(color), lore(), 1000);
+    public StringBlade(Material color, String customModelDataString) {
+        super(Material.NETHERITE_SWORD, customModelDataString, Constant.ITEMTYPE, "string_blade", itemName(color), lore(), 1000);
         this.color = color;
     }
 

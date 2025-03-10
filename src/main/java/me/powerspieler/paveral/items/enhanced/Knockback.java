@@ -37,7 +37,7 @@ public class Knockback extends PaveralItem implements Listener, Dismantable {
     }
 
     public Knockback() {
-        super(Material.ENCHANTED_BOOK, 0, Constant.ITEMTYPE, "enhanced_knockback", itemName(), lore());
+        super(Material.ENCHANTED_BOOK, "", Constant.ITEMTYPE, "enhanced_knockback", itemName(), lore());
     }
 
     @Override

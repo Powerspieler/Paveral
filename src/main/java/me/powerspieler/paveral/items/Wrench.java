@@ -38,7 +38,7 @@ public class Wrench extends PaveralItem implements Listener, Dismantable {
     }
 
     public Wrench() {
-        super(Material.WARPED_FUNGUS_ON_A_STICK, 3, Constant.ITEMTYPE, "wrench", itemName(), lore());
+        super(Material.WARPED_FUNGUS_ON_A_STICK, "wrench", Constant.ITEMTYPE, "wrench", itemName(), lore());
     }
 
     @Override

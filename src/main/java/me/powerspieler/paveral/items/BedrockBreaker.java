@@ -59,7 +59,7 @@ public class BedrockBreaker extends PaveralItem implements Listener, Dismantable
     }
 
     public BedrockBreaker() {
-        super(Material.WARPED_FUNGUS_ON_A_STICK, 5, Constant.ITEMTYPE, "bedrock_breaker", itemName(), lore());
+        super(Material.WARPED_FUNGUS_ON_A_STICK, "bedrock_breaker", Constant.ITEMTYPE, "bedrock_breaker", itemName(), lore());
     }
 
     @Override

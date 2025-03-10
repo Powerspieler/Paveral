@@ -58,7 +58,7 @@ public class LightningRod extends CooldownItem implements Listener, Dismantable 
     }
 
     public LightningRod() {
-        super(Material.WARPED_FUNGUS_ON_A_STICK, 1, Constant.ITEMTYPE, "lightning_rod", itemName(), lore(), 1500);
+        super(Material.WARPED_FUNGUS_ON_A_STICK, "lightning_rod", Constant.ITEMTYPE, "lightning_rod", itemName(), lore(), 1500);
     }
 
     @Override

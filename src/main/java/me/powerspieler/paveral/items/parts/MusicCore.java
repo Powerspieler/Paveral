@@ -41,7 +41,7 @@ public class MusicCore extends PaveralItem {
     }
 
     public MusicCore() {
-        super(Material.JIGSAW, 7, Constant.ITEMTYPE, "music_core", itemName(), lore());
+        super(Material.JIGSAW, "music_core", Constant.ITEMTYPE, "music_core", itemName(), lore());
     }
 
     @Override

@@ -52,7 +52,7 @@ public class PianoSword extends CooldownItem implements Listener {
     }
 
     public PianoSword(){
-        super(Material.NETHERITE_SWORD, 1, Constant.ITEMTYPE, "piano_sword", itemName(), lore(), 2000);
+        super(Material.NETHERITE_SWORD, "rhythms_awakening", Constant.ITEMTYPE, "piano_sword", itemName(), lore(), 2000);
     }
 
     @Override
@@ -60,9 +60,9 @@ public class PianoSword extends CooldownItem implements Listener {
         ItemStack item = super.build();
         ItemMeta itemMeta = item.getItemMeta();
         AttributeModifier attackSpeedModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "rhythms_awakening_attack_speed"), -3.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND);
-        itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, attackSpeedModifier);
+        itemMeta.addAttributeModifier(Attribute.ATTACK_SPEED, attackSpeedModifier);
         AttributeModifier attackDamageModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "rhythms_awakening_attack_damage"), 10.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND);
-        itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, attackDamageModifier);
+        itemMeta.addAttributeModifier(Attribute.ATTACK_DAMAGE, attackDamageModifier);
         item.setItemMeta(itemMeta);
         return item;
     }

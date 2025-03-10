@@ -74,7 +74,7 @@ public class LightStaff extends PaveralItem implements Listener, Dismantable {
     }
 
     public LightStaff() {
-        super(Material.WARPED_FUNGUS_ON_A_STICK, 4, Constant.ITEMTYPE, "lightstaff", itemName(), lore());
+        super(Material.WARPED_FUNGUS_ON_A_STICK, "lightstaff", Constant.ITEMTYPE, "lightstaff", itemName(), lore());
     }
 
     @Override

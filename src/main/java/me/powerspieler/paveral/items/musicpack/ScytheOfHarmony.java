@@ -66,7 +66,7 @@ public class ScytheOfHarmony extends PaveralItem implements Listener, Enchantabl
     }
 
     public ScytheOfHarmony() {
-        super(Material.NETHERITE_HOE, 1, Constant.ITEMTYPE, "scythe_of_harmony", itemName(), lore());
+        super(Material.NETHERITE_HOE, "scythe_of_harmony", Constant.ITEMTYPE, "scythe_of_harmony", itemName(), lore());
     }
 
     @Override

@@ -37,7 +37,7 @@ public class Channeling extends PaveralItem implements Listener, Dismantable {
     }
 
     public Channeling() {
-        super(Material.ENCHANTED_BOOK, 0, Constant.ITEMTYPE, "enhanced_channeling", itemName(), lore());
+        super(Material.ENCHANTED_BOOK, "", Constant.ITEMTYPE, "enhanced_channeling", itemName(), lore());
     }
 
     @Override

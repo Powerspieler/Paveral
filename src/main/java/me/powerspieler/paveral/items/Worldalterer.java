@@ -70,7 +70,7 @@ public class Worldalterer extends CooldownItem implements Listener, Enchantable 
     }
 
     public Worldalterer() {
-        super(Material.WARPED_FUNGUS_ON_A_STICK, 6, Constant.ITEMTYPE, "worldalterer", itemName(), lore(), 100L);
+        super(Material.WARPED_FUNGUS_ON_A_STICK, "worldalterer", Constant.ITEMTYPE, "worldalterer", itemName(), lore(), 100L);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class AntiCreeperGrief extends PaveralItem implements Listener, Dismantab
     }
 
     public AntiCreeperGrief() {
-        super(Material.JIGSAW, 1, Constant.ITEMTYPE, "anti_creeper_grief", itemName(), lore());
+        super(Material.JIGSAW, "anti_creeper_grief", Constant.ITEMTYPE, "anti_creeper_grief", itemName(), lore());
     }
 
     @Override

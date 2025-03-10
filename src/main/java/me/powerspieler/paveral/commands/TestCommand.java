@@ -1,12 +1,16 @@
 package me.powerspieler.paveral.commands;
 
 
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.CustomModelData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -15,6 +19,10 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
             if(player.isOp()){
+
+//                ItemStack itemStack = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
+//                itemStack.setData(DataComponentTypes.CUSTOM_MODEL_DATA, CustomModelData.customModelDataString().addString("lightstaff").build());
+//                player.getInventory().addItem(itemStack);
 
 
 //                ItemStack item = new ItemStack(Material.NETHERITE_AXE);

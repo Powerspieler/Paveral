@@ -18,7 +18,7 @@ public class AmethystLaser extends PaveralItem {
     }
 
     public AmethystLaser() {
-        super(Material.JIGSAW, 3, Constant.ITEMTYPE, "amethyst_laser", itemName(), null);
+        super(Material.JIGSAW, "amethyst_laser", Constant.ITEMTYPE, "amethyst_laser", itemName(), null);
     }
 
     @Override

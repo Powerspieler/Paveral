@@ -18,7 +18,7 @@ public class AlterationCore extends PaveralItem {
     }
 
     public AlterationCore() {
-        super(Material.JIGSAW, 5, Constant.ITEMTYPE, "alteration_core", itemName(), null);
+        super(Material.JIGSAW, "alteration_core", Constant.ITEMTYPE, "alteration_core", itemName(), null);
     }
 
     @Override

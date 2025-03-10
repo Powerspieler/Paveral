@@ -18,7 +18,7 @@ public class EchoContainer extends PaveralItem {
     }
 
     public EchoContainer() {
-        super(Material.JIGSAW, 6, Constant.ITEMTYPE, "echo_container", itemName(), null);
+        super(Material.JIGSAW, "echo_container", Constant.ITEMTYPE, "echo_container", itemName(), null);
     }
 
     @Override

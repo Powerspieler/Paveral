@@ -23,7 +23,7 @@ import java.util.Set;
 
 public abstract class AdvancedMiningTool extends PaveralItem implements Listener, Enchantable {
     public AdvancedMiningTool(Material baseMaterial, String keyString, Component itemName, List<Component> lore) {
-        super(baseMaterial, 1, Constant.ITEMTYPE, keyString, itemName, lore);
+        super(baseMaterial, keyString, Constant.ITEMTYPE, keyString, itemName, lore);
     }
 
     @EventHandler

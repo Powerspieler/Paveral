@@ -68,7 +68,7 @@ public final class Paveral extends JavaPlugin {
         pm.registerEvents(new Wrench(), this);
 
         pm.registerEvents(new PianoSword(), this);
-        pm.registerEvents(new StringBlade(Material.BLACK_DYE, 2), this);
+        pm.registerEvents(new StringBlade(Material.BLACK_DYE, "stringblade/black"), this);
         pm.registerEvents(new ResonatingPickaxe(), this);
         pm.registerEvents(new LumberjacksBass(), this);
         pm.registerEvents(new BardicInspiration(), this);

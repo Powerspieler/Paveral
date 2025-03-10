@@ -17,8 +17,8 @@ public abstract class CooldownItem extends PaveralItem {
     private long cooldownMillis;
     private static final DecimalFormat decimalFormat = new DecimalFormat("0.000");
 
-    public CooldownItem(Material baseMaterial, int customModelData, NamespacedKey key, String keyString, Component itemName, List<Component> lore, long cooldownMillis) {
-        super(baseMaterial, customModelData, key, keyString, itemName, lore);
+    public CooldownItem(Material baseMaterial, String customModelDataString, NamespacedKey key, String keyString, Component itemName, List<Component> lore, long cooldownMillis) {
+        super(baseMaterial, customModelDataString, key, keyString, itemName, lore);
         this.cooldownMap = new HashMap<>();
         this.cooldownMillis = cooldownMillis;
     }
