@@ -51,7 +51,7 @@ public class MusicCore extends PaveralItem {
 
     // --- Item Logic ---
 
-    private static final NamespacedKey recipeKey = new NamespacedKey(Paveral.getPlugin(), "music_core");
+    public static final NamespacedKey recipeKey = new NamespacedKey(Paveral.getPlugin(), "music_core");
     public static ShapedRecipe registerRecipe(){
         ShapedRecipe recipe = new ShapedRecipe(recipeKey, new MusicCore().build());
         recipe.shape(" * ","#B#","JIJ");
