@@ -12,6 +12,7 @@ import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.items.enhanced.Channeling;
 import me.powerspieler.paveral.items.enhanced.Knockback;
 import me.powerspieler.paveral.items.musicpack.*;
+import me.powerspieler.paveral.items.parts.MusicCore;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -129,6 +130,7 @@ public class FormingListeners implements Listener {
                 progress.addPlayer(player);
                 progress.setVisible(true);
                 if(AwardAdvancements.isAdvancementUndone(player, "first_forming")){
+                    player.discoverRecipe(MusicCore.recipeKey);
                     AwardAdvancements.grantAdvancement(player, "first_forming");
                 }
             }

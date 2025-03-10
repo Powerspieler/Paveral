@@ -5,7 +5,6 @@ import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.crafting.ItemHelper;
 import me.powerspieler.paveral.disassemble.events.DisassembleItemEvent;
 import me.powerspieler.paveral.items.helper.Dismantable;
-import me.powerspieler.paveral.items.parts.MusicCore;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -121,7 +120,6 @@ public class DisassembleListeners implements Listener {
                 progress.addPlayer(player);
                 progress.setVisible(true);
                 if(AwardAdvancements.isAdvancementUndone(player, "first_dis")){
-                    player.discoverRecipe(MusicCore.recipeKey);
                     AwardAdvancements.grantAdvancement(player, "first_dis");
                 }
             }
