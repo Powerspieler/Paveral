@@ -16,7 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
@@ -29,6 +28,8 @@ public class Channeling extends PaveralItem implements Listener, Dismantable {
 
     private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Enhanced Channeling", NamedTextColor.DARK_RED)
+                .decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text("Compatible with: ")
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.text("Trident", NamedTextColor.YELLOW)
@@ -38,15 +39,6 @@ public class Channeling extends PaveralItem implements Listener, Dismantable {
 
     public Channeling() {
         super(Material.ENCHANTED_BOOK, "", Constant.ITEMTYPE, "enhanced_channeling", itemName(), lore());
-    }
-
-    @Override
-    protected ItemStack build() {
-        ItemStack item = super.build();
-        EnchantmentStorageMeta itemMeta = (EnchantmentStorageMeta) item.getItemMeta();
-        itemMeta.addStoredEnchant(Enchantment.CHANNELING, 10, true);
-        item.setItemMeta(itemMeta);
-        return item;
     }
 
     @Override
