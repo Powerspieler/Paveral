@@ -14,6 +14,7 @@ import me.powerspieler.paveral.forming_altar.AwakeAltar;
 import me.powerspieler.paveral.forming_altar.FormingListeners;
 import me.powerspieler.paveral.items.*;
 import me.powerspieler.paveral.items.enhanced.Channeling;
+import me.powerspieler.paveral.items.enhanced.Efficiency;
 import me.powerspieler.paveral.items.enhanced.Knockback;
 import me.powerspieler.paveral.items.helper.ItemHoldingController;
 import me.powerspieler.paveral.items.helper.TotemDisabler;
@@ -77,6 +78,7 @@ public final class Paveral extends JavaPlugin {
         // Enhanced Enchantments
         pm.registerEvents(new Knockback(), this);
         pm.registerEvents(new Channeling(), this);
+        pm.registerEvents(new Efficiency(), this);
 
         // Forming Altar
         pm.registerEvents(new AwakeAltar(), this);

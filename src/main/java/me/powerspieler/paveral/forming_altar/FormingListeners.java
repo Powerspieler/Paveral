@@ -10,6 +10,7 @@ import me.powerspieler.paveral.forming_altar.events.FormItemEvent;
 import me.powerspieler.paveral.items.BedrockBreaker;
 import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.items.enhanced.Channeling;
+import me.powerspieler.paveral.items.enhanced.Efficiency;
 import me.powerspieler.paveral.items.enhanced.Knockback;
 import me.powerspieler.paveral.items.musicpack.*;
 import me.powerspieler.paveral.items.parts.MusicCore;
@@ -50,6 +51,7 @@ public class FormingListeners implements Listener {
 
         recipes.add(new Knockback().recipe());
         recipes.add(new Channeling().recipe());
+        recipes.add(new Efficiency().recipe());
 
         recipes.add(new PianoSword().recipe());
         recipes.addAll(StringBlade.getAllStringBladeRecipes());
