@@ -26,7 +26,7 @@ public abstract class DiscoveryBook {
         this.isDiary = isDiary;
     }
 
-    protected ItemStack build(){
+    public ItemStack build(){
         ItemStack itemStack = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
         bookMeta.getPersistentDataContainer().set(Constant.DISCOVERY, PersistentDataType.STRING, keyString);

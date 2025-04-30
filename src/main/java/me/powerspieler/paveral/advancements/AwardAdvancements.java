@@ -2,6 +2,7 @@ package me.powerspieler.paveral.advancements;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.ItemHelper;
+import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import me.powerspieler.paveral.util.Constant;
 import me.powerspieler.paveral.util.RecipeLoader;
 import net.kyori.adventure.text.Component;
@@ -28,14 +29,14 @@ import java.util.Objects;
 import java.util.logging.Level;
 
 public class AwardAdvancements implements Listener {
-    // Award Recipe for Altar Book
+    // Award Recipe for Guide Book
     @EventHandler
     public void onRootAdvGrant(PlayerAdvancementDoneEvent event){
         NamespacedKey root = new NamespacedKey("paveral", "root");
         if(event.getAdvancement().getKey().equals(root)){
             Player player = event.getPlayer();
-            player.discoverRecipe(RecipeLoader.altarbookrecipekey);
-            player.sendMessage(Component.text("You have unlocked a valuable recipe! Check your recipe book!" , NamedTextColor.DARK_PURPLE));
+            player.discoverRecipe(BaseGuide.recipeKey);
+            player.sendMessage(Component.text("You have unlocked the Paveral Guide! Check your recipe book inside a crafting table!" , NamedTextColor.DARK_PURPLE));
         }
     }
     // Flying Pig
@@ -79,7 +80,7 @@ public class AwardAdvancements implements Listener {
             String discoveryType = item.getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING);
             switch (Objects.requireNonNull(discoveryType)){
                 case "bedrock_breaker" -> checkAndGrandAdvancement(player, "sleep_with_cat");
-                case "altar_book" -> checkAndGrandAdvancement(player, "craft_tutorial_book");
+                case "guide_book" -> checkAndGrandAdvancement(player, "craft_guide_book");
                 case "tech_book" -> checkAndGrandAdvancement(player, "craft_tutorial_book_forge");
                 default -> checkAndGrandAdvancement(player, discoveryType);
             }

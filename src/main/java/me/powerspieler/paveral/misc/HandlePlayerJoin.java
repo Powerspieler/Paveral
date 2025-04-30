@@ -2,6 +2,7 @@ package me.powerspieler.paveral.misc;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
+import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import me.powerspieler.paveral.util.RecipeLoader;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -22,9 +23,9 @@ public class HandlePlayerJoin implements Listener {
         if(!player.hasResourcePack()){
             player.setResourcePack("https://github.com/Powerspieler/Paveral-Resourcepack/releases/download/v1.6-1.21.4/Paveral-Resourcepack_v1.6-1.21.4.zip", "ca127a0238b73ab81d9640bd71e1e66a36ecf7fd", false, Component.text("Custom items have been added to this server and therefore require custom textures!", NamedTextColor.GOLD));
         }
-        // Altarbook Reminder Message
-        if(player.hasDiscoveredRecipe(RecipeLoader.altarbookrecipekey) && AwardAdvancements.isAdvancementUndone(player, "craft_tutorial_book")){
-            player.sendMessage(Component.text("You still haven't crafted the tutorial book! Check your recipe book!" , NamedTextColor.DARK_PURPLE));
+        // Guide Book Reminder Message
+        if(player.hasDiscoveredRecipe(BaseGuide.recipeKey) && AwardAdvancements.isAdvancementUndone(player, "craft_guide_book")){
+            player.sendMessage(Component.text("You still haven't crafted the Paveral Guide! Check your recipe book inside a crafting table!" , NamedTextColor.DARK_PURPLE));
         }
     }
 

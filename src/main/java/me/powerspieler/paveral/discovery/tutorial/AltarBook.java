@@ -1,9 +1,12 @@
 package me.powerspieler.paveral.discovery.tutorial;
 
+import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.discovery.DiscoveryBook;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +30,15 @@ public class AltarBook extends DiscoveryBook{
         super("altar_book", "Powerspieler", "Paveralicious Additions", null, pages(), false);
     }
 
-    @Override
-    public ItemStack build() {
-        return super.build();
+    private static final NamespacedKey recipeKey = new NamespacedKey(Paveral.getPlugin(), "altar_book");
+    public static ShapedRecipe registerRecipe(){
+        ShapedRecipe recipe = new ShapedRecipe(recipeKey, new AltarBook().build());
+        recipe.shape(" C ","S+S","#S#");
+        recipe.setIngredient('C', Material.AMETHYST_CLUSTER);
+        recipe.setIngredient('S', Material.AMETHYST_SHARD);
+        recipe.setIngredient('+', Material.BOOK);
+        recipe.setIngredient('#', Material.AMETHYST_BLOCK);
+        return recipe;
     }
+
 }

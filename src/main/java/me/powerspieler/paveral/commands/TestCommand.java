@@ -3,6 +3,7 @@ package me.powerspieler.paveral.commands;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.CustomModelData;
+import me.powerspieler.paveral.discovery.diaries.AntiCreeperGrief;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
@@ -19,6 +20,9 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player player){
             if(player.isOp()){
+
+                ItemStack item = new AntiCreeperGrief().build();
+                player.getInventory().addItem(item);
 
 //                ItemStack itemStack = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
 //                itemStack.setData(DataComponentTypes.CUSTOM_MODEL_DATA, CustomModelData.customModelDataString().addString("lightstaff").build());

@@ -8,6 +8,7 @@ import me.powerspieler.paveral.disassemble.DisassembleListeners;
 import me.powerspieler.paveral.discovery.CatMorningGiftLootTable;
 import me.powerspieler.paveral.discovery.ChestLootTable;
 import me.powerspieler.paveral.discovery.FishingLootTable;
+import me.powerspieler.paveral.discovery.guide.CombiningLiteratur;
 import me.powerspieler.paveral.forge.AwakeForge;
 import me.powerspieler.paveral.forge.ForgeListener;
 import me.powerspieler.paveral.forming_altar.AwakeAltar;
@@ -56,6 +57,9 @@ public final class Paveral extends JavaPlugin {
         Objects.requireNonNull(getCommand("items")).setExecutor(new ItemsCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
+        // Discovery
+        pm.registerEvents(new CombiningLiteratur(), this);
+
         // Items
         pm.registerEvents(new ItemHoldingController(), this);
 
