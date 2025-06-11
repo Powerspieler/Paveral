@@ -4,6 +4,8 @@ main: me.powerspieler.paveral.Paveral
 api-version: '1.21'
 
 commands:
+  guide:
+    description: Used for the guide book to open up sub-pages
   test:
     description: Execute Test Code
     permission: paveral.dev

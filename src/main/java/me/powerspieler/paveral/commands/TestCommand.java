@@ -5,10 +5,12 @@ import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.CustomModelData;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.discovery.diaries.AntiCreeperGrief;
+import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentIteratorFlag;
 import net.kyori.adventure.text.ComponentIteratorType;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -55,8 +57,16 @@ public class TestCommand implements CommandExecutor {
         }
         if(sender instanceof Player player){
             if(player.isOp()){
-                //player.openBook(new AntiCreeperGrief().build());
-                player.sendMessage(Paveral.getPlugin().getPluginMeta().getVersion());
+                Component comp = Component.text("A way of ").append(Component.text("HURENSOHN")).clickEvent(ClickEvent.runCommand("/guide"));
+                TextComponent textComp = (TextComponent) comp;
+                System.out.println(textComp.content());
+
+
+
+                //player.getInventory().addItem(new BaseGuide().build());
+
+//                player.openBook(new AntiCreeperGrief().build());
+//                player.sendMessage(Paveral.getPlugin().getPluginMeta().getVersion());
                 // openBook. guide only index when all explored. append in the end if update. but sort index still maybe with comparator string -> int. x
 
 

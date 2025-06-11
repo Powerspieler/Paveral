@@ -2,16 +2,23 @@ package me.powerspieler.paveral.discovery.guide;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.discovery.DiscoveryBook;
+import me.powerspieler.paveral.discovery.diaries.AntiCreeperGrief;
+import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.BookMeta;
 
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,37 +31,34 @@ public class BaseGuide extends DiscoveryBook {
 
         // Access via children
         pages.add(Component.text("Index: \n\n")
-                .append(Component.text("The Forming Altar", NamedTextColor.AQUA).clickEvent(ClickEvent.changePage(4)))
-                .append(Component.text("???", NamedTextColor.AQUA).clickEvent(ClickEvent.changePage(5))) // Dis
-                .append(Component.text("???", NamedTextColor.AQUA).clickEvent(ClickEvent.changePage(6))) // Forge
+                .append(Component.text("The Forming Altar\n", NamedTextColor.AQUA).clickEvent(ClickEvent.runCommand("/guide entry A")))
+                .append(Component.text("???\n", NamedTextColor.AQUA).clickEvent(ClickEvent.changePage(5))) // Dis
+                .append(Component.text("???\n", NamedTextColor.AQUA).clickEvent(ClickEvent.changePage(6))) // Forge
 
-                .append(Component.text("???", NamedTextColor.LIGHT_PURPLE).clickEvent(ClickEvent.changePage(7))) // Enhanced
-                .append(Component.text("???", NamedTextColor.LIGHT_PURPLE).clickEvent(ClickEvent.changePage(8))) // Bonk
-                .append(Component.text("???", NamedTextColor.LIGHT_PURPLE).clickEvent(ClickEvent.changePage(9))) // Lightning Rod
+                .append(Component.text("???\n", NamedTextColor.LIGHT_PURPLE).clickEvent(ClickEvent.changePage(7))) // Enhanced
+                .append(Component.text("???\n", NamedTextColor.LIGHT_PURPLE).clickEvent(ClickEvent.changePage(8))) // Bonk
+                .append(Component.text("???\n", NamedTextColor.LIGHT_PURPLE).clickEvent(ClickEvent.changePage(9))) // Lightning Rod
 
-                .append(Component.text("???", NamedTextColor.DARK_PURPLE).clickEvent(ClickEvent.changePage(10))) // Lightstaff
-                .append(Component.text("???", NamedTextColor.DARK_PURPLE).clickEvent(ClickEvent.changePage(11))) // Bedrock Breaker
+                .append(Component.text("???\n", NamedTextColor.DARK_PURPLE).clickEvent(ClickEvent.changePage(10))) // Lightstaff
+                .append(Component.text("???\n", NamedTextColor.DARK_PURPLE).clickEvent(ClickEvent.changePage(11))) // Bedrock Breaker
 
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(12))) // Music Core
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(13))) // Piano Sword
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(14))) // String Blade
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(15))) // Pickaxe
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(16))) // Axe
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(17))) // Shovel
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(18))) // Hoe
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(12))) // Music Core
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(13))) // Piano Sword
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(14))) // String Blade
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(15))) // Pickaxe
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(16))) // Axe
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(17))) // Shovel
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(18))) // Hoe
 
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(19))) // creeper defuser
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(20))) // chunkloader
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(21))) // Wrench
-                .append(Component.text("???").clickEvent(ClickEvent.changePage(22))) // Worldalterer
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(19))) // creeper defuser
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(20))) // chunkloader
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(21))) // Wrench
+                .append(Component.text("???\n").clickEvent(ClickEvent.changePage(22))) // Worldalterer
         );
 
-        pages.add(Component.text("A way of ")); //4
+        pages.add(Component.text("A way of ").clickEvent(ClickEvent.runCommand("/guide"))); //4
         pages.add(Component.text("Titlepage"));
-        pages.add(Component.text("Hint Page").append(Component.text("here", NamedTextColor.BLUE)
-                .decoration(TextDecoration.UNDERLINED, true)
-                .hoverEvent(Component.text("Download Resourcepack"))
-                .clickEvent(ClickEvent.changePage(4))));
+        pages.add(Component.text("Hint Page"));
         pages.add(Component.text("End Page"));
         return pages;
     }

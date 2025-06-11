@@ -9,6 +9,7 @@ import me.powerspieler.paveral.discovery.CatMorningGiftLootTable;
 import me.powerspieler.paveral.discovery.ChestLootTable;
 import me.powerspieler.paveral.discovery.FishingLootTable;
 import me.powerspieler.paveral.discovery.guide.CombiningLiteratur;
+import me.powerspieler.paveral.discovery.guide.GuideCommand;
 import me.powerspieler.paveral.forge.AwakeForge;
 import me.powerspieler.paveral.forge.ForgeListener;
 import me.powerspieler.paveral.forming_altar.AwakeAltar;
@@ -44,6 +45,10 @@ public final class Paveral extends JavaPlugin {
     // TODO Lightning rod: Bring back hold behavior
     // TODO Angle Ring; Pylone
 
+    // TODO Rythms Awaking 2 two block high damage.
+    // TODO Lumberjacks Bass Rightclick Strip
+    // TODO Fire Aspekt Paino Sword
+
 
     @Override
     public void onEnable() {
@@ -59,6 +64,7 @@ public final class Paveral extends JavaPlugin {
         PluginManager pm = Bukkit.getPluginManager();
         // Discovery
         pm.registerEvents(new CombiningLiteratur(), this);
+        Objects.requireNonNull(getCommand("guide")).setExecutor(new GuideCommand());
 
         // Items
         pm.registerEvents(new ItemHoldingController(), this);
