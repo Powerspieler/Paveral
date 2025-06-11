@@ -67,7 +67,6 @@ public class DisassembleListeners implements Listener {
         try {
             act = Class.forName(className);
         } catch (ClassNotFoundException ignored) {
-            Paveral.getPlugin().getLogger().log(Level.SEVERE, "Not found: " + className);
             className = "me.powerspieler.paveral.items.enhanced." + fileName;
             try {
                 act = Class.forName(className);

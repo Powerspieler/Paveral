@@ -1,9 +1,11 @@
 package me.powerspieler.paveral.discovery.guide;
 
+import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.ItemHelper;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +15,13 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.view.LecternView;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+
+import static me.powerspieler.paveral.discovery.guide.BaseGuide.GUIDE_ENTRIES;
 
 public class GuideCommand implements CommandExecutor {
     @Override
@@ -29,9 +36,46 @@ public class GuideCommand implements CommandExecutor {
                 LecternView lectern = (LecternView) player.getOpenInventory();
                 guideBook = lectern.getTopInventory().getBook();
             }
-
             if(guideBook != null){
+                BookMeta bookMeta = (BookMeta) guideBook.getItemMeta();
+                if(bookMeta != null && (args[0].equals("hint") || args[0].equals("entry"))){
+                    if(args[0].equals("entry") && !isAllowedToAccess(guideBook, args[1])) return true;
 
+                    String className = "me.powerspieler.paveral.discovery.guide.";
+                    if(args[0].equals("entry")){
+                        className += "entries.";
+                    } else {
+                        className += "hints.";
+                    }
+                    className += args[1];
+
+                    Class<?> act = null;
+                    try {
+                        act = Class.forName(className);
+                    } catch (ClassNotFoundException e) {
+                        Paveral.getPlugin().getLogger().log(Level.SEVERE, "ClassNotFoundException while accessing guide entry: ", e);
+                    }
+                    if(act == null) return true;
+
+                    try {
+                        GuideEntryBook entry = (GuideEntryBook) act.getConstructor().newInstance();
+                        List<Component> pages = entry.getPages();
+
+                        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+                        BookMeta meta = (BookMeta) book.getItemMeta();
+                        meta.setAuthor("author");
+                        meta.setTitle("title");
+                        meta.setGeneration(BookMeta.Generation.ORIGINAL);
+                        for(Component page : pages){
+                            meta.addPages(page);
+                        }
+                        book.setItemMeta(meta);
+                        player.openBook(book);
+                    } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
+                             NoSuchMethodException | ClassCastException e) {
+                        Paveral.getPlugin().getLogger().log(Level.SEVERE, "Exception while getting pages for guide entry: ", e);
+                    }
+                }
             }
         }
         return true;
@@ -44,17 +88,8 @@ public class GuideCommand implements CommandExecutor {
         return false;
     }
 
-    private boolean isAllowedToAccess(ItemStack book, String type, String pageName){
-        BookMeta bookMeta = (BookMeta) book.getItemMeta();
-        TextComponent secondpage = (TextComponent) bookMeta.page(2);
-        List<Component> index = secondpage.content().startsWith("Welcome!") ? bookMeta.page(4).children() : bookMeta.page(2).children(); // TODO HERE
-        return true;
-    }
-
-
-    final List<String> guideOrder = List.of("Altar", "Dis", "Forge","Enhanced","Bonk","LightningRod","Lightstaff","BedrockBreaker","MusicCore","MusicPianoSword","MusicStringBlade","MusicPickaxe","MusicAxe","MusicShovel","MusicHoe","CreeperDefuser","Chunkloader","Wrench","Worldalterer");
-
-    int compare(String o1, String o2){
-        return guideOrder.indexOf(o1) - guideOrder.indexOf(o2);
+    private boolean isAllowedToAccess(ItemStack book, String entry){
+        List<String> entries = book.getPersistentDataContainer().get(GUIDE_ENTRIES, Constant.STRING_LIST_DATA_TYPE);
+        return entries != null && entries.contains(entry);
     }
 }

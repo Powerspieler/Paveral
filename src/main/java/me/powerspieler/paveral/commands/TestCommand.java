@@ -6,6 +6,7 @@ import io.papermc.paper.datacomponent.item.CustomModelData;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.discovery.diaries.AntiCreeperGrief;
 import me.powerspieler.paveral.discovery.guide.BaseGuide;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentIteratorFlag;
 import net.kyori.adventure.text.ComponentIteratorType;
@@ -14,6 +15,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,8 +25,12 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.LecternInventory;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.logging.Level;
@@ -57,9 +63,33 @@ public class TestCommand implements CommandExecutor {
         }
         if(sender instanceof Player player){
             if(player.isOp()){
-                Component comp = Component.text("A way of ").append(Component.text("HURENSOHN")).clickEvent(ClickEvent.runCommand("/guide"));
-                TextComponent textComp = (TextComponent) comp;
-                System.out.println(textComp.content());
+
+
+
+
+
+
+//                ItemStack guide = new BaseGuide().build();
+//
+//                List<String> entries = new ArrayList<>();
+//                entries.add("Altar");
+//                entries.add("Dis");
+//                entries.add("Forge");
+//                ItemMeta meta = guide.getItemMeta();
+//                meta.getPersistentDataContainer().set(key, Constant.STRING_LIST_DATA_TYPE, entries);
+//                guide.setItemMeta(meta);
+//                player.getInventory().addItem(guide);
+//
+//                List<String> result = guide.getItemMeta().getPersistentDataContainer().get(key, Constant.STRING_LIST_DATA_TYPE);
+//                if(result != null){
+//                    player.sendMessage(Component.text("Entries: " + result.toString()));
+//                } else {
+//                    player.sendMessage(Component.text("No Entries found!", NamedTextColor.RED));
+//                }
+
+
+
+
 
 
 
@@ -241,6 +271,7 @@ public class TestCommand implements CommandExecutor {
             inventory.addItem(item);
             player.openInventory(inventory);
             */
+                player.sendMessage(Component.text("Test run."));
             } else player.sendMessage(Component.text("ERROR: No Op", NamedTextColor.RED));
         }
         return false;

@@ -8,6 +8,7 @@ import me.powerspieler.paveral.disassemble.DisassembleListeners;
 import me.powerspieler.paveral.discovery.CatMorningGiftLootTable;
 import me.powerspieler.paveral.discovery.ChestLootTable;
 import me.powerspieler.paveral.discovery.FishingLootTable;
+import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import me.powerspieler.paveral.discovery.guide.CombiningLiteratur;
 import me.powerspieler.paveral.discovery.guide.GuideCommand;
 import me.powerspieler.paveral.forge.AwakeForge;
@@ -63,8 +64,10 @@ public final class Paveral extends JavaPlugin {
 
         PluginManager pm = Bukkit.getPluginManager();
         // Discovery
+        pm.registerEvents(new BaseGuide(), this);
         pm.registerEvents(new CombiningLiteratur(), this);
         Objects.requireNonNull(getCommand("guide")).setExecutor(new GuideCommand());
+
 
         // Items
         pm.registerEvents(new ItemHoldingController(), this);
