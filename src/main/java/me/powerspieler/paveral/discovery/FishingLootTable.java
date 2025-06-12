@@ -1,6 +1,7 @@
 package me.powerspieler.paveral.discovery;
 
 import me.powerspieler.paveral.advancements.AwardAdvancements;
+import me.powerspieler.paveral.discovery.papers.Paper;
 import me.powerspieler.paveral.items.LightStaff;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
@@ -40,18 +41,7 @@ public class FishingLootTable implements Listener {
                 if(!AwardAdvancements.isAdvancementUndone(event.getPlayer(), "root") && AwardAdvancements.isAdvancementUndone(event.getPlayer(), "fishing")){
                     if(Math.random() <= 0.02){
                         AwardAdvancements.grantAdvancement(event.getPlayer(), "fishing");
-                        ItemStack wetPaper = new ItemStack(Material.PAPER);
-                        ItemMeta wetPaperMeta = wetPaper.getItemMeta();
-                        List<Component> lore = new ArrayList<>();
-                        lore.add(Component.text("Have you ever wondered if you could")
-                                .decoration(TextDecoration.ITALIC, false));
-                        lore.add(Component.text("enhance the documentation book on the altar?")
-                                .decoration(TextDecoration.ITALIC, false));
-                        wetPaperMeta.lore(lore);
-                        wetPaper.setItemMeta(wetPaperMeta);
-
-                        item.setItemStack(wetPaper);
-
+                        item.setItemStack(Paper.disassemblePaper());
                     }
                 }
             }

@@ -2,7 +2,6 @@ package me.powerspieler.paveral.discovery.guide;
 
 import me.powerspieler.paveral.crafting.ItemHelper;
 import me.powerspieler.paveral.util.Constant;
-import net.kyori.adventure.text.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,11 +9,8 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static me.powerspieler.paveral.discovery.guide.BaseGuide.GUIDE_ENTRIES;
@@ -40,8 +36,11 @@ public class CombiningLiteratur implements Listener {
                     List<String> entries = result.getPersistentDataContainer().get(GUIDE_ENTRIES, Constant.STRING_LIST_DATA_TYPE);
                     if(entries != null){
                         String addition = ItemHelper.getPaveralNamespacedKey(literature, Constant.DISCOVERY);
-                        assert addition != null; // Check for other than Discovery Type
-                        entries.add(convertToGuideEntry(addition));
+                        if(addition == null){
+                            return;
+                        }
+
+                        entries.addAll(convertToGuideEntries(addition));
 
                         ItemMeta itemMeta = result.getItemMeta();
                         itemMeta.getPersistentDataContainer().set(GUIDE_ENTRIES, Constant.STRING_LIST_DATA_TYPE, entries);
@@ -54,11 +53,24 @@ public class CombiningLiteratur implements Listener {
         }
     }
 
-    private String convertToGuideEntry(String string){
-        String result = null;
+    private Set<String> convertToGuideEntries(String string){
+        Set<String> result = new HashSet<>();
         switch(string){
-            case "altar_book" -> result = "Forming";
-            //TODO
+            case "altar_book" -> result.add("Forming");
+            case "disassemble_paper" -> result.add("Dis"); // in guide only how to craft disbook // achievement reset
+            //case "soos" -> result.addAll(List.of("Forge", "CreeperDefuser", "Chunkloader", "Wrench")); // paper via Again? achievemnt // reset
+            case "diary_84" -> result.add("Enhanced");
+            case "diary_34" -> result.add("Bonk");
+            case "diary_17" -> result.add("LightningRod");
+            // TODO Lightstaff Disass. Paper geben als Tutorial zum adden. result.add("Lightstaff")
+            case "bedrock_breaker" -> result.add("BedrockBreaker");
+            // TODO MusicCore // paper mit First_Forming Achievement // achievment reset wenn mehr benötigt
+            //case "s" -> result.add("MusicCore");
+            // TODO All MusicCore Items // paper with MuiscCore_Achievment // reset
+            //case "soos" -> result.addAll(List.of("MusicPianoSword","MusicStringBlade","MusicPickaxe","MusicAxe","MusicShovel","MusicHoe"));
+            //TODO  Worldalterer // book in acient city ("A book about .... . Looks like this book still isn't finished")
+            // TODO case "soos" -> result.add("Worldalterer")
+
         }
         return result;
     }
