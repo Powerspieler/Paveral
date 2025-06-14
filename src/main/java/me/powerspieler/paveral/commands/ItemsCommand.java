@@ -1,5 +1,7 @@
 package me.powerspieler.paveral.commands;
 
+import me.powerspieler.paveral.discovery.guide.BaseGuide;
+import me.powerspieler.paveral.discovery.papers.Paper;
 import me.powerspieler.paveral.items.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -36,6 +38,17 @@ public class ItemsCommand implements CommandExecutor {
                     if(args[0].equalsIgnoreCase("wa")){
                         //Items item = new Worldalterer();
                         player.getInventory().addItem(new Worldalterer().recipe().result());
+                    }
+                    if(args[0].equalsIgnoreCase("guide")){
+                        //Items item = new Worldalterer();
+                        player.getInventory().addItem(new BaseGuide().build());
+                    }
+                    if(args[0].equalsIgnoreCase("lit")){
+                        player.getInventory().addItem(Paper.disassemblePaper());
+                        player.getInventory().addItem(Paper.forgePaper());
+                        player.getInventory().addItem(Paper.musicCorePaper());
+                        player.getInventory().addItem(Paper.musicCoreItemsPaper());
+                        player.getInventory().addItem(Paper.lightstaffPaper());
                     }
                 }
             } else player.sendMessage(Component.text("ERROR: No Op", NamedTextColor.RED));

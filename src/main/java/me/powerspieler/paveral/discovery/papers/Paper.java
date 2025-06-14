@@ -19,7 +19,8 @@ public class Paper {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.getPersistentDataContainer().set(Constant.DISCOVERY, PersistentDataType.STRING, discoveryString);
         lore.add(Component.text(""));
-        lore.add(Component.text("Can be combined with Paveral Guide", NamedTextColor.DARK_GRAY));
+        lore.add(Component.text("Can be combined with Paveral Guide", NamedTextColor.DARK_GRAY)
+                .decoration(TextDecoration.ITALIC, false));
         itemMeta.lore(lore);
         item.setItemMeta(itemMeta);
         return item;
@@ -61,7 +62,8 @@ public class Paper {
 
     public static ItemStack musicCoreItemsPaper() {
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("An interesting article about how everything"));
+        lore.add(Component.text("Some blueprints for tools and weapons"));
+        lore.add(Component.text("(Weapons of Melody Set)").decoration(TextDecoration.ITALIC, false));
 
         return createPaper(lore, "musiccore_items_paper");
     }

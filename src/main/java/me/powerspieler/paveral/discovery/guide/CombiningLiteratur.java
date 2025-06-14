@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,7 +17,7 @@ import static me.powerspieler.paveral.discovery.guide.BaseGuide.GUIDE_ENTRIES;
 public class CombiningLiteratur implements Listener {
     @EventHandler
     public void onCombining(PrepareItemCraftEvent event) {
-        Set<ItemStack> items = Arrays.stream(event.getInventory().getMatrix()).filter(Objects::nonNull).collect(Collectors.toSet());
+        List<ItemStack> items = Arrays.stream(event.getInventory().getMatrix()).filter(Objects::nonNull).toList();
         if(items.size() == 2) {
             if(items.stream().anyMatch(item -> ItemHelper.paveralNamespacedKeyEquals(item, Constant.DISCOVERY, "guide_book"))){
                 Optional<ItemStack> optionalGuide = items.stream().filter(item -> ItemHelper.paveralNamespacedKeyEquals(item, Constant.DISCOVERY, "guide_book")).findFirst();
@@ -40,10 +39,19 @@ public class CombiningLiteratur implements Listener {
                             return;
                         }
 
-                        entries.addAll(convertToGuideEntries(addition));
+                        int entriesAmount = entries.size();
+                        for ( String entry : convertToGuideEntries(addition)) {
+                            if(!entries.contains(entry)){
+                                entries.add(entry);
+                            }
+                        }
+                        if(entries.size() == entriesAmount){
+                            return;
+                        }
 
-                        ItemMeta itemMeta = result.getItemMeta();
+                        BookMeta itemMeta = (BookMeta) result.getItemMeta();
                         itemMeta.getPersistentDataContainer().set(GUIDE_ENTRIES, Constant.STRING_LIST_DATA_TYPE, entries);
+                        itemMeta.setAuthor(player.getName());
                         result.setItemMeta(itemMeta);
 
                         event.getInventory().setResult(result);

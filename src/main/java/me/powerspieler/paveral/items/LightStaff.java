@@ -3,6 +3,7 @@ package me.powerspieler.paveral.items;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
 import me.powerspieler.paveral.crafting.StandardIngredient;
+import me.powerspieler.paveral.discovery.papers.Paper;
 import me.powerspieler.paveral.items.helper.ActionbarStatus;
 import me.powerspieler.paveral.items.helper.Dismantable;
 import me.powerspieler.paveral.items.helper.ItemHoldingController;
@@ -117,6 +118,7 @@ public class LightStaff extends PaveralItem implements Listener, Dismantable {
         parts.add(new ItemStack(Material.COPPER_INGOT));
         parts.add(new ItemStack(Material.REDSTONE_LAMP));
         parts.add(new ItemStack(Material.WITHER_ROSE, 2));
+        parts.add(Paper.lightstaffPaper());
         return parts;
     }
 

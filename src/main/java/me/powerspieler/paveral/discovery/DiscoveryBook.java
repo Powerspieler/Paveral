@@ -3,6 +3,7 @@ package me.powerspieler.paveral.discovery;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -37,7 +38,8 @@ public abstract class DiscoveryBook {
         if(isDiary) bookMeta.getPersistentDataContainer().set(Constant.IS_DIARY, PersistentDataType.INTEGER, 1);
         if(isGuideLiterature){
             List<Component> lore = new ArrayList<>();
-            lore.add(Component.text("Can be combined with Paveral Guide", NamedTextColor.DARK_GRAY));
+            lore.add(Component.text("Can be combined with Paveral Guide", NamedTextColor.DARK_GRAY)
+                    .decoration(TextDecoration.ITALIC, false));
             bookMeta.lore(lore);
         }
         bookMeta.setAuthor(author);
