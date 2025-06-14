@@ -70,8 +70,7 @@ public class CombiningLiteratur implements Listener {
             case "bedrock_breaker" -> result.add("BedrockBreaker"); // achievement reset
             case "musiccore_paper" -> result.add("MusicCore"); // paper mit First_Forming Achievement // achievement reset
             case "musiccore_items_paper" -> result.addAll(List.of("MusicPianoSword","MusicStringBlade","MusicPickaxe","MusicAxe","MusicShovel","MusicHoe")); // paper with MuiscCore_Achievment // reset
-            // TODO case "soos" -> result.add("Worldalterer") // book in acient city ("A book about .... . Looks like this book still isn't finished")
-
+            case "worldalterer" -> result.add("Worldalterer"); // book in acient city ("A book about .... . Looks like this book still isn't finished")
         }
         return result;
     }

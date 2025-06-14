@@ -70,13 +70,5 @@ public class ChestLootTable implements Listener {
                 event.setLoot(loot);
             }
         }
-        // Worldalterer - Book // TODO change to portal (structure blocks o.O)
-        if(chesttype.equals("minecraft:chests/ancient_city_ice_box")){
-            if (Math.random() <= 0.5) {
-                List<ItemStack> loot = new ArrayList<>(event.getLoot());
-                loot.add(new Worldalterer().build());
-                event.setLoot(loot);
-            }
-        }
     }
 }

@@ -27,6 +27,7 @@ import me.powerspieler.paveral.misc.HandlePlayerJoin;
 import me.powerspieler.paveral.util.AdvancementLoader;
 import me.powerspieler.paveral.util.MarkerDataStorage;
 import me.powerspieler.paveral.util.RecipeLoader;
+import me.powerspieler.paveral.util.StructureLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.plugin.PluginManager;
@@ -55,6 +56,7 @@ public final class Paveral extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
+        StructureLoader.loadAncientCityCenter();
         AdvancementLoader.copyAdvancements();
         RecipeLoader.registerRecipes();
 
