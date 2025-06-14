@@ -20,6 +20,6 @@ public class BedrockBreaker extends DiscoveryBook {
     }
 
     public BedrockBreaker() {
-        super("bedrock_breaker", "", "A tale about an unbreakable myth", BookMeta.Generation.TATTERED, pages(), true);
+        super("bedrock_breaker", "", "A tale about an unbreakable myth", BookMeta.Generation.TATTERED, pages(), true, true);
     }
 }

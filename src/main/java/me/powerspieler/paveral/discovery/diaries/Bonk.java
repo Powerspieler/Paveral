@@ -31,6 +31,6 @@ public class Bonk extends DiscoveryBook {
         return pages;
     }
     public Bonk() {
-        super("diary_34", "", "Diary [#34]", BookMeta.Generation.TATTERED, pages(), true);
+        super("diary_34", "", "Diary [#34]", BookMeta.Generation.TATTERED, pages(), true, true);
     }
 }

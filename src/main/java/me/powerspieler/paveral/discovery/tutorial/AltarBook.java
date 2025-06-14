@@ -27,7 +27,7 @@ public class AltarBook extends DiscoveryBook{
     }
 
     public AltarBook() {
-        super("altar_book", "Powerspieler", "Paveralicious Additions", null, pages(), false);
+        super("altar_book", "Powerspieler", "Paveralicious Additions", null, pages(), false, false);
     }
 
     private static final NamespacedKey recipeKey = new NamespacedKey(Paveral.getPlugin(), "altar_book");

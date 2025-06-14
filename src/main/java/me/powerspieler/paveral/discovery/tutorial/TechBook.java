@@ -34,7 +34,7 @@ public class TechBook extends DiscoveryBook implements Formable {
     }
 
     public TechBook() {
-        super("tech_book", "Powerspieler", "Paveralicious Additions - Vol. 3", null, pages(), false);
+        super("tech_book", "Powerspieler", "Paveralicious Additions - Vol. 3", null, pages(), false, false);
     }
 
     @Override

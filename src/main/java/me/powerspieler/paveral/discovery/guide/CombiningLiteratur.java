@@ -56,20 +56,17 @@ public class CombiningLiteratur implements Listener {
     private Set<String> convertToGuideEntries(String string){
         Set<String> result = new HashSet<>();
         switch(string){
-            case "altar_book" -> result.add("Forming");
-            case "disassemble_paper" -> result.add("Dis"); // in guide only how to craft disbook // achievement reset
-            //case "soos" -> result.addAll(List.of("Forge", "CreeperDefuser", "Chunkloader", "Wrench")); // paper via Again? achievemnt // reset
+            //case "altar_book" -> result.add("Forming"); // Unlocked by default.
+            case "disassemble_paper" -> result.add("Dis"); // wetpaper // in guide only how to craft disbook // achievement reset
+            case "forge_paper" -> result.addAll(List.of("Forge", "CreeperDefuser", "Chunkloader", "Wrench")); // paper via Again? achievement // reset
             case "diary_84" -> result.add("Enhanced");
             case "diary_34" -> result.add("Bonk");
             case "diary_17" -> result.add("LightningRod");
-            // TODO Lightstaff Disass. Paper geben als Tutorial zum adden. result.add("Lightstaff")
-            case "bedrock_breaker" -> result.add("BedrockBreaker");
-            // TODO MusicCore // paper mit First_Forming Achievement // achievment reset wenn mehr benötigt
-            //case "s" -> result.add("MusicCore");
-            // TODO All MusicCore Items // paper with MuiscCore_Achievment // reset
-            //case "soos" -> result.addAll(List.of("MusicPianoSword","MusicStringBlade","MusicPickaxe","MusicAxe","MusicShovel","MusicHoe"));
-            //TODO  Worldalterer // book in acient city ("A book about .... . Looks like this book still isn't finished")
-            // TODO case "soos" -> result.add("Worldalterer")
+            case "lightstaff_paper" -> result.add("Lightstaff"); // via disass.
+            case "bedrock_breaker" -> result.add("BedrockBreaker"); // achievement reset
+            case "musiccore_paper" -> result.add("MusicCore"); // paper mit First_Forming Achievement // achievement reset
+            case "musiccore_items_paper" -> result.addAll(List.of("MusicPianoSword","MusicStringBlade","MusicPickaxe","MusicAxe","MusicShovel","MusicHoe")); // paper with MuiscCore_Achievment // reset
+            // TODO case "soos" -> result.add("Worldalterer") // book in acient city ("A book about .... . Looks like this book still isn't finished")
 
         }
         return result;

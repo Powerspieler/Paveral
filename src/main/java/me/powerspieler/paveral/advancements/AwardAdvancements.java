@@ -4,7 +4,6 @@ import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.ItemHelper;
 import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import me.powerspieler.paveral.util.Constant;
-import me.powerspieler.paveral.util.RecipeLoader;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -111,6 +110,17 @@ public class AwardAdvancements implements Listener {
                 player.getAdvancementProgress(adv).awardCriteria(crit);
             }
         } else Paveral.getPlugin().getLogger().log(Level.WARNING,"Failed to grant Advancement! Advancement: \"" + advkey.getKey() + "\" does not exist");
+    }
+
+    public static void revokeAdvancement(Player player, String key){
+        NamespacedKey advkey = new NamespacedKey("paveral", key);
+        Advancement adv = Bukkit.getAdvancement(advkey);
+        if(adv != null){
+            Collection<String> awardedCriteria = player.getAdvancementProgress(adv).getAwardedCriteria();
+            for(String crit : awardedCriteria){
+                player.getAdvancementProgress(adv).revokeCriteria(crit);
+            }
+        } else Paveral.getPlugin().getLogger().log(Level.WARNING,"Failed to revoke Advancement! Advancement: \"" + advkey.getKey() + "\" does not exist");
     }
 
     public static boolean isAdvancementUndone(Player player, String key) {

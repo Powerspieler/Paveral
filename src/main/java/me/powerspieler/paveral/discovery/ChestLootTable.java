@@ -54,14 +54,14 @@ public class ChestLootTable implements Listener {
                 event.setLoot(loot);
             }
         }
-        // AntiCreeperGrief - Book
-        if(chesttype.equals("minecraft:chests/jungle_temple")){
-            if(Math.random() <= 0.25){
-                List<ItemStack> loot = new ArrayList<>(event.getLoot());
-                loot.add(new AntiCreeperGrief().build());
-                event.setLoot(loot);
-            }
-        }
+        // AntiCreeperGrief - Book // Not needed bc Guide
+//        if(chesttype.equals("minecraft:chests/jungle_temple")){
+//            if(Math.random() <= 0.25){
+//                List<ItemStack> loot = new ArrayList<>(event.getLoot());
+//                loot.add(new AntiCreeperGrief().build());
+//                event.setLoot(loot);
+//            }
+//        }
         // Wrench - Item
         if(chesttype.equals("minecraft:chests/village/village_toolsmith")){
             if (Math.random() <= 0.25) {

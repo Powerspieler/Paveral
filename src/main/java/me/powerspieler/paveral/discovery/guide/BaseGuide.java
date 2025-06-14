@@ -27,14 +27,14 @@ public class BaseGuide extends DiscoveryBook implements Listener {
     static final NamespacedKey GUIDE_ENTRIES = new NamespacedKey(Paveral.getPlugin(), "guide_entries");
 
     public BaseGuide() {
-        super("guide_book", "You", "Paveral Guide", BookMeta.Generation.ORIGINAL, new ArrayList<>(), false);
+        super("guide_book", "You", "Paveral Guide", BookMeta.Generation.ORIGINAL, new ArrayList<>(), false, false);
     }
 
     @Override
     public ItemStack build() {
         ItemStack guide = super.build();
         ItemMeta meta = guide.getItemMeta();
-        meta.getPersistentDataContainer().set(GUIDE_ENTRIES, Constant.STRING_LIST_DATA_TYPE, new ArrayList<>());
+        meta.getPersistentDataContainer().set(GUIDE_ENTRIES, Constant.STRING_LIST_DATA_TYPE, List.of("Forming"));
         guide.setItemMeta(meta);
         return guide;
     }
@@ -116,9 +116,9 @@ public class BaseGuide extends DiscoveryBook implements Listener {
         List<Component> pages = new ArrayList<>();
         pages.add(Component.text("Titlepage"));
 
-        if(entries.isEmpty()){
+        if(entries.size() == 1){
             pages.add(Component.text("Welcome!\n\nThis book will assist you in collecting all recipes added by Paveral.\n\nYou can find various diaries and documents in your world, which can be added to this guide."));
-            pages.add(Component.text("You can do this by combining the found literature with this guide via crafting.\nGet started by clicking on the first \"???\" on the next page!\n\n Note: This two introduction pages will be removed once you have added your first diary or document"));
+            pages.add(Component.text("You can do this by combining the found literature with this guide via crafting.\nGet started by clicking on the first entry on the next page!\n\n Note: This two introduction pages will be removed once you have added your first diary or document"));
         }
 
         for (int i = 0; i < Math.ceil((double) guideOrder.size() / 14) ; i++) { // i = page number

@@ -15,6 +15,6 @@ public class Worldalterer extends DiscoveryBook {
     }
 
     public Worldalterer() {
-        super("worldalterer", "", "EMI Research", BookMeta.Generation.TATTERED, pages(), true);
+        super("worldalterer", "", "EMI Research", BookMeta.Generation.TATTERED, pages(), true, true);
     }
 }

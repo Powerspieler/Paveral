@@ -16,11 +16,14 @@ public class AchievementReward implements Listener {
         NamespacedKey key = event.getAdvancement().getKey();
 
         if(key.equals(new NamespacedKey("paveral","craft_tutorial_book_forge"))){
-            player.getInventory().addItem();
+            addItemToInventory(player, Paper.forgePaper());
         }
-
-
-
+        if(key.equals(new NamespacedKey("paveral","first_forming"))){
+            addItemToInventory(player, Paper.musicCorePaper());
+        }
+        if(key.equals(new NamespacedKey("paveral","music_core"))){
+            addItemToInventory(player, Paper.musicCoreItemsPaper());
+        }
     }
 
     private void addItemToInventory(Player player, ItemStack item){

@@ -10,7 +10,7 @@ public class Forming implements GuideEntryBook {
     @Override
     public List<Component> getPages() {
         List<Component> pages = new ArrayList<>();
-        pages.add(Component.text("FORMING HINT PAGE"));
+        pages.add(Component.text("Hey! You found a secret!\n\nI'd like to give you an cookie, but I think it's considered cheating"));
         return pages;
     }
 }
