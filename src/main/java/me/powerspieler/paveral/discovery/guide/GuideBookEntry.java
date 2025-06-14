@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.logging.Level;
 
-public interface GuideEntryBook {
+public interface GuideBookEntry {
     List<Component> getPages();
 
     default Component generateAchievementResetPage(String advancement_key) {

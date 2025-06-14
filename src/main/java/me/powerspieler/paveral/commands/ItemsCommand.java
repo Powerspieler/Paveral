@@ -9,7 +9,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemsCommand implements CommandExecutor {
     @Override
@@ -49,6 +54,16 @@ public class ItemsCommand implements CommandExecutor {
                         player.getInventory().addItem(Paper.musicCorePaper());
                         player.getInventory().addItem(Paper.musicCoreItemsPaper());
                         player.getInventory().addItem(Paper.lightstaffPaper());
+                    }
+                    if(args[0].equalsIgnoreCase("wabook")){
+                        ItemStack item = new me.powerspieler.paveral.discovery.diaries.Worldalterer().build();
+                        ItemMeta itemMeta = item.getItemMeta();
+                        List<Component> lore = itemMeta.lore() != null ? itemMeta.lore() : new ArrayList<>();
+                        lore.addFirst(Component.empty());
+                        lore.addFirst(Component.text("Looks like this book still isn't finished"));
+                        itemMeta.lore(lore);
+                        item.setItemMeta(itemMeta);
+                        player.getInventory().addItem(item);
                     }
                 }
             } else player.sendMessage(Component.text("ERROR: No Op", NamedTextColor.RED));

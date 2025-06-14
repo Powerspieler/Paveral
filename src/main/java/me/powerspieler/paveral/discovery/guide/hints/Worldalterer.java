@@ -2,15 +2,16 @@ package me.powerspieler.paveral.discovery.guide.hints;
 
 import me.powerspieler.paveral.discovery.guide.GuideBookEntry;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Forming implements GuideBookEntry {
+public class Worldalterer implements GuideBookEntry {
     @Override
     public List<Component> getPages() {
         List<Component> pages = new ArrayList<>();
-        pages.add(Component.text("Hey! You found a secret!\n\nI'd like to give you an cookie, but I think it's considered cheating"));
+        pages.add(Component.text(""));
         return pages;
     }
 }

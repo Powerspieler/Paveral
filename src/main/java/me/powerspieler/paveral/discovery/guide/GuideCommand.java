@@ -4,7 +4,6 @@ import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.ItemHelper;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,9 +15,7 @@ import org.bukkit.inventory.view.LecternView;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import static me.powerspieler.paveral.discovery.guide.BaseGuide.GUIDE_ENTRIES;
@@ -58,7 +55,7 @@ public class GuideCommand implements CommandExecutor {
                     if(act == null) return true;
 
                     try {
-                        GuideEntryBook entry = (GuideEntryBook) act.getConstructor().newInstance();
+                        GuideBookEntry entry = (GuideBookEntry) act.getConstructor().newInstance();
                         List<Component> pages = entry.getPages();
 
                         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);

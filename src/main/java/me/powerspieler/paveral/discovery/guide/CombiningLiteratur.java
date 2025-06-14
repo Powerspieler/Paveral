@@ -27,10 +27,6 @@ public class CombiningLiteratur implements Listener {
                     ItemStack literature = optionalLiterature.get();
                     Player player = (Player) event.getViewers().getFirst();
 
-                    if(guide.getItemMeta() instanceof BookMeta bookMeta && Objects.equals(bookMeta.getAuthor(), "You")){
-                        bookMeta.setAuthor(player.getName());
-                    }
-
                     ItemStack result = new ItemStack(guide);
                     List<String> entries = result.getPersistentDataContainer().get(GUIDE_ENTRIES, Constant.STRING_LIST_DATA_TYPE);
                     if(entries != null){
@@ -51,7 +47,7 @@ public class CombiningLiteratur implements Listener {
 
                         BookMeta itemMeta = (BookMeta) result.getItemMeta();
                         itemMeta.getPersistentDataContainer().set(GUIDE_ENTRIES, Constant.STRING_LIST_DATA_TYPE, entries);
-                        itemMeta.setAuthor(player.getName());
+                        if(Objects.equals(itemMeta.getAuthor(), "You")) itemMeta.setAuthor(player.getName());
                         result.setItemMeta(itemMeta);
 
                         event.getInventory().setResult(result);
