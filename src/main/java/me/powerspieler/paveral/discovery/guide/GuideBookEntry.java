@@ -28,7 +28,7 @@ public interface GuideBookEntry {
         Component revokeComp = Component.text("\n\nClick here to revoke ", NamedTextColor.DARK_RED).append(advancement.displayName());
         return Component.text("This piece of literature is bound to the advancement ")
                 .append(advancement.displayName())
-                .append(Component.text(" and can only be found when it's uncompleted.\nYou may want to revoke it yourself, if you need this piece again"))
+                .append(Component.text(" and can only be found when it's uncompleted.\nYou may want to revoke it yourself, if you need this piece again."))
                 .append(revokeComp)
                         .clickEvent(ClickEvent.callback(audience -> {
                             if (audience instanceof Player player) {
@@ -36,7 +36,7 @@ public interface GuideBookEntry {
                                     AwardAdvancements.revokeAdvancement(player, advancement_key);
                                     player.sendMessage(Component.text("Advancement ")
                                             .append(advancement.displayName())
-                                            .append(Component.text(" has been revoked. You are now able to encounter this literature again!")));
+                                            .append(Component.text(" has been revoked. You are now able to encounter this document or book again!")));
                                     player.playSound(Sound.sound(Key.key("ui.toast.out"), Sound.Source.MASTER, 2f, 2f), Sound.Emitter.self());
                                 }
                             }

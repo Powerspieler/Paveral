@@ -10,11 +10,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static me.powerspieler.paveral.discovery.guide.BaseGuide.GUIDE_ENTRIES;
 
-public class CombiningLiteratur implements Listener {
+public class CombiningLiterature implements Listener {
     @EventHandler
     public void onCombining(PrepareItemCraftEvent event) {
         List<ItemStack> items = Arrays.stream(event.getInventory().getMatrix()).filter(Objects::nonNull).toList();

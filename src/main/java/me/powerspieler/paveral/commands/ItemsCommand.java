@@ -1,10 +1,13 @@
 package me.powerspieler.paveral.commands;
 
+import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import me.powerspieler.paveral.discovery.papers.Paper;
 import me.powerspieler.paveral.items.*;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -62,6 +65,18 @@ public class ItemsCommand implements CommandExecutor {
                         lore.addFirst(Component.empty());
                         lore.addFirst(Component.text("Looks like this book still isn't finished"));
                         itemMeta.lore(lore);
+                        item.setItemMeta(itemMeta);
+                        player.getInventory().addItem(item);
+                    }
+                    if(args[0].equalsIgnoreCase("guideFull")){
+                        ItemStack item = new BaseGuide().build();
+                        ItemMeta itemMeta = item.getItemMeta();
+                        itemMeta.getPersistentDataContainer().set(new NamespacedKey(Paveral.getPlugin(), "guide_entries"), Constant.STRING_LIST_DATA_TYPE, List.of(
+                                "Forming", "Dis", "Forge",
+                                "Enhanced", "Bonk","LightningRod",
+                                "Lightstaff","BedrockBreaker",
+                                "MusicCore","MusicPianoSword","MusicStringBlade","MusicPickaxe","MusicAxe","MusicShovel","MusicHoe",
+                                "CreeperDefuser","Chunkloader","Wrench","Worldalterer"));
                         item.setItemMeta(itemMeta);
                         player.getInventory().addItem(item);
                     }

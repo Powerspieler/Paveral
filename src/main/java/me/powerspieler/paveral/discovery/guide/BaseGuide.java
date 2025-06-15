@@ -55,7 +55,7 @@ public class BaseGuide extends DiscoveryBook implements Listener {
 
     @EventHandler
     private void onBookOpen(PlayerInteractEvent event){
-        if(event.getItem() != null && event.getItem().getType() == Material.WRITTEN_BOOK && event.getItem().getItemMeta() instanceof BookMeta bookMeta){
+        if(event.getAction().isRightClick() && event.getItem() != null && event.getItem().getType() == Material.WRITTEN_BOOK && event.getItem().getItemMeta() instanceof BookMeta bookMeta){
             if(bookMeta.getPersistentDataContainer().has(Constant.DISCOVERY) && bookMeta.getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING).equals("guide_book")){
                 bookMeta.pages(generateGuideContent(event.getItem()));
                 event.getItem().setItemMeta(bookMeta);
@@ -132,8 +132,9 @@ public class BaseGuide extends DiscoveryBook implements Listener {
         Component buildingComponent = Component.text("");
         for (int j = 0; j < 14 && i * 14 + j < guideOrder.size(); j++) { // j = entry number on page
             String entry = guideOrder.get(i * 14 + j);
+            NamedTextColor color = j % 2 == 0 ? NamedTextColor.GRAY : NamedTextColor.DARK_GRAY;
             if (entries.contains(entry)) {
-                buildingComponent = buildingComponent.append(Component.text(convertToHumanString(entry) + "\n")
+                buildingComponent = buildingComponent.append(Component.text(convertToHumanString(entry) + "\n", color)
                         .clickEvent(ClickEvent.runCommand("/guide entry " + entry)));
             } else {
                 buildingComponent = buildingComponent.append(Component.text("???\n", NamedTextColor.DARK_PURPLE)

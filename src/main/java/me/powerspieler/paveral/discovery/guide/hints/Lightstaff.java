@@ -21,7 +21,7 @@ public class Lightstaff implements GuideBookEntry {
                 .append(Component.text("Stronghold Corridor", NamedTextColor.GOLD))
                 .append(Component.text(" chests with a chance of ", NamedTextColor.BLACK))
                 .append(Component.text("25%", NamedTextColor.GOLD))
-                .append(Component.text(".\n\n\nOnce you have gained your lightstaff you can throw it into the multi-structure which is introduced in the ", NamedTextColor.BLACK))
+                .append(Component.text(".\n\n\nOnce you have gained your lightstaff, you can throw it into the multi-structure which is introduced in the ", NamedTextColor.BLACK))
                 .append(Component.text("second entry of this guide.", NamedTextColor.GOLD)));
         return pages;
     }
