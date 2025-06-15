@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Recipe;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -40,5 +41,18 @@ public interface GuideBookEntry {
                                 }
                             }
                         }));
+    }
+
+    default Component generateRecipeGivingComponent(NamespacedKey recipeKey, boolean craftingTableHint) {
+        Component text = Component.text("Click here to unlock the recipe ", NamedTextColor.DARK_RED);
+        Recipe recipe = Bukkit.getRecipe(recipeKey);
+        if (recipe != null) {
+            text = text.append(recipe.getResult().displayName().color(NamedTextColor.DARK_GREEN));
+        }
+        text = text.clickEvent(ClickEvent.callback(audience -> {
+            if (audience instanceof Player player) {
+                player.discoverRecipe(recipeKey);
+            }}));
+        return craftingTableHint ? text.append(Component.text("\n\nCheck your recipe book inside a crafting table", NamedTextColor.BLACK)) : text;
     }
 }

@@ -11,6 +11,7 @@ import me.powerspieler.paveral.discovery.FishingLootTable;
 import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import me.powerspieler.paveral.discovery.guide.CombiningLiteratur;
 import me.powerspieler.paveral.discovery.guide.GuideCommand;
+import me.powerspieler.paveral.discovery.papers.AchievementReward;
 import me.powerspieler.paveral.forge.AwakeForge;
 import me.powerspieler.paveral.forge.ForgeListener;
 import me.powerspieler.paveral.forming_altar.AwakeAltar;
@@ -67,6 +68,7 @@ public final class Paveral extends JavaPlugin {
         // Discovery
         pm.registerEvents(new BaseGuide(), this);
         pm.registerEvents(new CombiningLiteratur(), this);
+        pm.registerEvents(new AchievementReward(), this);
         Objects.requireNonNull(getCommand("guide")).setExecutor(new GuideCommand());
 
 
