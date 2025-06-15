@@ -13,7 +13,7 @@ public class BedrockBreaker implements GuideBookEntry {
         List<Component> pages = new ArrayList<>();
         pages.add(Component.text("To unlock this entry you have to ")
                 .append(Component.text("tame a cat", NamedTextColor.GOLD))
-                .append(Component.text(" and have it nearby when you go to sleep.\n\nWhen you wake up, the cat might have brought you a gift.\n\nWith a chance of ", NamedTextColor.GOLD))
+                .append(Component.text(" and have it nearby when you go to sleep.\n\nWhen you wake up, the cat might have brought you a gift.\n\nWith a chance of "))
                 .append(Component.text("20%", NamedTextColor.GOLD))
                 .append(Component.text(" it's the book you seek.")));
         pages.add(generateAchievementResetPage("sleep_with_cat"));
