@@ -31,7 +31,7 @@ public class MusicAxe implements GuideBookEntry {
                 .append(Component.text(" on a "))
                 .append(Component.text("stripped part", NamedTextColor.GOLD))
                 .append(Component.text(" of the tree.")));
-        pages.add(Component.text("This is tool works just like a regular Netherite Axe, but it can only enchanted with ")
+        pages.add(Component.text("This is tool works just like a regular Netherite Axe, but it can only be enchanted with ")
                 .append(Component.text("Unbreaking", NamedTextColor.GOLD))
                 .append(Component.text(" and "))
                 .append(Component.text("Mending", NamedTextColor.GOLD))
@@ -40,14 +40,14 @@ public class MusicAxe implements GuideBookEntry {
                 .append(Component.text(" of tree you are chopping down.\n\nThis tool also "))
                 .append(Component.text("disables", NamedTextColor.GOLD))
                 .append(Component.text(" your "))
-                .append(Component.text("Totem of Undying", NamedTextColor.GOLD))
-                .append(Component.text(" when being in your")));
-        pages.add(Component.text("inventory", NamedTextColor.GOLD)
-                .append(Component.text(", just like all other tools of the \"Weapons of Melody\" - Set.\n\nCombine a "))
+                .append(Component.text("Totem of Undying", NamedTextColor.GOLD)));
+        pages.add(Component.text("when being in your ",  NamedTextColor.BLACK)
+                .append(Component.text("inventory", NamedTextColor.GOLD))
+                .append(Component.text(", just like all other tools of the \"Weapons of Melody\" - Set.\n\nCombine a ", NamedTextColor.BLACK))
                 .append(Component.text("Netherite Axe", NamedTextColor.GOLD))
-                .append(Component.text(" with a "))
+                .append(Component.text(" with a ", NamedTextColor.BLACK))
                 .append(Component.text("Music Core", NamedTextColor.GOLD))
-                .append(Component.text(" on the altar to create it."))
+                .append(Component.text(" on the altar to create it.\n\n", NamedTextColor.BLACK))
                 .append(Component.text("\uEE13", NamedTextColor.WHITE)));
         return pages;
     }
