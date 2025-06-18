@@ -31,9 +31,8 @@ public class Wrench extends PaveralItem implements Listener, Dismantable {
 
     private static List<Component> lore(){
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text("Open iron trapdoors")
+        lore.add(Component.text("A light version of the Debug Stick")
                 .decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("Experimental", NamedTextColor.RED).decoration(TextDecoration.ITALIC, false));
         return lore;
     }
 
