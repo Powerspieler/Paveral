@@ -16,7 +16,7 @@ public class MusicCore implements GuideBookEntry {
                 .append(Component.text(" is the basic ingredient for all tools and weapons of the \""))
                 .append(Component.text("Weapons of Melody", NamedTextColor.GOLD))
                 .append(Component.text("\"-Set.\n\n"))
-                .append(generateRecipeGivingComponent(me.powerspieler.paveral.items.parts.MusicCore.recipeKey, true)));
+                .append(generateRecipeGivingComponent(me.powerspieler.paveral.items.parts.MusicCore.recipeKey, "\uEE17", true)));
         return pages;
     }
 }

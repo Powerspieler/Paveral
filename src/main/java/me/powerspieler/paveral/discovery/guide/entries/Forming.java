@@ -16,7 +16,7 @@ public class Forming implements GuideBookEntry {
                 .append(Component.text("The Forming Altar", NamedTextColor.GOLD))
                 .append(Component.text(".\n\nThis multiblock- structure will be the main method to \"form\" certain items, at least for now.\n\nAll details and the blueprint for building the altar are part of")));
         pages.add(Component.text("the Paveralicious Additions book.\n\n")
-                .append(generateRecipeGivingComponent(AltarBook.registerRecipe().getKey(), true)));
+                .append(generateRecipeGivingComponent(AltarBook.registerRecipe().getKey(), "\uEE16", true)));
         pages.add(Component.text("Explore other entries of ")
                 .append(Component.text("this guide",  NamedTextColor.GOLD))
                 .append(Component.text(" to learn which items you can form.")));
