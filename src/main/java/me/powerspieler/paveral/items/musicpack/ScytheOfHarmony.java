@@ -114,7 +114,7 @@ public class ScytheOfHarmony extends PaveralItem implements Listener, Enchantabl
     @EventHandler
     private void onCropHarvest(BlockBreakEvent event){
         Player player = event.getPlayer();
-        if(ItemHoldingController.checkIsHoldingPaveralItem(player, "scythe_of_harmony") && MaterialSetTag.MAINTAINS_FARMLAND.isTagged(event.getBlock().getType())){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(player, "scythe_of_harmony") && (MaterialSetTag.MAINTAINS_FARMLAND.isTagged(event.getBlock().getType()) || event.getBlock().getType() == Material.NETHER_WART)){
             Material cropType = event.getBlock().getType();
             Material seedType = convertBlockToSeed(cropType);
             PlayerInventory inventory = player.getInventory();
@@ -144,6 +144,7 @@ public class ScytheOfHarmony extends PaveralItem implements Listener, Enchantabl
             case TORCHFLOWER_CROP, TORCHFLOWER -> seedMaterial = Material.TORCHFLOWER_SEEDS;
             case PITCHER_CROP -> seedMaterial = Material.PITCHER_POD;
             case WHEAT -> seedMaterial = Material.WHEAT_SEEDS;
+            case NETHER_WART -> seedMaterial = Material.NETHER_WART;
         }
         return seedMaterial;
     }
