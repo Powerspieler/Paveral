@@ -30,6 +30,6 @@ public class Enhancing extends DiscoveryBook {
     }
 
     public Enhancing() {
-        super("diary_84", "", "Diary [#84]", BookMeta.Generation.TATTERED, pages(), true);
+        super("diary_84", "", "Diary [#84]", BookMeta.Generation.TATTERED, pages(), true, true);
     }
 }

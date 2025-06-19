@@ -29,7 +29,7 @@ public class DisBook extends DiscoveryBook implements Formable {
     }
 
     public DisBook() {
-        super("dis_book", "Powerspieler", "Paveralicious Additions - Vol. 2", null, pages(), false);
+        super("dis_book", "Powerspieler", "Paveralicious Additions - Vol. 2", null, pages(), false, false);
     }
 
     @Override

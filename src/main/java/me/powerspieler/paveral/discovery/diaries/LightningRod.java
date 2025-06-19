@@ -23,6 +23,6 @@ public class LightningRod extends DiscoveryBook {
     }
 
     public LightningRod() {
-        super("diary_17", "", "Diary [#17]", BookMeta.Generation.TATTERED, pages(), true);
+        super("diary_17", "", "Diary [#17]", BookMeta.Generation.TATTERED, pages(), true, true);
     }
 }

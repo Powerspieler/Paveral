@@ -16,6 +16,6 @@ public class AntiCreeperGrief extends DiscoveryBook {
     }
 
     public AntiCreeperGrief() {
-        super("diary_35", "", "Diary [#35]", BookMeta.Generation.TATTERED, pages(), true);
+        super("diary_35", "", "Diary [#35]", BookMeta.Generation.TATTERED, pages(), true, false);
     }
 }

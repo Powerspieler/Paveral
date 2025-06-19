@@ -8,6 +8,10 @@ import me.powerspieler.paveral.disassemble.DisassembleListeners;
 import me.powerspieler.paveral.discovery.CatMorningGiftLootTable;
 import me.powerspieler.paveral.discovery.ChestLootTable;
 import me.powerspieler.paveral.discovery.FishingLootTable;
+import me.powerspieler.paveral.discovery.guide.BaseGuide;
+import me.powerspieler.paveral.discovery.guide.CombiningLiterature;
+import me.powerspieler.paveral.discovery.guide.GuideCommand;
+import me.powerspieler.paveral.discovery.papers.AchievementReward;
 import me.powerspieler.paveral.forge.AwakeForge;
 import me.powerspieler.paveral.forge.ForgeListener;
 import me.powerspieler.paveral.forming_altar.AwakeAltar;
@@ -21,7 +25,7 @@ import me.powerspieler.paveral.items.helper.TotemDisabler;
 import me.powerspieler.paveral.items.musicpack.*;
 import me.powerspieler.paveral.items.parts.worldalterer.SonicEssence;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;
-import me.powerspieler.paveral.util.AdvancementLoader;
+import me.powerspieler.paveral.util.DatapackLoader;
 import me.powerspieler.paveral.util.MarkerDataStorage;
 import me.powerspieler.paveral.util.RecipeLoader;
 import org.bukkit.Bukkit;
@@ -43,12 +47,17 @@ public final class Paveral extends JavaPlugin {
     // TODO Lightning rod: Bring back hold behavior
     // TODO Angle Ring; Pylone
 
+    // TODO Rythms Awaking 2 two block high damage.
+    // TODO Lumberjacks Bass Rightclick Strip
+    // TODO Fire Aspekt Paino Sword
+
 
     @Override
     public void onEnable() {
         plugin = this;
 
-        AdvancementLoader.copyAdvancements();
+        DatapackLoader.copyAncientCityCenter();
+        DatapackLoader.copyAdvancements();
         RecipeLoader.registerRecipes();
 
         Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
@@ -56,6 +65,13 @@ public final class Paveral extends JavaPlugin {
         Objects.requireNonNull(getCommand("items")).setExecutor(new ItemsCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
+        // Discovery
+        pm.registerEvents(new BaseGuide(), this);
+        pm.registerEvents(new CombiningLiterature(), this);
+        pm.registerEvents(new AchievementReward(), this);
+        Objects.requireNonNull(getCommand("guide")).setExecutor(new GuideCommand());
+
+
         // Items
         pm.registerEvents(new ItemHoldingController(), this);
 

@@ -3,22 +3,109 @@ package me.powerspieler.paveral.commands;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.CustomModelData;
+import me.powerspieler.paveral.Paveral;
+import me.powerspieler.paveral.discovery.diaries.AntiCreeperGrief;
+import me.powerspieler.paveral.discovery.guide.BaseGuide;
+import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentIteratorFlag;
+import net.kyori.adventure.text.ComponentIteratorType;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.LecternInventory;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.logging.Level;
 
 
 public class TestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(sender instanceof ConsoleCommandSender) {
+
+            TextComponent text = Component.text("Cone")
+                    .append(Component.text("fort"))
+                    .append(Component.text("fort"))
+                    .append(Component.text("fort"))
+                    .append(Component.text("fort"));
+            List<Component> list = text.children();
+            System.out.println(list);
+
+
+//            Spliterator<Component> test = text.spliterator(ComponentIteratorType.DEPTH_FIRST, ComponentIteratorFlag.INCLUDE_TRANSLATABLE_COMPONENT_ARGUMENTS);
+//            System.out.println();
+//            test.tryAdvance(c -> c.c);
+//            System.out.println();
+//            test.tryAdvance(System.out::println);
+//            System.out.println();
+//            test.tryAdvance(System.out::println);
+//            System.out.println();
+
+            Paveral.getPlugin().getLogger().log(Level.INFO, "Test run");
+        }
         if(sender instanceof Player player){
             if(player.isOp()){
+
+
+
+
+
+
+//                ItemStack guide = new BaseGuide().build();
+//
+//                List<String> entries = new ArrayList<>();
+//                entries.add("Altar");
+//                entries.add("Dis");
+//                entries.add("Forge");
+//                ItemMeta meta = guide.getItemMeta();
+//                meta.getPersistentDataContainer().set(key, Constant.STRING_LIST_DATA_TYPE, entries);
+//                guide.setItemMeta(meta);
+//                player.getInventory().addItem(guide);
+//
+//                List<String> result = guide.getItemMeta().getPersistentDataContainer().get(key, Constant.STRING_LIST_DATA_TYPE);
+//                if(result != null){
+//                    player.sendMessage(Component.text("Entries: " + result.toString()));
+//                } else {
+//                    player.sendMessage(Component.text("No Entries found!", NamedTextColor.RED));
+//                }
+
+
+
+
+
+
+
+                //player.getInventory().addItem(new BaseGuide().build());
+
+//                player.openBook(new AntiCreeperGrief().build());
+//                player.sendMessage(Paveral.getPlugin().getPluginMeta().getVersion());
+                // openBook. guide only index when all explored. append in the end if update. but sort index still maybe with comparator string -> int. x
+
+
+
+
+
+
+//                ItemStack item = new AntiCreeperGrief().build();
+//                player.getInventory().addItem(item);
 
 //                ItemStack itemStack = new ItemStack(Material.WARPED_FUNGUS_ON_A_STICK);
 //                itemStack.setData(DataComponentTypes.CUSTOM_MODEL_DATA, CustomModelData.customModelDataString().addString("lightstaff").build());
@@ -184,6 +271,7 @@ public class TestCommand implements CommandExecutor {
             inventory.addItem(item);
             player.openInventory(inventory);
             */
+                player.sendMessage(Component.text("Test run."));
             } else player.sendMessage(Component.text("ERROR: No Op", NamedTextColor.RED));
         }
         return false;

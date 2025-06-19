@@ -2,8 +2,8 @@ package me.powerspieler.paveral.advancements;
 
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.ItemHelper;
+import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import me.powerspieler.paveral.util.Constant;
-import me.powerspieler.paveral.util.RecipeLoader;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -28,14 +28,14 @@ import java.util.Objects;
 import java.util.logging.Level;
 
 public class AwardAdvancements implements Listener {
-    // Award Recipe for Altar Book
+    // Award Recipe for Guide Book
     @EventHandler
     public void onRootAdvGrant(PlayerAdvancementDoneEvent event){
         NamespacedKey root = new NamespacedKey("paveral", "root");
         if(event.getAdvancement().getKey().equals(root)){
             Player player = event.getPlayer();
-            player.discoverRecipe(RecipeLoader.altarbookrecipekey);
-            player.sendMessage(Component.text("You have unlocked a valuable recipe! Check your recipe book!" , NamedTextColor.DARK_PURPLE));
+            player.discoverRecipe(BaseGuide.recipeKey);
+            player.sendMessage(Component.text("You have unlocked the Paveral Guide! Check your recipe book inside a crafting table!" , NamedTextColor.DARK_PURPLE));
         }
     }
     // Flying Pig
@@ -79,8 +79,9 @@ public class AwardAdvancements implements Listener {
             String discoveryType = item.getPersistentDataContainer().get(Constant.DISCOVERY, PersistentDataType.STRING);
             switch (Objects.requireNonNull(discoveryType)){
                 case "bedrock_breaker" -> checkAndGrandAdvancement(player, "sleep_with_cat");
-                case "altar_book" -> checkAndGrandAdvancement(player, "craft_tutorial_book");
+                case "guide_book" -> checkAndGrandAdvancement(player, "craft_guide_book");
                 case "tech_book" -> checkAndGrandAdvancement(player, "craft_tutorial_book_forge");
+                case "worldalterer" -> {return;}
                 default -> checkAndGrandAdvancement(player, discoveryType);
             }
         }
@@ -110,6 +111,17 @@ public class AwardAdvancements implements Listener {
                 player.getAdvancementProgress(adv).awardCriteria(crit);
             }
         } else Paveral.getPlugin().getLogger().log(Level.WARNING,"Failed to grant Advancement! Advancement: \"" + advkey.getKey() + "\" does not exist");
+    }
+
+    public static void revokeAdvancement(Player player, String key){
+        NamespacedKey advkey = new NamespacedKey("paveral", key);
+        Advancement adv = Bukkit.getAdvancement(advkey);
+        if(adv != null){
+            Collection<String> awardedCriteria = player.getAdvancementProgress(adv).getAwardedCriteria();
+            for(String crit : awardedCriteria){
+                player.getAdvancementProgress(adv).revokeCriteria(crit);
+            }
+        } else Paveral.getPlugin().getLogger().log(Level.WARNING,"Failed to revoke Advancement! Advancement: \"" + advkey.getKey() + "\" does not exist");
     }
 
     public static boolean isAdvancementUndone(Player player, String key) {

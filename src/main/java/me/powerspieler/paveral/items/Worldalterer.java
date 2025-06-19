@@ -93,8 +93,6 @@ public class Worldalterer extends CooldownItem implements Listener, Enchantable 
 
     // --- Item Logic ---
 
-    // TODO Bea book writing
-
     Map<UUID, Integer> runnableMap = new HashMap<>();
 
     @EventHandler
