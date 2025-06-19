@@ -4,6 +4,7 @@ import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import me.powerspieler.paveral.discovery.papers.Paper;
 import me.powerspieler.paveral.items.*;
+import me.powerspieler.paveral.items.parts.worldalterer.*;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -79,6 +80,12 @@ public class ItemsCommand implements CommandExecutor {
                                 "CreeperDefuser","Chunkloader","Wrench","Worldalterer"));
                         item.setItemMeta(itemMeta);
                         player.getInventory().addItem(item);
+                    }
+                    if(args[0].equalsIgnoreCase("waParts")){
+                        player.getInventory().addItem(SculkCircuit.registerRecipe().getResult());
+                        player.getInventory().addItem(AlterationCore.registerRecipe().getResult());
+                        player.getInventory().addItem(AmethystLaser.registerRecipe().getResult());
+                        player.getInventory().addItem(EchoContainer.registerRecipe().getResult());
                     }
                 }
             } else player.sendMessage(Component.text("ERROR: No Op", NamedTextColor.RED));

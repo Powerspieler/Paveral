@@ -44,7 +44,7 @@ public interface GuideBookEntry {
     }
 
     default Component generateRecipeGivingComponent(NamespacedKey recipeKey, String unicode, boolean craftingTableHint) {
-        Component text = Component.text(unicode, NamedTextColor.WHITE).append(Component.text("          Click to unlock ", NamedTextColor.DARK_RED)); // "\n\n\n"
+        Component text = Component.text(unicode, NamedTextColor.WHITE).append(Component.text("           Click to unlock ", NamedTextColor.DARK_RED)); // "\n\n\n"
         Recipe recipe = Bukkit.getRecipe(recipeKey);
         if (recipe != null) {
             text = text.append(Component.text("          ")).append(recipe.getResult().displayName().color(NamedTextColor.DARK_GREEN));
