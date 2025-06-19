@@ -26,8 +26,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -72,9 +74,9 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
         super(Material.NETHERITE_AXE, "vampires_bass", Constant.ITEMTYPE, "lumberjacks_bass", itemName(), lore());
     }
 
-    private final AttributeModifier largeTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "largeTreeModifier"), -0.985, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
-    private final AttributeModifier mediumTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "mediumTreeModifier"), -0.95, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
-    private final AttributeModifier smallTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "smallTreeModifier"), -0.90, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
+    private final AttributeModifier largeTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "largeTreeModifier"), -0.935, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
+    private final AttributeModifier mediumTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "mediumTreeModifier"), -0.90, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
+    private final AttributeModifier smallTreeModifier = new AttributeModifier(new NamespacedKey(Paveral.getPlugin(), "smallTreeModifier"), -0.85, AttributeModifier.Operation.ADD_SCALAR, EquipmentSlotGroup.MAINHAND);
 
     @Override
     protected ItemStack build() {
@@ -94,6 +96,26 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
     }
 
     // --- Item Logic ---
+    @EventHandler
+    private void onTreeStrip(PlayerInteractEvent event) {
+        if (ItemHoldingController.checkIsHoldingPaveralItem(event.getPlayer(), keyString)) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null) {
+                event.setCancelled(true);
+                if(event.getPlayer().getInventory().getItemInMainHand().getItemMeta() instanceof Damageable itemMeta && itemMeta.getDamage() == 2031){
+                    return;
+                }
+                Material logType = event.getClickedBlock().getType();
+
+                if(MaterialSetTag.CRIMSON_STEMS.isTagged(logType) || MaterialSetTag.WARPED_STEMS.isTagged(logType)){
+                    breakNetherTree(event.getClickedBlock(), event.getPlayer(), true);
+                } else if(MaterialSetTag.LOGS.isTagged(logType)){
+                    breakTreeWithActualLeaves(event.getClickedBlock(), event.getPlayer(), true);
+                } else {
+                    event.setCancelled(false);
+                }
+            }
+        }
+    }
 
     @EventHandler
     private void onTreeBreak(BlockBreakEvent event) {
@@ -107,9 +129,9 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
             if(logType == Material.MUSHROOM_STEM){
                 breakMushroom(event.getBlock(), event.getPlayer());
             } else if(MaterialSetTag.CRIMSON_STEMS.isTagged(logType) || MaterialSetTag.WARPED_STEMS.isTagged(logType)){
-                breakNetherTree(event.getBlock(), event.getPlayer());
+                breakNetherTree(event.getBlock(), event.getPlayer(), false);
             } else if(MaterialSetTag.LOGS.isTagged(logType)){
-                breakTreeWithActualLeaves(event.getBlock(), event.getPlayer());
+                breakTreeWithActualLeaves(event.getBlock(), event.getPlayer(), false);
             } else {
                 event.setCancelled(false);
             }
@@ -133,7 +155,7 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
 
     private Block breakMushroomStem(Block block, Player player){
         if(block.getType() == Material.MUSHROOM_STEM){
-            destroyBlock(block, player.getInventory().getItemInMainHand());
+            destroyBlock(block, player.getInventory().getItemInMainHand(), false);
             return breakMushroomStem(block.getRelative(BlockFace.UP), player);
         }
         return block;
@@ -141,7 +163,7 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
 
     private void breakBrownMushroomTop(Block block, Player player){
         if(block.getType() == Material.BROWN_MUSHROOM_BLOCK){
-            destroyBlock(block, player.getInventory().getItemInMainHand());
+            destroyBlock(block, player.getInventory().getItemInMainHand(), false);
             for(BlockFace face : blockFaceListFour){
                 breakBrownMushroomTop(block.getRelative(face), player);
             }
@@ -151,11 +173,11 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
     private void breakRedMushroomTop(Block block, Player player){
         ItemStack tool = player.getInventory().getItemInMainHand();
         if(block.getType() == Material.RED_MUSHROOM_BLOCK){
-            destroyBlock(block, tool);
+            destroyBlock(block, tool, false);
         }
         for(BlockFace face : blockFaceListSameEight){
             if(block.getRelative(face).getType() == Material.RED_MUSHROOM_BLOCK){
-                destroyBlock(block.getRelative(face), tool);
+                destroyBlock(block.getRelative(face), tool, false);
             }
         }
         for(BlockFace face : blockFaceListFour){
@@ -179,14 +201,14 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
 
         for (int i = 0; i < 3; i++) {
             if(tempCenter.getType() == Material.RED_MUSHROOM_BLOCK){
-                destroyBlock(tempCenter, tool);
+                destroyBlock(tempCenter, tool, false);
             }
             if(tempCenter.getRelative(orthogonalFace).getType() == Material.RED_MUSHROOM_BLOCK){
-                destroyBlock(tempCenter.getRelative(orthogonalFace), tool);
+                destroyBlock(tempCenter.getRelative(orthogonalFace), tool, false);
             }
 
             if(tempCenter.getRelative(orthogonalFace.getOppositeFace()).getType() == Material.RED_MUSHROOM_BLOCK){
-                destroyBlock(tempCenter.getRelative(orthogonalFace.getOppositeFace()), tool);
+                destroyBlock(tempCenter.getRelative(orthogonalFace.getOppositeFace()), tool, false);
             }
 
             tempCenter = tempCenter.getRelative(BlockFace.DOWN);
@@ -202,9 +224,11 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
      * --- Shroomlights are treated like wartBlocks.
      * ------------------------
      */
-    private void breakNetherTree(Block block, Player player){
+    private void breakNetherTree(Block block, Player player, boolean stripMode){
         Block correctedCenter = correctCenter(block);
-        Block wartEntry = breakMainStemRecursive(correctedCenter, correctedCenter.getType(), player.getInventory().getItemInMainHand());
+        Set<Material> blocksToBreak = stripMode ? Set.of(correctedCenter.getType()) : convertToListWithAllTypes(correctedCenter.getType());
+        Block wartEntry = breakMainStemRecursive(correctedCenter, blocksToBreak, player.getInventory().getItemInMainHand(), stripMode);
+        if(stripMode) return;
         if(wartEntry == null || !MaterialSetTag.WART_BLOCKS.isTagged(wartEntry.getType())) return;
         breakWartTreetop(wartEntry, wartEntry.getType(), wartEntry.getX(), wartEntry.getZ(), correctedCenter.getY());
     }
@@ -240,21 +264,27 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
 
     private final List<BlockFace> blockFaceListSameEight = List.of(BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST);
     private final List<BlockFace> blockFaceListWeirdEight = List.of(BlockFace.NORTH_NORTH_EAST, BlockFace.EAST_NORTH_EAST, BlockFace.EAST_SOUTH_EAST, BlockFace.SOUTH_SOUTH_EAST, BlockFace.SOUTH_SOUTH_WEST, BlockFace.WEST_SOUTH_WEST, BlockFace.WEST_NORTH_WEST, BlockFace.NORTH_NORTH_WEST);
-    private Block breakMainStemRecursive(Block block, Material stemType, ItemStack tool){
-        if(block.getType() == stemType){
-            if (destroyBlock(block, tool)) return null;
+    private Block breakMainStemRecursive(Block block, Set<Material> blocksToBreak, ItemStack tool, boolean stripMode) {
+        if(blocksToBreak.contains(block.getType())){
+            if (destroyBlock(block, tool, stripMode)) return null;
             for(BlockFace face : blockFaceListSameEight){ // This is for 3x3 Stems. CenterCorrected Block broken still determines wartEntry.
-                if(block.getRelative(face).getType() == stemType){
-                    if (destroyBlock(block.getRelative(face), tool)) return null;
+                if(blocksToBreak.contains(block.getRelative(face).getType())){
+                    if (destroyBlock(block.getRelative(face), tool, stripMode)) return null;
                 }
             }
-            return breakMainStemRecursive(block.getRelative(BlockFace.UP), stemType, tool);
+            return breakMainStemRecursive(block.getRelative(BlockFace.UP), blocksToBreak, tool, stripMode);
         }
         return block;
     }
 
-    private static boolean destroyBlock(Block block, ItemStack tool) {
-        block.breakNaturally(true);
+    private boolean destroyBlock(Block block, ItemStack tool, boolean stripMode) {
+        if(stripMode) {
+            Material stripped = convertToStripped(block.getType());
+            if(stripped == null) return false;
+            block.setType(stripped);
+        } else {
+            block.breakNaturally(true);
+        }
         ItemsUtil.applyDamage(tool, 1, 2031);
         return tool.getItemMeta() instanceof Damageable itemMeta && itemMeta.getDamage() == 2031;
     }
@@ -279,11 +309,15 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
      * --- Then Leaves of List destroy itself with their neighbors(Distance of 7 + notPersistant; 6 Directions) (Recursive)
      * ------------------------
      */
-    private void breakTreeWithActualLeaves(Block logBlock, Player player) {
+    private void breakTreeWithActualLeaves(Block logBlock, Player player, boolean stripMode) {
         Material logBlockType = logBlock.getType();
         Set<Material> leavesType = convertToLeavesVariant(logBlockType);
+        Set<Material> logBlockTypeSet = stripMode ?  Set.of(logBlockType) : convertToListWithAllTypes(logBlockType);
 
-        Set<Block> leavesEntryList = breakLogRecursive(logBlock, logBlockType, leavesType, player.getInventory().getItemInMainHand(), logBlock.getX(), logBlock.getZ());
+        Set<Block> leavesEntryList = breakLogRecursive(logBlock, logBlockTypeSet, leavesType, player.getInventory().getItemInMainHand(), logBlock.getX(), logBlock.getZ(), stripMode);
+        if (stripMode) {
+            return;
+        }
         leavesEntryList.forEach(Block::tick); //Distance 1 -> 3
 
         new BukkitRunnable() {
@@ -297,10 +331,19 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
     }
 
 
-    private Set<Block> breakLogRecursive(Block block, Material logType, Set<Material> leavesTypes, ItemStack item, int entryX, int entryZ) {
+    private Set<Block> breakLogRecursive(Block block, Set<Material> blocksToBreak, Set<Material> leavesTypes, ItemStack item, int entryX, int entryZ, boolean stripMode) {
         Set<Block> leavesBlocks = new HashSet<>();
-        if (block.getType() == logType) {
-            block.breakNaturally(true);
+        if (blocksToBreak.contains(block.getType())) {
+            if(stripMode){
+                Material stripped = convertToStripped(block.getType());
+                if(stripped == null){
+                    return leavesBlocks;
+                } else {
+                    block.setType(stripped);
+                }
+            } else {
+                block.breakNaturally(true);
+            }
             ItemsUtil.applyDamage(item, 1, 2031);
             if((item.getItemMeta() instanceof Damageable itemMeta && itemMeta.getDamage() == 2031)
                     || !(Math.abs(block.getX() - entryX) <= 4 && Math.abs(block.getZ() - entryZ) <= 4)){
@@ -317,7 +360,7 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
                             leavesBlocks.add(block.getRelative(x, y, z));
                             block.getRelative(x, y, z).tick();
                         }
-                        leavesBlocks.addAll(breakLogRecursive(block.getRelative(x, y, z), logType, leavesTypes, item, entryX, entryZ));
+                        leavesBlocks.addAll(breakLogRecursive(block.getRelative(x, y, z), blocksToBreak, leavesTypes, item, entryX, entryZ, stripMode));
                     }
                 }
             }
@@ -336,8 +379,55 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
             case DARK_OAK_LOG, DARK_OAK_WOOD, STRIPPED_DARK_OAK_LOG, STRIPPED_DARK_OAK_WOOD -> leavesType.add(Material.DARK_OAK_LEAVES);
             case MANGROVE_LOG, MANGROVE_WOOD, STRIPPED_MANGROVE_LOG, STRIPPED_MANGROVE_WOOD -> leavesType.add(Material.MANGROVE_LEAVES);
             case CHERRY_LOG, CHERRY_WOOD, STRIPPED_CHERRY_LOG, STRIPPED_CHERRY_WOOD -> leavesType.add(Material.CHERRY_LEAVES);
+            case PALE_OAK_LOG, PALE_OAK_WOOD, STRIPPED_PALE_OAK_LOG, STRIPPED_PALE_OAK_WOOD -> leavesType.add(Material.PALE_OAK_LEAVES);
         }
         return leavesType;
+    }
+
+    private Set<Material> convertToListWithAllTypes(Material logType) {
+        Set<Material> logs = new HashSet<>();
+        switch (logType) {
+            case OAK_LOG, OAK_WOOD, STRIPPED_OAK_LOG, STRIPPED_OAK_WOOD -> logs.addAll(List.of(Material.OAK_LOG ,Material.STRIPPED_OAK_LOG, Material.OAK_WOOD, Material.STRIPPED_OAK_WOOD));
+            case SPRUCE_LOG, SPRUCE_WOOD, STRIPPED_SPRUCE_LOG, STRIPPED_SPRUCE_WOOD -> logs.addAll(List.of(Material.SPRUCE_LOG, Material.STRIPPED_SPRUCE_LOG, Material.SPRUCE_WOOD, Material.STRIPPED_SPRUCE_WOOD));
+            case BIRCH_LOG, BIRCH_WOOD, STRIPPED_BIRCH_LOG, STRIPPED_BIRCH_WOOD -> logs.addAll(List.of(Material.BIRCH_LOG, Material.STRIPPED_BIRCH_LOG, Material.BIRCH_WOOD, Material.STRIPPED_BIRCH_WOOD));
+            case JUNGLE_LOG, JUNGLE_WOOD, STRIPPED_JUNGLE_LOG, STRIPPED_JUNGLE_WOOD -> logs.addAll(List.of(Material.JUNGLE_LOG, Material.STRIPPED_JUNGLE_LOG, Material.JUNGLE_WOOD, Material.STRIPPED_JUNGLE_WOOD));
+            case ACACIA_LOG, ACACIA_WOOD, STRIPPED_ACACIA_LOG, STRIPPED_ACACIA_WOOD -> logs.addAll(List.of(Material.ACACIA_LOG, Material.STRIPPED_ACACIA_LOG, Material.ACACIA_WOOD, Material.STRIPPED_ACACIA_WOOD));
+            case DARK_OAK_LOG, DARK_OAK_WOOD, STRIPPED_DARK_OAK_LOG, STRIPPED_DARK_OAK_WOOD -> logs.addAll(List.of(Material.DARK_OAK_LOG, Material.STRIPPED_DARK_OAK_LOG, Material.DARK_OAK_WOOD, Material.STRIPPED_DARK_OAK_WOOD));
+            case MANGROVE_LOG, MANGROVE_WOOD, STRIPPED_MANGROVE_LOG, STRIPPED_MANGROVE_WOOD -> logs.addAll(List.of(Material.MANGROVE_LOG, Material.STRIPPED_MANGROVE_LOG, Material.MANGROVE_WOOD, Material.STRIPPED_MANGROVE_WOOD));
+            case CHERRY_LOG, CHERRY_WOOD, STRIPPED_CHERRY_LOG, STRIPPED_CHERRY_WOOD -> logs.addAll(List.of(Material.CHERRY_LOG, Material.STRIPPED_CHERRY_LOG, Material.CHERRY_WOOD, Material.STRIPPED_CHERRY_WOOD));
+            case PALE_OAK_LOG, PALE_OAK_WOOD, STRIPPED_PALE_OAK_LOG, STRIPPED_PALE_OAK_WOOD -> logs.addAll(List.of(Material.PALE_OAK_LOG, Material.STRIPPED_PALE_OAK_LOG, Material.PALE_OAK_WOOD, Material.STRIPPED_PALE_OAK_WOOD));
+            case CRIMSON_STEM, STRIPPED_CRIMSON_STEM, CRIMSON_HYPHAE, STRIPPED_CRIMSON_HYPHAE -> logs.addAll(List.of(Material.CRIMSON_STEM, Material.STRIPPED_CRIMSON_STEM, Material.CRIMSON_HYPHAE, Material.STRIPPED_CRIMSON_HYPHAE));
+            case WARPED_STEM, STRIPPED_WARPED_STEM, WARPED_HYPHAE, STRIPPED_WARPED_HYPHAE -> logs.addAll(List.of(Material.WARPED_STEM, Material.STRIPPED_WARPED_STEM, Material.WARPED_HYPHAE, Material.STRIPPED_WARPED_HYPHAE));
+        }
+        return logs;
+    }
+
+    private Material convertToStripped(Material log){
+        switch (log) {
+            case OAK_LOG -> { return Material.STRIPPED_OAK_LOG; }
+            case OAK_WOOD -> { return Material.STRIPPED_OAK_WOOD; }
+            case SPRUCE_LOG -> { return Material.STRIPPED_SPRUCE_LOG; }
+            case SPRUCE_WOOD -> { return Material.STRIPPED_SPRUCE_WOOD; }
+            case BIRCH_LOG -> { return Material.STRIPPED_BIRCH_LOG; }
+            case BIRCH_WOOD -> { return Material.STRIPPED_BIRCH_WOOD; }
+            case JUNGLE_LOG -> { return Material.STRIPPED_JUNGLE_LOG; }
+            case JUNGLE_WOOD -> { return Material.STRIPPED_JUNGLE_WOOD; }
+            case ACACIA_LOG -> { return Material.STRIPPED_ACACIA_LOG; }
+            case ACACIA_WOOD -> { return Material.STRIPPED_ACACIA_WOOD; }
+            case DARK_OAK_LOG -> { return Material.STRIPPED_DARK_OAK_LOG; }
+            case DARK_OAK_WOOD -> { return Material.STRIPPED_DARK_OAK_WOOD; }
+            case MANGROVE_LOG -> { return Material.STRIPPED_MANGROVE_LOG; }
+            case MANGROVE_WOOD -> { return Material.STRIPPED_MANGROVE_WOOD; }
+            case CHERRY_LOG -> { return Material.STRIPPED_CHERRY_LOG; }
+            case CHERRY_WOOD -> { return Material.STRIPPED_CHERRY_WOOD; }
+            case PALE_OAK_LOG -> { return Material.STRIPPED_PALE_OAK_LOG; }
+            case PALE_OAK_WOOD -> { return Material.STRIPPED_PALE_OAK_WOOD; }
+            case CRIMSON_STEM -> { return Material.STRIPPED_CRIMSON_STEM; }
+            case CRIMSON_HYPHAE -> { return Material.STRIPPED_CRIMSON_HYPHAE; }
+            case WARPED_STEM -> { return Material.STRIPPED_WARPED_STEM; }
+            case WARPED_HYPHAE -> { return Material.STRIPPED_WARPED_HYPHAE; }
+        }
+        return null;
     }
 
     private final List<BlockFace> blockFaceListSix = List.of(BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
