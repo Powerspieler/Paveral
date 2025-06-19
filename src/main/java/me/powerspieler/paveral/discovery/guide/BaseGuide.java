@@ -6,6 +6,9 @@ import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Lectern;
@@ -114,11 +117,29 @@ public class BaseGuide extends DiscoveryBook implements Listener {
         assert entries != null;
 
         List<Component> pages = new ArrayList<>();
-        pages.add(Component.text("Titlepage"));
+        pages.add(generateTitlePage());
 
         if(entries.size() == 1){
-            pages.add(Component.text("Welcome!\n\nThis book will assist you in collecting all recipes added by Paveral.\n\nYou can find various diaries and documents in your world, which can be added to this guide."));
-            pages.add(Component.text("You can do this by combining the found literature with this guide via crafting.\nGet started by clicking on the first entry on the next page!\n\n Note: This two introduction pages will be removed once you have added your first diary or document"));
+            pages.add(Component.text("Welcome!\n\nThis book will assist you in ")
+                    .append(Component.text("collecting", NamedTextColor.GOLD))
+                    .append(Component.text(" all recipes added by "))
+                    .append(Component.text("Paveral", NamedTextColor.GOLD))
+                    .append(Component.text(".\n\nYou can find various "))
+                    .append(Component.text("diaries", NamedTextColor.GOLD))
+                    .append(Component.text(" and "))
+                    .append(Component.text("documents", NamedTextColor.GOLD))
+                    .append(Component.text(" in your world, which can be added to "))
+                    .append(Component.text("this guide", NamedTextColor.GOLD))
+                    .append(Component.text(".")));
+            pages.add(Component.text("You can do this by ")
+                    .append(Component.text("combining", NamedTextColor.GOLD))
+                    .append(Component.text(" the found piece of literature with this guide via "))
+                    .append(Component.text("crafting", NamedTextColor.GOLD))
+                    .append(Component.text(".\nGet started by clicking on the "))
+                    .append(Component.text("first entry", NamedTextColor.GOLD))
+                    .append(Component.text(" on the next page!\n\nNote: This two introduction pages will be "))
+                    .append(Component.text("removed", NamedTextColor.GOLD))
+                    .append(Component.text(" once you have added your first diary or document.")));
         }
 
         for (int i = 0; i < Math.ceil((double) guideOrder.size() / 14) ; i++) { // i = page number
@@ -142,6 +163,29 @@ public class BaseGuide extends DiscoveryBook implements Listener {
             }
         }
         return buildingComponent;
+    }
+
+    private Component generateTitlePage(){
+        TextColor color = TextColor.color(240, 240,240);
+        Component text = Component.text("eralGuide", color);
+        int[] pavList = {1,2,3,4,6,8,9,11,13,14,15,16,18,20,21};
+        int[] guideList = {2,4,5,6,7,9,10,11,12,13,14,16,17,18,19,21,22,23};
+
+        int paveral = pavList[(int) Math.floor(Math.random() * pavList.length)];
+        int[] trimmedGuideList = Arrays.stream(guideList).filter(num -> num > paveral).toArray();
+        int guide = trimmedGuideList[(int) (Math.floor(Math.random() * trimmedGuideList.length))];
+
+        for (int i = 1; i < 24; i++) {
+            if(i == paveral){
+                text = text.append(Component.text("Paveral", NamedTextColor.DARK_GREEN).append(Component.text("Guide", color)));
+            } else if(i == guide){
+                text = text.append(Component.text("Paveral", color).append(Component.text("Guide", NamedTextColor.LIGHT_PURPLE)));
+            } else {
+                text = text.append(Component.text("PaveralGuide", color));
+            }
+        }
+        return text.append(Component.text("Pav", color));
+
     }
 
 }

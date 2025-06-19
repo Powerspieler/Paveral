@@ -81,6 +81,7 @@ public class AwardAdvancements implements Listener {
                 case "bedrock_breaker" -> checkAndGrandAdvancement(player, "sleep_with_cat");
                 case "guide_book" -> checkAndGrandAdvancement(player, "craft_guide_book");
                 case "tech_book" -> checkAndGrandAdvancement(player, "craft_tutorial_book_forge");
+                case "worldalterer" -> {return;}
                 default -> checkAndGrandAdvancement(player, discoveryType);
             }
         }

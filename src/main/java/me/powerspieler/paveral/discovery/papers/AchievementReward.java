@@ -1,5 +1,7 @@
 package me.powerspieler.paveral.discovery.papers;
 
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +26,7 @@ public class AchievementReward implements Listener {
         if(key.equals(new NamespacedKey("paveral","music_core"))){
             addItemToInventory(player, Paper.musicCoreItemsPaper());
         }
+        player.playSound(Sound.sound(Key.key("entity.item.pickup"), Sound.Source.AMBIENT, 0.2f, 1.8f), Sound.Emitter.self());
     }
 
     private void addItemToInventory(Player player, ItemStack item){
