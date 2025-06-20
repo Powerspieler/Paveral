@@ -131,7 +131,14 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
             } else if(MaterialSetTag.CRIMSON_STEMS.isTagged(logType) || MaterialSetTag.WARPED_STEMS.isTagged(logType)){
                 breakNetherTree(event.getBlock(), event.getPlayer(), false);
             } else if(MaterialSetTag.LOGS.isTagged(logType)){
+                Material material = event.getBlock().getType(); // Store for mangrove roots since next line is breaking block.
                 breakTreeWithActualLeaves(event.getBlock(), event.getPlayer(), false);
+                if(mangroveTypes().contains(material)){
+                    breakMangroveRootInit(event.getBlock(), BlockFace.NORTH, event.getPlayer());
+                    breakMangroveRootInit(event.getBlock(), BlockFace.EAST, event.getPlayer());
+                    breakMangroveRootInit(event.getBlock(), BlockFace.SOUTH, event.getPlayer());
+                    breakMangroveRootInit(event.getBlock(), BlockFace.WEST, event.getPlayer());
+                }
             } else {
                 event.setCancelled(false);
             }
@@ -439,6 +446,52 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
             }
         }
     }
+
+    /*
+     * ------------------------
+     * --- Mangrove Roots
+     * ------------------------
+     */
+    private Set<Material> mangroveTypes() {
+        return Set.of(Material.MANGROVE_LOG, Material.STRIPPED_MANGROVE_LOG, Material.MANGROVE_WOOD, Material.STRIPPED_MANGROVE_WOOD);
+    }
+
+    private void breakMangroveRootInit(Block block, BlockFace blockFace, Player player){
+        ItemStack item = player.getInventory().getItemInMainHand();
+        int entryX = block.getX();
+        int entryZ = block.getZ();
+        if(block.getRelative(BlockFace.DOWN).getType() == Material.MANGROVE_ROOTS){
+            destroyBlock(block.getRelative(BlockFace.DOWN), item, false);
+        } else if(mangroveTypes().contains(block.getRelative(BlockFace.DOWN).getType()) && block.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN).getType() == Material.MANGROVE_ROOTS){
+            destroyBlock(block.getRelative(BlockFace.DOWN), item, false);
+            destroyBlock(block.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN), item, false);
+        }
+
+        Block neighbor = block.getRelative(blockFace);
+        if(neighbor.getType() == Material.MANGROVE_ROOTS){
+            breakMangroveRootRecursive(neighbor, blockFace, item, entryX, entryZ);
+        } else if(neighbor.getRelative(BlockFace.DOWN).getType() == Material.MANGROVE_ROOTS){
+            breakMangroveRootRecursive(neighbor.getRelative(BlockFace.DOWN), blockFace, item, entryX, entryZ);
+        }
+    }
+
+    private void breakMangroveRootRecursive(Block block, BlockFace blockFace, ItemStack tool, int entryX, int entryZ){
+        if(block.getType() == Material.MANGROVE_ROOTS){
+            block.breakNaturally(true);
+            ItemsUtil.applyDamage(tool, 1, 2031);
+            if (tool.getItemMeta() instanceof Damageable itemMeta && itemMeta.getDamage() == 2031) {
+                return;
+            }
+
+            for (BlockFace face : Set.of(blockFace, BlockFace.DOWN)) {
+                if (Math.abs(block.getX() - entryX) <= 7 && Math.abs(block.getZ() - entryZ) <= 7) {
+                    breakMangroveRootRecursive(block.getRelative(face), blockFace, tool, entryX, entryZ);
+                }
+            }
+        }
+    }
+
+
 
 
     // Chance Mining Speed based on Tree
