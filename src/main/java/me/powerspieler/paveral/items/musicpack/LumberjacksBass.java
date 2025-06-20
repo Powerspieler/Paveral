@@ -28,6 +28,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;
@@ -531,4 +533,31 @@ public class LumberjacksBass extends PaveralItem implements Listener, Enchantabl
         enchants.add(Enchantment.BANE_OF_ARTHROPODS);
         Enchantable.super.onEnchantingAttempt(event, keyString, enchants);
     }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableAttempt(PrepareItemEnchantEvent event) {
+        Set<Enchantment> enchants = new HashSet<>();
+        enchants.add(Enchantment.EFFICIENCY);
+        enchants.add(Enchantment.SILK_TOUCH);
+        enchants.add(Enchantment.FORTUNE);
+        enchants.add(Enchantment.SHARPNESS);
+        enchants.add(Enchantment.SMITE);
+        enchants.add(Enchantment.BANE_OF_ARTHROPODS);
+        Enchantable.super.onEnchantingTableAttempt(event, keyString, enchants);
+    }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableComplete(EnchantItemEvent event) {
+        Set<Enchantment> enchants = new HashSet<>();
+        enchants.add(Enchantment.EFFICIENCY);
+        enchants.add(Enchantment.SILK_TOUCH);
+        enchants.add(Enchantment.FORTUNE);
+        enchants.add(Enchantment.SHARPNESS);
+        enchants.add(Enchantment.SMITE);
+        enchants.add(Enchantment.BANE_OF_ARTHROPODS);
+        Enchantable.super.onEnchantingTableComplete(event, keyString, enchants);
+    }
+
 }

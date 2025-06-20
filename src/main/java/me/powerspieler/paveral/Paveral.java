@@ -48,7 +48,6 @@ public final class Paveral extends JavaPlugin {
     // TODO Angle Ring; Pylone
 
     // TODO Rythms Awaking 2 two block high damage.
-    // TODO Lumberjacks Bass Rightclick Strip
     // TODO Fire Aspekt Paino Sword
 
 

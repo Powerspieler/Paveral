@@ -25,6 +25,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -156,5 +158,17 @@ public class ScytheOfHarmony extends PaveralItem implements Listener, Enchantabl
         enchants.add(Enchantment.EFFICIENCY);
         enchants.add(Enchantment.SILK_TOUCH);
         Enchantable.super.onEnchantingAttempt(event, keyString, enchants);
+    }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableAttempt(PrepareItemEnchantEvent event) {
+        Enchantable.super.onEnchantingTableAttempt(event, keyString, Set.of(Enchantment.EFFICIENCY, Enchantment.SILK_TOUCH));
+    }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableComplete(EnchantItemEvent event) {
+        Enchantable.super.onEnchantingTableComplete(event, keyString, Set.of(Enchantment.EFFICIENCY, Enchantment.SILK_TOUCH));
     }
 }

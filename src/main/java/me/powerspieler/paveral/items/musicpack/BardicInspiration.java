@@ -12,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -68,5 +70,17 @@ public class BardicInspiration extends AdvancedMiningTool implements Listener {
     @EventHandler
     public void onEnchantingAttempt(PrepareAnvilEvent event) {
         super.onEnchantingAttempt(event);
+    }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableAttempt(PrepareItemEnchantEvent event) {
+        super.onEnchantingTableAttempt(event);
+    }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableComplete(EnchantItemEvent event){
+        super.onEnchantingTableComplete(event);
     }
 }
