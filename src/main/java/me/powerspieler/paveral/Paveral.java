@@ -45,7 +45,7 @@ public final class Paveral extends JavaPlugin {
     // TODO Wrench: Bring back behavior
     // TODO Raphilius Waffe für Arena. On Kill: player stribt nicht wenn von dieser waffe getötet.
     // TODO Lightning rod: Bring back hold behavior
-    // TODO Angle Ring; Pylone
+    // TODO Angle Ring; Pylone // Phanton Membran aufladen? Bei station aufladen?
 
     // TODO Rythms Awaking 2 two block high damage.
     // TODO Fire Aspekt Paino Sword

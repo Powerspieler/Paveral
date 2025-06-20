@@ -27,6 +27,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -107,6 +108,16 @@ public class ScytheOfHarmony extends PaveralItem implements Listener, Enchantabl
     private void onFarmlandJump(PlayerInteractEvent event){
         Block block = event.getClickedBlock();
         if(block != null && block.getType() == Material.FARMLAND && event.getAction() == Action.PHYSICAL){
+            if(MarkerDataStorage.hasMarker(block) && MarkerDataStorage.getMarkerDataContainer(block).has(protectedFarmland)){
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    private void onFarmlandGrief(EntityInteractEvent event){
+        Block block = event.getBlock();
+        if(block.getType() == Material.FARMLAND){
             if(MarkerDataStorage.hasMarker(block) && MarkerDataStorage.getMarkerDataContainer(block).has(protectedFarmland)){
                 event.setCancelled(true);
             }
