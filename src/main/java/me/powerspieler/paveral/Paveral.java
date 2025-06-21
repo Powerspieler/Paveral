@@ -39,7 +39,6 @@ import java.util.Objects;
 public final class Paveral extends JavaPlugin {
     private static Paveral plugin;
 
-    // TODO Advancement ohne zip; nicht immer kopieren nur bei Changes
     // TODO items command in paveral umbennenen und alle items in einem Chest inventar anbieten
 
     // TODO Wrench: Bring back behavior
@@ -55,8 +54,7 @@ public final class Paveral extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
-        DatapackLoader.copyAncientCityCenter();
-        DatapackLoader.copyAdvancements();
+        DatapackLoader.load();
         RecipeLoader.registerRecipes();
 
         Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
