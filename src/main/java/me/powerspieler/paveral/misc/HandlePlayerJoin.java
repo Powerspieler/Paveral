@@ -3,7 +3,6 @@ package me.powerspieler.paveral.misc;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.discovery.guide.BaseGuide;
-import me.powerspieler.paveral.util.RecipeLoader;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
@@ -21,7 +20,7 @@ public class HandlePlayerJoin implements Listener {
         Player player = event.getPlayer();
         // Check and provide Resourcepack
         if(!player.hasResourcePack()){
-            player.setResourcePack("https://github.com/Powerspieler/Paveral-Resourcepack/releases/download/v1.6-1.21.4/Paveral-Resourcepack_v1.6-1.21.4.zip", "ca127a0238b73ab81d9640bd71e1e66a36ecf7fd", false, Component.text("Custom items have been added to this server and therefore require custom textures!", NamedTextColor.GOLD));
+            player.setResourcePack("https://github.com/Powerspieler/Paveral-Resourcepack/releases/download/v1.7-1.21.4/Paveral-Resourcepack_v1.7-1.21.4.zip", "0e82d2bcad5979cfb88d0775a3d0753ea63579c7", false, Component.text("Custom items have been added to this server and therefore require custom textures!", NamedTextColor.GOLD));
         }
         // Guide Book Reminder Message
         if(player.hasDiscoveredRecipe(BaseGuide.recipeKey) && AwardAdvancements.isAdvancementUndone(player, "craft_guide_book")){
