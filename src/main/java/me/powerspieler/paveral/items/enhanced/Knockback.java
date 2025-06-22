@@ -64,20 +64,23 @@ public class Knockback extends PaveralItem implements Listener, Dismantable {
     @EventHandler
     private void onAnvilUse(PrepareAnvilEvent event){
         if(event.getInventory().getFirstItem() != null && event.getInventory().getFirstItem().getType() == Material.STICK && event.getInventory().getSecondItem() != null && Objects.equals(event.getInventory().getSecondItem().getItemMeta().getPersistentDataContainer().get(Constant.ITEMTYPE, PersistentDataType.STRING), keyString)){
-            ItemStack item = new ItemStack(Material.STICK);
-            ItemMeta itemmeta = item.getItemMeta();
-            itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "bonk");
-            itemmeta.addEnchant(Enchantment.KNOCKBACK, 5, true);
-            itemmeta.itemName(Component.text("Bonk", NamedTextColor.RED)
-                    .decoration(TextDecoration.ITALIC, false));
-            List<Component> lore = new ArrayList<>();
-            lore.add(Component.text("Hornyjail certified", NamedTextColor.GOLD)
-                    .decoration(TextDecoration.ITALIC, false));
-            itemmeta.lore(lore);
-            item.setItemMeta(itemmeta);
             event.getView().setRepairCost(0);
-            event.setResult(item);
-
+            event.setResult(bonk());
         }
+    }
+
+    public static ItemStack bonk() {
+        ItemStack item = new ItemStack(Material.STICK);
+        ItemMeta itemmeta = item.getItemMeta();
+        itemmeta.getPersistentDataContainer().set(Constant.ITEMTYPE, PersistentDataType.STRING, "bonk");
+        itemmeta.addEnchant(Enchantment.KNOCKBACK, 5, true);
+        itemmeta.itemName(Component.text("Bonk", NamedTextColor.RED)
+                .decoration(TextDecoration.ITALIC, false));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Hornyjail certified", NamedTextColor.GOLD)
+                .decoration(TextDecoration.ITALIC, false));
+        itemmeta.lore(lore);
+        item.setItemMeta(itemmeta);
+        return item;
     }
 }

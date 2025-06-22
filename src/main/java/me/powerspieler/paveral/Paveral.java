@@ -39,16 +39,12 @@ import java.util.Objects;
 public final class Paveral extends JavaPlugin {
     private static Paveral plugin;
 
-    // TODO items command in paveral umbennenen und alle items in einem Chest inventar anbieten
-
     // TODO Wrench: Bring back behavior
     // TODO Raphilius Waffe für Arena. On Kill: player stribt nicht wenn von dieser waffe getötet.
     // TODO Lightning rod: Bring back hold behavior
     // TODO Angle Ring; Pylone // Phanton Membran aufladen? Bei station aufladen?
 
-    // TODO Rythms Awaking 2 two block high damage.
-    // TODO Fire Aspekt Paino Sword
-
+    // TODO Rythms Awaking 2 two block high damage. // ?????
 
     @Override
     public void onEnable() {
