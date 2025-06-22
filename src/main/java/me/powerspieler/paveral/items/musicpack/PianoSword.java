@@ -21,6 +21,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -119,6 +120,7 @@ public class PianoSword extends CooldownItem implements Listener {
                     if(target instanceof Tameable tameable){
                         if(tameable.isTamed()) continue;
                     }
+                    if(player.getInventory().getItemInMainHand().containsEnchantment(Enchantment.FIRE_ASPECT)) target.setFireTicks(100);
                     if(target.getType() == EntityType.PLAYER){
                         target.damage(5.0, player);
                     } else {

@@ -23,6 +23,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -92,6 +94,23 @@ public class BedrockBreaker extends PaveralItem implements Listener, Dismantable
         enchants.add(Enchantment.MENDING);
         Enchantable.super.onEnchantingAttempt(event, keyString, enchants);
     }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableAttempt(PrepareItemEnchantEvent event) {
+        Set<Enchantment> enchants = new HashSet<>();
+        enchants.add(Enchantment.MENDING);
+        Enchantable.super.onEnchantingTableAttempt(event, keyString, enchants);
+    }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableComplete(EnchantItemEvent event) {
+        Set<Enchantment> enchants = new HashSet<>();
+        enchants.add(Enchantment.MENDING);
+        Enchantable.super.onEnchantingTableComplete(event, keyString, enchants);
+    }
+
 
     // --- Item Logic ---
 

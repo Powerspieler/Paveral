@@ -20,6 +20,8 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -543,5 +545,23 @@ public class Worldalterer extends CooldownItem implements Listener, Enchantable 
         enchants.add(Enchantment.MENDING);
         enchants.add(Enchantment.UNBREAKING);
         Enchantable.super.onEnchantingAttempt(event, keyString, enchants);
+    }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableAttempt(PrepareItemEnchantEvent event) {
+        Set<Enchantment> enchants = new HashSet<>();
+        enchants.add(Enchantment.MENDING);
+        enchants.add(Enchantment.UNBREAKING);
+        Enchantable.super.onEnchantingTableAttempt(event, keyString, enchants);
+    }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableComplete(EnchantItemEvent event) {
+        Set<Enchantment> enchants = new HashSet<>();
+        enchants.add(Enchantment.MENDING);
+        enchants.add(Enchantment.UNBREAKING);
+        Enchantable.super.onEnchantingTableComplete(event, keyString, enchants);
     }
 }

@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 
 import java.util.ArrayList;
@@ -100,10 +102,23 @@ public abstract class AdvancedMiningTool extends PaveralItem implements Listener
     }
 
     @Override
-    @EventHandler
     public void onEnchantingAttempt(PrepareAnvilEvent event) {
         Set<Enchantment> enchantments = new HashSet<>();
         enchantments.add(Enchantment.UNBREAKING);
         Enchantable.super.onEnchantingAttempt(event, keyString, enchantments);
+    }
+
+    @Override
+    public void onEnchantingTableAttempt(PrepareItemEnchantEvent event) {
+        Set<Enchantment> enchantments = new HashSet<>();
+        enchantments.add(Enchantment.UNBREAKING);
+        Enchantable.super.onEnchantingTableAttempt(event, keyString, enchantments);
+    }
+
+    @Override
+    public void onEnchantingTableComplete(EnchantItemEvent event) {
+        Set<Enchantment> enchantments = new HashSet<>();
+        enchantments.add(Enchantment.UNBREAKING);
+        Enchantable.super.onEnchantingTableComplete(event, keyString, enchantments);
     }
 }

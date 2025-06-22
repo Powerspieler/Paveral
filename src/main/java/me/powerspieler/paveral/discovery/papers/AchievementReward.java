@@ -19,14 +19,16 @@ public class AchievementReward implements Listener {
 
         if(key.equals(new NamespacedKey("paveral","craft_tutorial_book_forge"))){
             addItemToInventory(player, Paper.forgePaper());
+            player.playSound(Sound.sound(Key.key("entity.item.pickup"), Sound.Source.AMBIENT, 0.2f, 1.8f), Sound.Emitter.self());
         }
         if(key.equals(new NamespacedKey("paveral","first_forming"))){
             addItemToInventory(player, Paper.musicCorePaper());
+            player.playSound(Sound.sound(Key.key("entity.item.pickup"), Sound.Source.AMBIENT, 0.2f, 1.8f), Sound.Emitter.self());
         }
         if(key.equals(new NamespacedKey("paveral","music_core"))){
             addItemToInventory(player, Paper.musicCoreItemsPaper());
+            player.playSound(Sound.sound(Key.key("entity.item.pickup"), Sound.Source.AMBIENT, 0.2f, 1.8f), Sound.Emitter.self());
         }
-        player.playSound(Sound.sound(Key.key("entity.item.pickup"), Sound.Source.AMBIENT, 0.2f, 1.8f), Sound.Emitter.self());
     }
 
     private void addItemToInventory(Player player, ItemStack item){

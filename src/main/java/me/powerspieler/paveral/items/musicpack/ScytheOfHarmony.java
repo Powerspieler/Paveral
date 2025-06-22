@@ -25,6 +25,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -112,9 +115,19 @@ public class ScytheOfHarmony extends PaveralItem implements Listener, Enchantabl
     }
 
     @EventHandler
+    private void onFarmlandGrief(EntityInteractEvent event){
+        Block block = event.getBlock();
+        if(block.getType() == Material.FARMLAND){
+            if(MarkerDataStorage.hasMarker(block) && MarkerDataStorage.getMarkerDataContainer(block).has(protectedFarmland)){
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
     private void onCropHarvest(BlockBreakEvent event){
         Player player = event.getPlayer();
-        if(ItemHoldingController.checkIsHoldingPaveralItem(player, "scythe_of_harmony") && MaterialSetTag.MAINTAINS_FARMLAND.isTagged(event.getBlock().getType())){
+        if(ItemHoldingController.checkIsHoldingPaveralItem(player, "scythe_of_harmony") && (MaterialSetTag.MAINTAINS_FARMLAND.isTagged(event.getBlock().getType()) || event.getBlock().getType() == Material.NETHER_WART)){
             Material cropType = event.getBlock().getType();
             Material seedType = convertBlockToSeed(cropType);
             PlayerInventory inventory = player.getInventory();
@@ -144,6 +157,7 @@ public class ScytheOfHarmony extends PaveralItem implements Listener, Enchantabl
             case TORCHFLOWER_CROP, TORCHFLOWER -> seedMaterial = Material.TORCHFLOWER_SEEDS;
             case PITCHER_CROP -> seedMaterial = Material.PITCHER_POD;
             case WHEAT -> seedMaterial = Material.WHEAT_SEEDS;
+            case NETHER_WART -> seedMaterial = Material.NETHER_WART;
         }
         return seedMaterial;
     }
@@ -155,5 +169,17 @@ public class ScytheOfHarmony extends PaveralItem implements Listener, Enchantabl
         enchants.add(Enchantment.EFFICIENCY);
         enchants.add(Enchantment.SILK_TOUCH);
         Enchantable.super.onEnchantingAttempt(event, keyString, enchants);
+    }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableAttempt(PrepareItemEnchantEvent event) {
+        Enchantable.super.onEnchantingTableAttempt(event, keyString, Set.of(Enchantment.EFFICIENCY, Enchantment.SILK_TOUCH));
+    }
+
+    @Override
+    @EventHandler
+    public void onEnchantingTableComplete(EnchantItemEvent event) {
+        Enchantable.super.onEnchantingTableComplete(event, keyString, Set.of(Enchantment.EFFICIENCY, Enchantment.SILK_TOUCH));
     }
 }

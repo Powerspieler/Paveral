@@ -28,7 +28,7 @@ public class SonicEssence extends PaveralItem implements Listener {
     }
 
     @Override
-    protected ItemStack build() {
+    public ItemStack build() {
         return super.build();
     }
 

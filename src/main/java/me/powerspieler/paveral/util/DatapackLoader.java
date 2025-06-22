@@ -5,17 +5,22 @@ import org.bukkit.Bukkit;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Comparator;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class DatapackLoader {
-    public static void copyAncientCityCenter() {
+    public static void load(){
+        copyAncientCityCenter();
+        copyAdvancements();
+        Bukkit.reloadData();
+    }
+
+    private static void copyAncientCityCenter() {
         String path = Bukkit.getServer().getWorlds().getFirst().getWorldFolder().getAbsolutePath() + "/datapacks/bukkit/data/minecraft/structures/ancient_city/city_center";
         File targetDirectory = new File(path);
         File targetFile = new File(path, "city_center_2.nbt");
@@ -52,51 +57,110 @@ public class DatapackLoader {
         }
     }
 
-    public static void copyAdvancements() {
-
+    private static void copyAdvancements() {
         String path = Bukkit.getServer().getWorlds().getFirst().getWorldFolder().getAbsolutePath() + "/datapacks/bukkit/data/paveral/advancement";
+        File targetDirectory = new File(path);
+
+        if (!targetDirectory.exists()) {
+            targetDirectory.mkdirs();
+        }
+
+        // Liste der bestehenden Dateien im Zielverzeichnis erstellen
+        Map<String, File> existingFiles = new HashMap<>();
+        if (targetDirectory.exists()) {
+            try {
+                Files.walk(targetDirectory.toPath())
+                        .filter(Files::isRegularFile)
+                        .forEach(p -> existingFiles.put(targetDirectory.toPath().relativize(p).toString(), p.toFile()));
+            } catch (IOException e) {
+                Paveral.getPlugin().getLogger().log(Level.WARNING, "Failed to list existing advancement files", e);
+            }
+        }
+
+        Set<String> processedFiles = new HashSet<>();
 
         try {
-            Files.walk(Path.of(path)).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-        } catch (IOException ignored) {
-            Bukkit.getLogger().log(Level.WARNING, "Could not delete / readd Paveral's advancements. Is this the first enable?");
-        }
+            // Ressourcenverzeichnis laden
+            ClassLoader classloader = DatapackLoader.class.getClassLoader();
 
-        new File(path).mkdirs();
+            // Advancements aus dem Ressourcenverzeichnis extrahieren
+            try (InputStream is = classloader.getResourceAsStream("advancement.zip")) {
+                if (is == null) {
+                    Paveral.getPlugin().getLogger().log(Level.SEVERE, "advancement.zip not found in resources!");
+                    return;
+                }
 
-        ClassLoader classloader = DatapackLoader.class.getClassLoader() == null ? Thread.currentThread().getContextClassLoader() : DatapackLoader.class.getClassLoader();
+                byte[] buffer = new byte[1024];
+                ZipInputStream zis = new ZipInputStream(is);
+                ZipEntry entry;
 
-        try(InputStream is = classloader.getResourceAsStream("advancement.zip")){
-            byte[] buffer = new byte[1024];
-            ZipInputStream zis = new ZipInputStream(is);
-            ZipEntry entry;
-            while((entry = zis.getNextEntry()) != null){
-                File newFile = new File(path, String.valueOf(entry));
-                if (entry.isDirectory()) {
-                    if (!newFile.isDirectory() && !newFile.mkdirs()) {
-                        throw new IOException("Failed to create directory " + newFile);
+                while ((entry = zis.getNextEntry()) != null) {
+                    if (entry.isDirectory()) {
+                        continue;
                     }
-                } else {
-                    // fix for Windows-created archives
-                    File parent = newFile.getParentFile();
-                    if (!parent.isDirectory() && !parent.mkdirs()) {
+
+                    String relativePath = entry.getName();
+                    processedFiles.add(relativePath);
+
+                    File targetFile = new File(targetDirectory, relativePath);
+                    File parent = targetFile.getParentFile();
+                    if (!parent.exists() && !parent.mkdirs()) {
                         throw new IOException("Failed to create directory " + parent);
                     }
-                    // write file content
-                    FileOutputStream fos = new FileOutputStream(newFile);
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
+
+                    // Überprüfen, ob die Datei bereits existiert und unverändert ist
+                    if (targetFile.exists()) {
+                        // ZIP-Eintrag in Byte-Array lesen
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            baos.write(buffer, 0, len);
+                        }
+                        byte[] zipEntryBytes = baos.toByteArray();
+
+                        // Zieldatei in Byte-Array lesen
+                        byte[] targetFileBytes = Files.readAllBytes(targetFile.toPath());
+
+                        // Vergleich mit Arrays.equals
+                        if (Arrays.equals(zipEntryBytes, targetFileBytes)) {
+                            // Dateien sind identisch, nichts zu tun
+                            continue;
+                        }
+
+                        // Dateien sind unterschiedlich, aus dem bereits gelesenen Byte-Array schreiben
+                        try (FileOutputStream fos = new FileOutputStream(targetFile)) {
+                            fos.write(zipEntryBytes);
+                        }
+
+                        Paveral.getPlugin().getLogger().log(Level.INFO, "Updated advancement: " + relativePath);
+                        continue;
                     }
-                    fos.close();
+
+                    // Falls die Datei noch nicht existiert, normal fortfahren
+                    try (FileOutputStream fos = new FileOutputStream(targetFile)) {
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                    }
+
+                    Paveral.getPlugin().getLogger().log(Level.INFO, "Added new advancement: " + relativePath);
+                }
+
+                zis.closeEntry();
+                zis.close();
+            }
+
+            // Dateien entfernen, die nicht mehr in der ZIP vorhanden sind
+            for (Map.Entry<String, File> entry : existingFiles.entrySet()) {
+                if (!processedFiles.contains(entry.getKey())) {
+                    entry.getValue().delete();
+                    Paveral.getPlugin().getLogger().log(Level.INFO, "Removed outdated advancement: " + entry.getKey());
                 }
             }
-            zis.closeEntry();
-            zis.close();
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            Paveral.getPlugin().getLogger().log(Level.SEVERE, "Error while processing advancements:", e);
         }
-        Bukkit.reloadData();
     }
 
     private static boolean filesAreEqual(InputStream source, File target) {
