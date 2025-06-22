@@ -6,7 +6,7 @@
 
     <groupId>de.powerspieler</groupId>
     <artifactId>Paveral</artifactId>
-    <version>1.2.3-1.21.4</version>
+    <version>1.2.4-1.21.4</version>
     <packaging>jar</packaging>
 
     <name>Paveral</name>
