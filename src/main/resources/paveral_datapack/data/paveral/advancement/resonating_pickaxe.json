@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:netherite_pickaxe",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "resonating_pickaxe"
+          ]
+        }
+      }
+    },
+    "title": "Bucket Wheel Excavator",
+    "description": [
+      "Time to dig out a new ",
+      {
+        "text": "home",
+        "strikethrough": true
+      },
+      " lifestyle"
+    ],
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "paveral:music_core",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

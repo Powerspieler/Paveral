@@ -1,0 +1,25 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:netherite_axe",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "vampires_bass"
+          ]
+        }
+      }
+    },
+    "title": "Tree-mendous achievement",
+    "description": "Get ready for a new axe-perience",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "paveral:music_core",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

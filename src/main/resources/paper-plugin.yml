@@ -1,0 +1,7 @@
+name: Paveral
+author: Powerspieler
+description: This plugin adds custom items and a way of crafting them. Balanced and intended in combination with vanilla gameplay.
+version: '${project.version}'
+main: me.powerspieler.paveral.Paveral
+bootstrapper: me.powerspieler.paveral.PaveralBootstrap
+api-version: '26.1'

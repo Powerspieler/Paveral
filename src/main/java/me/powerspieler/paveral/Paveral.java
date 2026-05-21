@@ -1,8 +1,6 @@
 package me.powerspieler.paveral;
 
 import me.powerspieler.paveral.advancements.AwardAdvancements;
-import me.powerspieler.paveral.commands.ItemsCommand;
-import me.powerspieler.paveral.commands.TestCommand;
 import me.powerspieler.paveral.disassemble.AwakeTable;
 import me.powerspieler.paveral.disassemble.DisassembleListeners;
 import me.powerspieler.paveral.discovery.CatMorningGiftLootTable;
@@ -10,7 +8,6 @@ import me.powerspieler.paveral.discovery.ChestLootTable;
 import me.powerspieler.paveral.discovery.FishingLootTable;
 import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import me.powerspieler.paveral.discovery.guide.CombiningLiterature;
-import me.powerspieler.paveral.discovery.guide.GuideCommand;
 import me.powerspieler.paveral.discovery.papers.AchievementReward;
 import me.powerspieler.paveral.forge.AwakeForge;
 import me.powerspieler.paveral.forge.ForgeListener;
@@ -25,15 +22,12 @@ import me.powerspieler.paveral.items.helper.TotemDisabler;
 import me.powerspieler.paveral.items.musicpack.*;
 import me.powerspieler.paveral.items.parts.worldalterer.SonicEssence;
 import me.powerspieler.paveral.misc.HandlePlayerJoin;
-import me.powerspieler.paveral.util.DatapackLoader;
 import me.powerspieler.paveral.util.MarkerDataStorage;
 import me.powerspieler.paveral.util.RecipeLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Objects;
 
 
 public final class Paveral extends JavaPlugin {
@@ -50,20 +44,14 @@ public final class Paveral extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
-        DatapackLoader.load();
         RecipeLoader.registerRecipes();
 
-        Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
-        //Objects.requireNonNull(getCommand("cooldown")).setExecutor(new CooldownCommand());
-        Objects.requireNonNull(getCommand("items")).setExecutor(new ItemsCommand());
-
         PluginManager pm = Bukkit.getPluginManager();
+
         // Discovery
         pm.registerEvents(new BaseGuide(), this);
         pm.registerEvents(new CombiningLiterature(), this);
         pm.registerEvents(new AchievementReward(), this);
-        Objects.requireNonNull(getCommand("guide")).setExecutor(new GuideCommand());
-
 
         // Items
         pm.registerEvents(new ItemHoldingController(), this);

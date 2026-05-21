@@ -1,0 +1,25 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:netherite_hoe",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "scythe_of_harmony"
+          ]
+        }
+      }
+    },
+    "title": "Finally, inner peace",
+    "description": "Experience cutting-edge comfort",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "paveral:music_core",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

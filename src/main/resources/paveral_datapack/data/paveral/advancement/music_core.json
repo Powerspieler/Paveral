@@ -1,0 +1,25 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:jigsaw",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "music_core"
+          ]
+        }
+      }
+    },
+    "title": "Melodic Arsenal",
+    "description": "Check your Recipe Book for Music Core after achieving The Former",
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "parent": "paveral:first_forming",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

@@ -1,18 +1,16 @@
 package me.powerspieler.paveral.discovery.guide;
 
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.ItemHelper;
 import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.view.LecternView;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -20,10 +18,10 @@ import java.util.logging.Level;
 
 import static me.powerspieler.paveral.discovery.guide.BaseGuide.GUIDE_ENTRIES;
 
-public class GuideCommand implements CommandExecutor {
+public class GuideCommand implements BasicCommand {
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if(sender instanceof Player player && args.length == 2) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
+        if(commandSourceStack.getSender() instanceof Player player && args.length == 2) {
             ItemStack guideBook = null;
             if(ItemHelper.paveralNamespacedKeyEquals(player.getInventory().getItemInMainHand(), Constant.DISCOVERY, "guide_book")) {
                 guideBook = player.getInventory().getItemInMainHand();
@@ -36,7 +34,7 @@ public class GuideCommand implements CommandExecutor {
             if(guideBook != null){
                 BookMeta bookMeta = (BookMeta) guideBook.getItemMeta();
                 if(bookMeta != null && (args[0].equals("hint") || args[0].equals("entry"))){
-                    if(args[0].equals("entry") && !isAllowedToAccess(guideBook, args[1])) return true;
+                    if(args[0].equals("entry") && !isAllowedToAccess(guideBook, args[1])) return;
 
                     String className = "me.powerspieler.paveral.discovery.guide.";
                     if(args[0].equals("entry")){
@@ -52,7 +50,7 @@ public class GuideCommand implements CommandExecutor {
                     } catch (ClassNotFoundException e) {
                         Paveral.getPlugin().getLogger().log(Level.SEVERE, "ClassNotFoundException while accessing guide entry: ", e);
                     }
-                    if(act == null) return true;
+                    if(act == null) return;
 
                     try {
                         GuideBookEntry entry = (GuideBookEntry) act.getConstructor().newInstance();
@@ -75,7 +73,7 @@ public class GuideCommand implements CommandExecutor {
                 }
             }
         }
-        return true;
+
     }
 
     private boolean isInsideGuideLectern(Player player){

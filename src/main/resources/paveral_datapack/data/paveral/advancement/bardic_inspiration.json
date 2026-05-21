@@ -1,0 +1,25 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:netherite_shovel",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "bardic_inspiration"
+          ]
+        }
+      }
+    },
+    "title": "Gardening",
+    "description": "Who's the mole now?",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "paveral:music_core",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

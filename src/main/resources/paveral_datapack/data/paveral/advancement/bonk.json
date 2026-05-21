@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:debug_stick"
+    },
+    "title": {
+      "text": "Bonk!",
+      "color": "gold"
+    },
+    "description": {
+      "text": "Send everyone to HornyJail!",
+      "color": "dark_red"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "paveral:first_forming",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

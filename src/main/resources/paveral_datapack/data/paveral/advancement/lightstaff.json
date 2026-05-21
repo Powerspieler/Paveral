@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:warped_fungus_on_a_stick",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "lightstaff"
+          ]
+        }
+      }
+    },
+    "title": "Light Up!",
+    "description": "Find a Lightstaff",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "paveral:first_forming",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

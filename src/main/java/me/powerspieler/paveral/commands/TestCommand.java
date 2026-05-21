@@ -1,46 +1,22 @@
 package me.powerspieler.paveral.commands;
 
-
-import io.papermc.paper.datacomponent.DataComponentTypes;
-import io.papermc.paper.datacomponent.item.CustomModelData;
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.powerspieler.paveral.Paveral;
-import me.powerspieler.paveral.discovery.diaries.AntiCreeperGrief;
-import me.powerspieler.paveral.discovery.guide.BaseGuide;
-import me.powerspieler.paveral.util.Constant;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentIteratorFlag;
-import net.kyori.adventure.text.ComponentIteratorType;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.LecternInventory;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Spliterator;
 import java.util.logging.Level;
 
-
-public class TestCommand implements CommandExecutor {
+public class TestCommand implements BasicCommand {
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(sender instanceof ConsoleCommandSender) {
-
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
+        CommandSender sender = commandSourceStack.getSender();
+        if (sender instanceof ConsoleCommandSender) {
             TextComponent text = Component.text("Cone")
                     .append(Component.text("fort"))
                     .append(Component.text("fort"))
@@ -48,7 +24,6 @@ public class TestCommand implements CommandExecutor {
                     .append(Component.text("fort"));
             List<Component> list = text.children();
             System.out.println(list);
-
 
 //            Spliterator<Component> test = text.spliterator(ComponentIteratorType.DEPTH_FIRST, ComponentIteratorFlag.INCLUDE_TRANSLATABLE_COMPONENT_ARGUMENTS);
 //            System.out.println();
@@ -58,17 +33,9 @@ public class TestCommand implements CommandExecutor {
 //            System.out.println();
 //            test.tryAdvance(System.out::println);
 //            System.out.println();
-
             Paveral.getPlugin().getLogger().log(Level.INFO, "Test run");
         }
-        if(sender instanceof Player player){
-            if(player.isOp()){
-
-
-
-
-
-
+        if (sender instanceof Player player) {
 //                ItemStack guide = new BaseGuide().build();
 //
 //                List<String> entries = new ArrayList<>();
@@ -88,20 +55,11 @@ public class TestCommand implements CommandExecutor {
 //                }
 
 
-
-
-
-
-
-                //player.getInventory().addItem(new BaseGuide().build());
+            //player.getInventory().addItem(new BaseGuide().build());
 
 //                player.openBook(new AntiCreeperGrief().build());
 //                player.sendMessage(Paveral.getPlugin().getPluginMeta().getVersion());
-                // openBook. guide only index when all explored. append in the end if update. but sort index still maybe with comparator string -> int. x
-
-
-
-
+            // openBook. guide only index when all explored. append in the end if update. but sort index still maybe with comparator string -> int. x
 
 
 //                ItemStack item = new AntiCreeperGrief().build();
@@ -124,7 +82,7 @@ public class TestCommand implements CommandExecutor {
 //                  String colorString = Material.PURPLE_DYE.translationKey().split(" ", 2)[0];
 //                  Bukkit.broadcast(Component.text(colorString));
 
-                  //player.getInventory().addItem(new LumberjacksBass().recipe().result());
+            //player.getInventory().addItem(new LumberjacksBass().recipe().result());
 
 //                Bukkit.getScheduler().getPendingTasks().forEach(task -> Bukkit.broadcast(Component.text(task.toString())));
 //
@@ -148,19 +106,12 @@ public class TestCommand implements CommandExecutor {
 //                ActionbarStatus.statusMessageVault.get(uuid).entrySet().forEach(item -> Bukkit.broadcast(Component.text(item + "\n")));
 
 
-
-
-
-
-
 //                if(player.getPersistentDataContainer().has(Constant.IS_HOLDING)){
 //                    String string = player.getPersistentDataContainer().get(Constant.IS_HOLDING, PersistentDataType.STRING);
 //
 //                    Bukkit.broadcast(Component.text("Holding: " + string));
 //                } else
 //                    Bukkit.broadcast(Component.text("Holding nothing!"));
-
-
 
 
 //                ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
@@ -271,9 +222,12 @@ public class TestCommand implements CommandExecutor {
             inventory.addItem(item);
             player.openInventory(inventory);
             */
-                player.sendMessage(Component.text("Test run."));
-            } else player.sendMessage(Component.text("ERROR: No Op", NamedTextColor.RED));
+            player.sendMessage(Component.text("Test run."));
         }
-        return false;
+    }
+
+    @Override
+    public boolean canUse(CommandSender sender) {
+        return sender.isOp();
     }
 }
