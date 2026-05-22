@@ -1,6 +1,5 @@
 package me.powerspieler.paveral.items.musicpack;
 
-import com.destroystokyo.paper.MaterialTags;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.PaveralIngredient;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
@@ -18,6 +17,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Tag;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -32,7 +32,7 @@ import java.util.*;
 public class StringBlade extends CooldownItem implements Listener {
     public static Set<PaveralRecipe> getAllStringBladeRecipes(){
         Set<PaveralRecipe> recipes = new HashSet<>(16);
-        for (Material dye : MaterialTags.DYES.getValues()) {
+        for (Material dye : Tag.ITEMS_DYES.getValues()) {
             recipes.add(new StringBlade(dye, getCustomModelData(dye)).recipe());
         }
         return recipes;

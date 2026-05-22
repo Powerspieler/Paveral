@@ -29,30 +29,32 @@ public interface GuideBookEntry {
         return Component.text("This piece of literature is bound to the advancement ")
                 .append(advancement.displayName())
                 .append(Component.text(" and can only be found when it's uncompleted.\nYou may want to revoke it yourself, if you need this piece again."))
-                .append(revokeComp)
-                        .clickEvent(ClickEvent.callback(audience -> {
-                            if (audience instanceof Player player) {
-                                if(!AwardAdvancements.isAdvancementUndone(player, advancement_key)){
-                                    AwardAdvancements.revokeAdvancement(player, advancement_key);
-                                    player.sendMessage(Component.text("Advancement ")
-                                            .append(advancement.displayName())
-                                            .append(Component.text(" has been revoked. You are now able to encounter this document or book again!")));
-                                    player.playSound(Sound.sound(Key.key("ui.toast.out"), Sound.Source.MASTER, 2f, 2f), Sound.Emitter.self());
-                                }
-                            }
-                        }));
+                .append(revokeComp.clickEvent(ClickEvent.callback(audience -> {
+                    if (audience instanceof Player player) {
+                        if (!AwardAdvancements.isAdvancementUndone(player, advancement_key)) {
+                            AwardAdvancements.revokeAdvancement(player, advancement_key);
+                            player.sendMessage(Component.text("Advancement ")
+                                    .append(advancement.displayName())
+                                    .append(Component.text(" has been revoked. You are now able to encounter this document or book again!")));
+                            player.playSound(Sound.sound(Key.key("ui.toast.out"), Sound.Source.MASTER, 2f, 2f), Sound.Emitter.self());
+                        }
+                    }
+                })));
     }
 
     default Component generateRecipeGivingComponent(NamespacedKey recipeKey, String unicode, boolean craftingTableHint) {
-        Component text = Component.text(unicode, NamedTextColor.WHITE).append(Component.text("           Click to unlock ", NamedTextColor.DARK_RED)); // "\n\n\n"
+        Component text = Component.text(unicode, NamedTextColor.WHITE).append(Component.text("           ", NamedTextColor.DARK_RED)); // "\n\n\n"
+        Component clickableText = Component.text("Click to unlock ", NamedTextColor.DARK_RED);
         Recipe recipe = Bukkit.getRecipe(recipeKey);
         if (recipe != null) {
-            text = text.append(Component.text("          ")).append(recipe.getResult().displayName().color(NamedTextColor.DARK_GREEN));
+            clickableText = clickableText.append(Component.text("          ")).append(recipe.getResult().displayName().color(NamedTextColor.DARK_GREEN));
         }
-        text = text.clickEvent(ClickEvent.callback(audience -> {
+        clickableText = clickableText.clickEvent(ClickEvent.callback(audience -> {
             if (audience instanceof Player player) {
                 player.discoverRecipe(recipeKey);
-            }}));
+            }
+        }));
+        text = text.append(clickableText);
         return craftingTableHint ? text.append(Component.text("\n\nCheck your recipe book inside a crafting table", NamedTextColor.BLACK)) : text;
     }
 }

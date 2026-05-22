@@ -1,6 +1,5 @@
 package me.powerspieler.paveral.items.musicpack;
 
-import com.destroystokyo.paper.MaterialTags;
 import me.powerspieler.paveral.Paveral;
 import me.powerspieler.paveral.crafting.PaveralIngredient;
 import me.powerspieler.paveral.crafting.PaveralRecipe;
@@ -15,10 +14,7 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
@@ -108,7 +104,7 @@ public class PianoSword extends CooldownItem implements Listener {
 
         for (int i = 0; i < 14; i++) {
             if(location.getBlock().isSolid()){
-                if(!MaterialTags.FENCES.getValues().contains(location.getBlock().getType()) && !MaterialTags.FENCE_GATES.getValues().contains(location.getBlock().getType())){
+                if(!Tag.FENCES.getValues().contains(location.getBlock().getType()) && !Tag.FENCE_GATES.getValues().contains(location.getBlock().getType())){
                     break;
                 }
             }
