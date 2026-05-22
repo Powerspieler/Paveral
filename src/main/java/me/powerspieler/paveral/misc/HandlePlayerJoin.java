@@ -22,7 +22,7 @@ public class HandlePlayerJoin implements Listener {
         Player player = event.getPlayer();
         // Check and provide Resourcepack
         if(!player.hasResourcePack()){
-            player.setResourcePack("https://github.com/Powerspieler/Paveral-Resourcepack/releases/download/v1.7-1.21.4/Paveral-Resourcepack_v1.7-1.21.4.zip", "0e82d2bcad5979cfb88d0775a3d0753ea63579c7", false, Component.text("Custom items have been added to this server and therefore require custom textures!", NamedTextColor.GOLD));
+            player.setResourcePack("https://github.com/Powerspieler/Paveral-Resourcepack/releases/download/v1.8-26.1.2/Paveral-Resourcepack_v1.8-26.1.2.zip", "11ebad8e7d8124c5d7db1d763b6dd2a0ea11da7f", false, Component.text("Custom items have been added to this server and therefore require custom textures!", NamedTextColor.GOLD));
         }
         // Give root Advancement for late deployment on server
         if(player.getStatistic(Statistic.KILL_ENTITY, EntityType.SHULKER) >= 1) {
