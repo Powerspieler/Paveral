@@ -5,6 +5,8 @@ import me.powerspieler.paveral.advancements.AwardAdvancements;
 import me.powerspieler.paveral.discovery.guide.BaseGuide;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Statistic;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,6 +23,10 @@ public class HandlePlayerJoin implements Listener {
         // Check and provide Resourcepack
         if(!player.hasResourcePack()){
             player.setResourcePack("https://github.com/Powerspieler/Paveral-Resourcepack/releases/download/v1.7-1.21.4/Paveral-Resourcepack_v1.7-1.21.4.zip", "0e82d2bcad5979cfb88d0775a3d0753ea63579c7", false, Component.text("Custom items have been added to this server and therefore require custom textures!", NamedTextColor.GOLD));
+        }
+        // Give root Advancement for late deployment on server
+        if(player.getStatistic(Statistic.KILL_ENTITY, EntityType.SHULKER) >= 1) {
+            AwardAdvancements.grantAdvancement(player, "root");
         }
         // Guide Book Reminder Message
         if(player.hasDiscoveredRecipe(BaseGuide.recipeKey) && AwardAdvancements.isAdvancementUndone(player, "craft_guide_book")){
